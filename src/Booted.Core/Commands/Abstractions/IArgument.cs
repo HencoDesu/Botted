@@ -5,7 +5,7 @@ namespace Booted.Core.Commands.Abstractions
 {
 	public interface IArgument
 	{
-		public Func<string, object> Converter { get; }
+		public Func<string, object?> Converter { get; }
 		
 		public MemberExpression Member { get; }
 	}

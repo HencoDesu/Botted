@@ -1,4 +1,6 @@
-﻿namespace Booted.Core.Providers
+﻿using Booted.Core.Providers;
+
+namespace Booted.Core.Events.EventData
 {
 	public class BotMessage
 	{
