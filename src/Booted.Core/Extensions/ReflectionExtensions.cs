@@ -26,10 +26,10 @@ namespace Booted.Core.Extensions
 			return false;
 		}
 		
-		public static T GetPropertyValue<T>(this Type type,
+		public static T? GetPropertyValue<T>(this Type type,
 											 object objectOfType,
 											 string propertyName)
-			=> type.GetProperty(propertyName)
+			=> type.GetProperty(propertyName)!
 				   .GetValue(objectOfType)
 				   .SafeCast<T>();
 
@@ -37,7 +37,7 @@ namespace Booted.Core.Extensions
 										 object objectOfType,
 										 string methodName,
 										 params object[] methodParameters)
-			=> type.GetMethod(methodName)
+			=> type.GetMethod(methodName)!
 				   .Invoke(objectOfType, methodParameters)
 				   .SafeCast<T>();
 	}

@@ -1,11 +1,9 @@
-﻿using System;
+﻿using Booted.Core.Events.EventData;
 
-namespace Booted.Core.Providers
+namespace Booted.Core.Providers.Abstractions
 {
 	public interface IProvider
 	{
-		event Action<IProvider, BotMessage> MessageReceived;
-
 		void SendMessage(BotMessage message);
 	}
 }

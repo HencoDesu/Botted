@@ -8,9 +8,6 @@ namespace Booted.Core.Commands
 			=> new OkCommandResult(text);
 		public static ICommandResult Error(string text) 
 			=> new ErrorCommandResult(text);
-
-		public static ICommandResult None()
-			=> new NoneCommandResult();
 		
 		public class OkCommandResult : CommandResultBase
 		{
@@ -21,11 +18,6 @@ namespace Booted.Core.Commands
 		{
 			public ErrorCommandResult(string text) : base(text) {}
 		}
-		
-		public class NoneCommandResult : CommandResultBase
-		{
-			public NoneCommandResult() : base("") {}
-		}
 
 		public abstract class CommandResultBase : ICommandResult
 		{
@@ -33,7 +25,7 @@ namespace Booted.Core.Commands
 			{
 				Text = text;
 			}
-
+			
 			public string Text { get; }
 		}
 	}

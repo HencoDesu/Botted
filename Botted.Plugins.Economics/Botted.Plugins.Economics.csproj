@@ -2,12 +2,10 @@
 
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
-        <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Autofac" Version="6.2.0" />
-      <PackageReference Include="Pidgin" Version="2.5.0" />
+      <ProjectReference Include="..\src\Booted.Core\Booted.Core.csproj" />
     </ItemGroup>
 
 </Project>

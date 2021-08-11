@@ -1,56 +1,60 @@
-﻿using Booted.Core.Commands;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Booted.Core.Commands;
 using Booted.Core.Commands.Abstractions;
-using Booted.Core.Plugins;
-using Booted.Core.Plugins.Abstractions;
-using Booted.Core.Providers;
+using Booted.Core.Events;
+using Booted.Core.Events.Abstractions;
+using Booted.Core.Events.EventData;
+using Booted.Core.Providers.Abstractions;
+using Pidgin;
+using Parser = Booted.Core.Commands.Parser;
 
 namespace Booted.Core.Bot
 {
-	public class Bot : IBot
+	public class Bot
 	{
-		public IPluginManager PluginManager { get; }
-		public ICommandManager CommandManager { get; }
+		private readonly IEnumerable<ICommand> _commands;
+		
+		public IEventService EventService { get; }
 
-		public Bot(IPluginManager pluginManager, ICommandManager commandManager)
+		public Bot(IEventService eventService, IEnumerable<ICommand> commands, IEnumerable<IProvider> providers)
 		{
-			PluginManager = pluginManager;
-			CommandManager = commandManager;
+			_commands = commands;
+			EventService = eventService;
+			EventService.Subscribe<MessageReceived, BotMessage>(OnMessageReceived);
+		}
 
-			var pluginLoadingContext = new PluginLoadingContext();
-			PluginManager.LoadAllPlugins(pluginLoadingContext);
-
-			foreach (var command in pluginLoadingContext.Commands)
+		private void OnMessageReceived(BotMessage message)
+		{
+			var commandName = Parser.CommandName.ParseOrThrow(message.Text);
+			var command = _commands.FirstOrDefault(c => c.Name == commandName);
+			
+			if (command is null || !command.ProviderLimitation.IsMatching(message.Provider))
 			{
-				CommandManager.RegisterCommand(command);
+				return;
 			}
 
-			foreach (var provider in pluginLoadingContext.Providers)
+			try
 			{
-				provider.MessageReceived += OnMessageReceived;
+				var data = command.Structure.ParseData(message);
+				var result = command.Execute(data);
+				OnCommandExecuted(result, message);
+			} catch (Exception e)
+			{
+				OnCommandExecuted(CommandResult.Error(e.Message), message);
 			}
 		}
 
-		private void OnMessageReceived(IProvider provider, BotMessage message)
+		private void OnCommandExecuted(ICommandResult commandResult, BotMessage inputMessage)
 		{
-			var commandResult = CommandManager.TryExecuteCommand(message);
-
-			var messageText = commandResult switch
+			var finalMessage = new BotMessage
 			{
-				CommandResult.OkCommandResult => commandResult.Text,
-				CommandResult.ErrorCommandResult => $"Произошла ошибка: {commandResult.Text}",
-				CommandResult.NoneCommandResult => "",
-				_ => ""
+				Provider = inputMessage.Provider,
+				Text = commandResult.Text,
+				UserId = inputMessage.UserId
 			};
-
-			if (!string.IsNullOrEmpty(messageText))
-			{
-				provider.SendMessage(new BotMessage
-				{
-					Provider = message.Provider,
-					UserId = message.UserId,
-					Text = messageText
-				});
-			}
+			EventService.Raise<NeedSendMessage, BotMessage>(finalMessage);
 		}
 	}
 }
