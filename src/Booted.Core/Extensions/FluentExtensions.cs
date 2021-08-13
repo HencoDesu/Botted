@@ -21,14 +21,14 @@ namespace Booted.Core.Extensions
 			return @object;
 		}
 
-		public static T ChainInvoke<T>(this T @object,
-									   Action<T> action)
+		public static T Apply<T>(this T @object,
+								 Action<T> action)
 		{
 			action(@object);
 			return @object;
 		}
 
-		public static T? SafeCast<T>(this object? @object)
+		public static T? Cast<T>(this object? @object)
 			=> @object is null ? default : (T) @object;
 	}
 }

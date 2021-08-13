@@ -1,13 +1,10 @@
-﻿using Booted.Core.Dependencies.Attributes;
-using Booted.Core.Events.Abstractions;
-using Booted.Core.Events.EventData;
-using Booted.Core.Providers;
-using Booted.Core.Providers.Abstractions;
+﻿using Botted.Core.Abstractions.Data;
+using Botted.Core.Abstractions.Services.Events;
+using Botted.Core.Abstractions.Services.Providers;
 
 namespace Botted.Providers.Console
 {
-	[Service]
-	public class ConsoleProvider : Provider
+	public class ConsoleProvider : ProviderService
 	{
 		public static ProviderIdentifier Identifier { get; } = new();
 		

@@ -2,16 +2,15 @@
 using System.IO;
 using System.Reflection;
 using Autofac;
-using Booted.Core.Abstractions;
-using Booted.Core.Commands.Abstractions;
-using Booted.Core.Dependencies.Attributes;
-using Booted.Core.Events;
-using Booted.Core.Events.Abstractions;
 using Booted.Core.Extensions;
+using Botted.Core.Abstractions.Bot;
+using Botted.Core.Abstractions.Services;
+using Botted.Core.Abstractions.Services.Commands;
+using Botted.Core.Abstractions.Services.Events;
 
 namespace Booted.Core.Bot
 {
-	public class BotBuilder : IBuilder<Bot>
+	public class BotBuilder : IBotBuilder
 	{
 		private readonly ContainerBuilder _builder = new();
 
@@ -21,19 +20,7 @@ namespace Booted.Core.Bot
 					.AsSelf();
 		}
 
-		public BotBuilder UseDefaultEventService()
-			=> UseEventService<EventService>();
-
-		public BotBuilder UseEventService<T>()
-			where T : class, IEventService
-		{
-			_builder.RegisterType<T>()
-					.As<IEventService>()
-					.SingleInstance();
-			return this;
-		}
-
-		public BotBuilder LoadPlugins()
+		public IBotBuilder LoadPlugins()
 		{
 			var pluginsPath = Path.Combine(Environment.CurrentDirectory, "Plugins");
 			var allPlugins = new DirectoryInfo(pluginsPath).GetFiles();
@@ -45,40 +32,29 @@ namespace Booted.Core.Bot
 			return this;
 		}
 
-		public BotBuilder RegisterEvents()
-		{
-			_builder.RegisterAssemblyTypes(AppDomain.CurrentDomain.GetAssemblies())
-					.PublicOnly()
-					.Where(t => t.InheritedFrom(typeof(IEvent)))
-					.AsImplementedInterfaces()
-					.SingleInstance();
-			return this;
-		}
+		public IBotBuilder RegisterEvents()
+			=> RegisterInheritedTypes(typeof(IEvent));
 
-		public BotBuilder RegisterServices()
-		{
-			_builder.RegisterAssemblyTypes(AppDomain.CurrentDomain.GetAssemblies())
-					.PublicOnly()
-					.Where(t => t.GetCustomAttribute<ServiceAttribute>() != null)
-					.AsImplementedInterfaces()
-					.SingleInstance();
-			return this;
-		}
+		public IBotBuilder RegisterServices()
+			=> RegisterInheritedTypes(typeof(IService));
 
-		public BotBuilder RegisterCommands()
-		{
-			_builder.RegisterAssemblyTypes(AppDomain.CurrentDomain.GetAssemblies())
-					.PublicOnly()
-					.Where(t => t.InheritedFrom(typeof(ICommand)))
-					.AsImplementedInterfaces()
-					.SingleInstance();
-			return this;
-		}
+		public IBotBuilder RegisterCommands()
+			=> RegisterInheritedTypes(typeof(ICommand));
 
-		public Bot Build()
+		public IBot Build()
 		{
 			var bot = _builder.Build().Resolve<Bot>();
 			return bot;
+		}
+
+		private IBotBuilder RegisterInheritedTypes(Type type)
+		{
+			_builder.RegisterAssemblyTypes(AppDomain.CurrentDomain.GetAssemblies())
+					.PublicOnly()
+					.Where(t => t.InheritedFrom(type))
+					.AsImplementedInterfaces()
+					.SingleInstance();
+			return this;
 		}
 	}
 }

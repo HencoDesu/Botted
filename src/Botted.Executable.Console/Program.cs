@@ -7,8 +7,7 @@ namespace Botted.Executable.Console
 	{
 		static void Main(string[] args)
 		{
-			var bot = new BotBuilder().UseDefaultEventService()
-									  .LoadPlugins()
+			var bot = new BotBuilder().LoadPlugins()
 									  .RegisterServices()
 									  .RegisterEvents()
 									  .RegisterCommands()

@@ -31,7 +31,7 @@ namespace Booted.Core.Extensions
 											 string propertyName)
 			=> type.GetProperty(propertyName)!
 				   .GetValue(objectOfType)
-				   .SafeCast<T>();
+				   .Cast<T>();
 
 		public static T? InvokeMethod<T>(this Type type,
 										 object objectOfType,
@@ -39,6 +39,6 @@ namespace Booted.Core.Extensions
 										 params object[] methodParameters)
 			=> type.GetMethod(methodName)!
 				   .Invoke(objectOfType, methodParameters)
-				   .SafeCast<T>();
+				   .Cast<T>();
 	}
 }

@@ -1,24 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Booted.Core.Commands;
-using Booted.Core.Commands.Abstractions;
-using Booted.Core.Events;
-using Booted.Core.Events.Abstractions;
-using Booted.Core.Events.EventData;
-using Booted.Core.Providers.Abstractions;
+using Botted.Core.Abstractions.Bot;
+using Botted.Core.Abstractions.Data;
+using Botted.Core.Abstractions.Services.Commands;
+using Botted.Core.Abstractions.Services.Events;
+using Botted.Core.Abstractions.Services.Providers;
 using Pidgin;
-using Parser = Booted.Core.Commands.Parser;
+using Parser = Booted.Core.Services.Commands.Parser;
 
 namespace Booted.Core.Bot
 {
-	public class Bot
+	public class Bot : IBot
 	{
 		private readonly IEnumerable<ICommand> _commands;
 		
 		public IEventService EventService { get; }
 
-		public Bot(IEventService eventService, IEnumerable<ICommand> commands, IEnumerable<IProvider> providers)
+		public Bot(IEventService eventService, IEnumerable<ICommand> commands, IEnumerable<IProviderService> providers)
 		{
 			_commands = commands;
 			EventService = eventService;
@@ -33,17 +31,11 @@ namespace Booted.Core.Bot
 			if (command is null || !command.ProviderLimitation.IsMatching(message.Provider))
 			{
 				return;
-			}
-
-			try
-			{
-				var data = command.Structure.ParseData(message);
-				var result = command.Execute(data);
-				OnCommandExecuted(result, message);
-			} catch (Exception e)
-			{
-				OnCommandExecuted(CommandResult.Error(e.Message), message);
-			}
+			} 
+			
+			var data = command.Structure.ParseData(message);
+			var result = command.Execute(data);
+			OnCommandExecuted(result, message);
 		}
 
 		private void OnCommandExecuted(ICommandResult commandResult, BotMessage inputMessage)
