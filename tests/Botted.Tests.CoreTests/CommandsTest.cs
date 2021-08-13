@@ -1,5 +1,5 @@
-using Booted.Core.Factories;
-using Booted.Core.Services.Commands;
+using Botted.Core.Factories;
+using Botted.Core.Services.Commands;
 using Botted.Core.Abstractions.Services.Events;
 using Botted.Tests.TestEnvironment;
 using Botted.Tests.TestEnvironment.Commands;

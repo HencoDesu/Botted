@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using Botted.Core.Abstractions.Bot;
 using Botted.Core.Abstractions.Services;
 
-namespace Booted.Core.Bot
+namespace Botted.Core.Bot
 {
 	public class Bot : IBot
 	{

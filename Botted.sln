@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Booted.Core", "src\Booted.Core\Booted.Core.csproj", "{32EFECED-6ABE-4DCF-A8D7-84BFA72C4751}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Botted.Core", "src\Botted.Core\Botted.Core.csproj", "{32EFECED-6ABE-4DCF-A8D7-84BFA72C4751}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Botted.Executable.Console", "src\Botted.Executable.Console\Botted.Executable.Console.csproj", "{E0958891-B408-4C1E-A527-D8B79190C701}"
 EndProject

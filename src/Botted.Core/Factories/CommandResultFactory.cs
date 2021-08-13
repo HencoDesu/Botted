@@ -3,7 +3,7 @@ using Botted.Core.Abstractions.Factories;
 using Botted.Core.Abstractions.Services.Commands;
 using Botted.Core.Abstractions.Services.Commands.Result;
 
-namespace Booted.Core.Factories
+namespace Botted.Core.Factories
 {
 	public class CommandResultFactory : ICommandResultFactory
 	{

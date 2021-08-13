@@ -3,7 +3,7 @@ using System.Reflection;
 using Botted.Core.Abstractions.Services.Commands;
 using Botted.Core.Abstractions.Services.Commands.Structure;
 
-namespace Booted.Core.Services.Commands.Structure
+namespace Botted.Core.Services.Commands.Structure
 {
 	public class ArgumentStructure<TValue> : IArgumentStructure
 	{

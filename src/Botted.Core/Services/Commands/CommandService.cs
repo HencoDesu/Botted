@@ -7,7 +7,7 @@ using Botted.Core.Abstractions.Services.Commands;
 using Botted.Core.Abstractions.Services.Events;
 using Pidgin;
 
-namespace Booted.Core.Services.Commands
+namespace Botted.Core.Services.Commands
 {
 	public class CommandService : ICommandService
 	{

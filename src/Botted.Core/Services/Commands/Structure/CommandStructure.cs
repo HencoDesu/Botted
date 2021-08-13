@@ -5,7 +5,7 @@ using Botted.Core.Abstractions.Services.Commands;
 using Botted.Core.Abstractions.Services.Commands.Structure;
 using Pidgin;
 
-namespace Booted.Core.Services.Commands.Structure
+namespace Botted.Core.Services.Commands.Structure
 {
 	public class CommandStructure<TData> : ICommandStructure
 		where TData : class, ICommandData, new()

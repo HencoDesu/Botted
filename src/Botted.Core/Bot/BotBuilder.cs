@@ -2,14 +2,14 @@
 using System.IO;
 using System.Reflection;
 using Autofac;
-using Booted.Core.Extensions;
+using Botted.Core.Extensions;
 using Botted.Core.Abstractions.Bot;
 using Botted.Core.Abstractions.Factories;
 using Botted.Core.Abstractions.Services;
 using Botted.Core.Abstractions.Services.Commands;
 using Botted.Core.Abstractions.Services.Events;
 
-namespace Booted.Core.Bot
+namespace Botted.Core.Bot
 {
 	public class BotBuilder : IBotBuilder
 	{

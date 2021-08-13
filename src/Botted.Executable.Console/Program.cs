@@ -1,5 +1,5 @@
 ﻿using System;
-using Booted.Core.Bot;
+using Botted.Core.Bot;
 
 namespace Botted.Executable.Console
 {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Booted.Core.Services.Events;
+using Botted.Core.Services.Events;
 using Botted.Core.Abstractions.Services.Events;
 
 namespace Botted.Tests.TestEnvironment

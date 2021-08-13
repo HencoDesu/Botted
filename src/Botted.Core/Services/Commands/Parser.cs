@@ -3,7 +3,7 @@ using System.Linq;
 using Pidgin;
 using static Pidgin.Parser;
 
-namespace Booted.Core.Services.Commands
+namespace Botted.Core.Services.Commands
 {
 	[SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
 	public static class Parser

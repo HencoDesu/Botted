@@ -1,4 +1,4 @@
-﻿using Booted.Core.Factories;
+﻿using Botted.Core.Factories;
 using Botted.Core.Abstractions.Extensions;
 using Botted.Core.Abstractions.Services.Commands;
 using Botted.Core.Abstractions.Services.Commands.Structure;

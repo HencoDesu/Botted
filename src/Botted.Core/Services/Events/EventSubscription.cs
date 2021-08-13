@@ -1,7 +1,7 @@
 ﻿using System;
 using Botted.Core.Abstractions.Services.Events;
 
-namespace Booted.Core.Services.Events
+namespace Botted.Core.Services.Events
 {
 	public class EventSubscription : IEventSubscription
 	{

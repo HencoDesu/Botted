@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Botted.Core.Abstractions.Services.Events;
 
-namespace Booted.Core.Services.Events
+namespace Botted.Core.Services.Events
 {
 	public class EventService : IEventService
 	{

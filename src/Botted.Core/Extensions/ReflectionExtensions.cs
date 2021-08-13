@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace Booted.Core.Extensions
+namespace Botted.Core.Extensions
 {
 	public static class ReflectionExtensions
 	{

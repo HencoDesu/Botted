@@ -1,4 +1,4 @@
-﻿using Booted.Core.Factories;
+﻿using Botted.Core.Factories;
 using Botted.Core.Abstractions.Services.Commands;
 
 namespace Botted.Tests.TestEnvironment.Commands
