@@ -1,6 +1,6 @@
 using Botted.Core.Factories;
 using Botted.Core.Services.Commands;
-using Botted.Core.Abstractions.Services.Events;
+using Botted.Core.Abstractions.Services.Providers.Events;
 using Botted.Tests.TestEnvironment;
 using Botted.Tests.TestEnvironment.Commands;
 using NUnit.Framework;

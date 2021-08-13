@@ -1,4 +1,7 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
+using Botted.Core.Abstractions.Services.Database;
+using Microsoft.EntityFrameworkCore;
 
 namespace Botted.Core.Abstractions.Bot
 {
@@ -10,5 +13,8 @@ namespace Botted.Core.Abstractions.Bot
 		IBotBuilder RegisterEvents();
 		IBotBuilder RegisterCommands();
 		IBotBuilder RegisterFactories();
+		IBotBuilder ReadConfig();
+		IBotBuilder ConfigureDb<TDb>(Action<DbContextOptionsBuilder<TDb>> builder)
+			where TDb : DbContext, IBotDatabase;
 	}
 }

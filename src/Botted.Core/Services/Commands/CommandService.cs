@@ -5,6 +5,8 @@ using Botted.Core.Abstractions.Data;
 using Botted.Core.Abstractions.Factories;
 using Botted.Core.Abstractions.Services.Commands;
 using Botted.Core.Abstractions.Services.Events;
+using Botted.Core.Abstractions.Services.Providers;
+using Botted.Core.Abstractions.Services.Providers.Events;
 using Pidgin;
 
 namespace Botted.Core.Services.Commands

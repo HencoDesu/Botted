@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Botted.Core.Abstractions.Data;
 using Botted.Core.Abstractions.Services.Events;
+using Botted.Core.Abstractions.Services.Providers.Events;
 
 namespace Botted.Core.Abstractions.Services.Providers
 {
