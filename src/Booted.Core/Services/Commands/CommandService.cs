@@ -38,7 +38,7 @@ namespace Booted.Core.Services.Commands
 					return;
 				} 
 			
-				var data = command.Structure.ParseData(message);
+				var data = command.Structure?.ParseData(message);
 				var result = command.Execute(data);
 				OnCommandExecuted(result, message);
 			} catch (Exception e)

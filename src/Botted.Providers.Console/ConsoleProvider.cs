@@ -4,8 +4,10 @@ using Botted.Core.Abstractions.Services.Providers;
 
 namespace Botted.Providers.Console
 {
+	// ReSharper disable once UnusedType.Global
 	public class ConsoleProvider : ProviderService
 	{
+		// ReSharper disable once MemberCanBePrivate.Global
 		public static ProviderIdentifier Identifier { get; } = new();
 		
 		public ConsoleProvider(IEventService eventService) : base(eventService, Identifier)

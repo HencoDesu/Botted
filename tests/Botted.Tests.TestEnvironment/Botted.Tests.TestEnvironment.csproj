@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\Booted.Core\Booted.Core.csproj" />
+      <ProjectReference Include="..\..\src\Botted.Core.Abstractions\Botted.Core.Abstractions.csproj" />
+    </ItemGroup>
+
+</Project>

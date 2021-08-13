@@ -1,5 +1,8 @@
-﻿namespace Botted.Core.Abstractions.Bot
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Botted.Core.Abstractions.Bot
 {
+	[SuppressMessage("ReSharper", "UnusedMemberInSuper.Global")]
 	public interface IBotBuilder : IBuilder<IBot>
 	{
 		IBotBuilder LoadPlugins();

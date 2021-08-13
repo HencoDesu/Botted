@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Botted.Core.Abstractions.Services.Providers
 {
@@ -9,8 +8,6 @@ namespace Botted.Core.Abstractions.Services.Providers
 		
 		private readonly List<ProviderIdentifier> _additionalIdentifiers = new();
 		
-		public Guid Id { get; } = Guid.NewGuid();
-
 		public static ProviderIdentifier operator | (ProviderIdentifier left, ProviderIdentifier right)
 		{
 			if (left._additionalIdentifiers.Count > 0)

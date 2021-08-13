@@ -1,8 +1,10 @@
-﻿using Botted.Core.Abstractions.Data;
+﻿using System.Diagnostics.CodeAnalysis;
+using Botted.Core.Abstractions.Data;
 using Botted.Core.Abstractions.Services.Events;
 
 namespace Botted.Core.Abstractions.Services.Providers
 {
+	[SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
 	public abstract class ProviderService : IProviderService
 	{
 		private readonly ProviderIdentifier _identifier;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Botted.Core.Abstractions.Services.Events;
 
@@ -9,6 +10,7 @@ namespace Booted.Core.Services.Events
 	{
 		private readonly Dictionary<Type, List<MulticastDelegate>> _events = new();
 
+		[SuppressMessage("ReSharper", "MemberCanBeProtected.Global")]
 		public EventService(IEnumerable<IEvent> events)
 		{
 			foreach (var @event in events)
@@ -17,7 +19,7 @@ namespace Booted.Core.Services.Events
 			}
 		}
 
-		public void Raise<TEvent>() 
+		public virtual void Raise<TEvent>() 
 			where TEvent : IEvent
 		{
 			foreach (var handler in _events[typeof(TEvent)].OfType<Action>())
@@ -26,7 +28,7 @@ namespace Booted.Core.Services.Events
 			}
 		}
 
-		public void Raise<TEvent, TData>(TData data) 
+		public virtual void Raise<TEvent, TData>(TData data) 
 			where TEvent : IEvent<TData>
 		{
 			foreach (var handler in _events[typeof(TEvent)].OfType<Action<TData>>())

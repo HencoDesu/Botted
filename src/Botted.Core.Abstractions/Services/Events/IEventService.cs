@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Botted.Core.Abstractions.Services.Events
 {
+	[SuppressMessage("ReSharper", "UnusedMemberInSuper.Global")]
+	[SuppressMessage("ReSharper", "UnusedMember.Global")]
+	[SuppressMessage("ReSharper", "UnusedMethodReturnValue.Global")]
 	public interface IEventService : IService
 	{
 		void Raise<TEvent>()

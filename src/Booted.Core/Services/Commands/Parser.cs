@@ -1,9 +1,11 @@
-﻿using System.Linq;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Pidgin;
 using static Pidgin.Parser;
 
 namespace Booted.Core.Services.Commands
 {
+	[SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
 	public static class Parser
 	{
 		public static Parser<char, Unit> CommandPrefix { get; }

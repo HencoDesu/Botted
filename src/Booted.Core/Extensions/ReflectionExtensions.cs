@@ -25,20 +25,5 @@ namespace Booted.Core.Extensions
 
 			return false;
 		}
-		
-		public static T? GetPropertyValue<T>(this Type type,
-											 object objectOfType,
-											 string propertyName)
-			=> type.GetProperty(propertyName)!
-				   .GetValue(objectOfType)
-				   .Cast<T>();
-
-		public static T? InvokeMethod<T>(this Type type,
-										 object objectOfType,
-										 string methodName,
-										 params object[] methodParameters)
-			=> type.GetMethod(methodName)!
-				   .Invoke(objectOfType, methodParameters)
-				   .Cast<T>();
 	}
 }

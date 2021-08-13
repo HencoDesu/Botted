@@ -14,10 +14,18 @@ namespace Booted.Core.Services.Commands.Structure
 		public ICommandStructureBuilder<TData> WithArgument<TArgument>(Expression<Func<TData, TArgument>> expression, 
 																	   Func<string, TArgument> converter)
 		{
-			var member = expression.Body as MemberExpression;
-			var argument = new ArgumentStructure<TArgument>(member.Member as PropertyInfo, converter);
-			_arguments.Add(argument);
-			return this;
+			try
+			{
+				var member = expression.Body as MemberExpression;
+				var property = member!.Member as PropertyInfo;
+				var argument = new ArgumentStructure<TArgument>(property!, converter);
+				_arguments.Add(argument);
+				return this;
+			} catch (NullReferenceException _)
+			{
+				// TODO: Custom exception type here
+				throw new Exception("Only properties can be an argument", _);
+			}
 		}
 
 		public ICommandStructure Build()

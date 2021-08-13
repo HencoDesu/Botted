@@ -5,39 +5,66 @@ using Botted.Core.Abstractions.Services.Providers;
 
 namespace Botted.Core.Abstractions.Services.Commands
 {
-	public abstract class Command<TData> : ICommand
-		where TData : class, ICommandData, new()
+	public abstract class Command : ICommand
 	{
 		private readonly ICommandResultFactory _commandResultFactory;
 
-		protected Command(string name, 
-						  IFactory<ICommandStructureBuilder<TData>> structureBuilderFactory,
-						  ICommandResultFactory commandResultFactory) 
-			: this(name, ProviderIdentifier.Any, structureBuilderFactory, commandResultFactory) 
-		{}
+		protected Command(string name,
+						  ICommandResultFactory commandResultFactory)
+			: this(name, ProviderIdentifier.Any, commandResultFactory)
+		{ }
 
-		// ReSharper disable once VirtualMemberCallInConstructor
-		protected Command(string name, 
-						  ProviderIdentifier providerLimitation, 
-						  IFactory<ICommandStructureBuilder<TData>> structureBuilderFactory,
+		protected Command(string name,
+						  ProviderIdentifier providerLimitation,
 						  ICommandResultFactory commandResultFactory)
 		{
-			_commandResultFactory = commandResultFactory;
 			Name = name;
 			ProviderLimitation = providerLimitation;
-
-			var structureBuilder = structureBuilderFactory.Create();
-			ConfigureStructure(structureBuilder);
-			Structure = structureBuilder.Build();
+			_commandResultFactory = commandResultFactory;
 		}
 
 		public string Name { get; }
 
 		public ProviderIdentifier ProviderLimitation { get; }
 
-		public ICommandStructure Structure { get; }
+		public ICommandStructure? Structure { get; protected init; }
 
-		public ICommandResult Execute(ICommandData data)
+		public abstract ICommandResult Execute(ICommandData? data);
+
+		protected ICommandResult Ok(string message)
+			=> _commandResultFactory.Ok(message);
+
+		// ReSharper disable once MemberCanBePrivate.Global
+		protected ICommandResult Error(string message)
+			=> _commandResultFactory.Error(message);
+
+		protected ICommandResult Error(Exception exception)
+			=> _commandResultFactory.Error(exception);
+	}
+
+	public abstract class Command<TData> : Command
+		where TData : class, ICommandData, new()
+	{
+		protected Command(string name,
+						  ICommandResultFactory commandResultFactory,
+						  IFactory<ICommandStructureBuilder<TData>> structureBuilderFactory)
+			: this(name, ProviderIdentifier.Any, commandResultFactory, structureBuilderFactory)
+		{ }
+
+		// ReSharper disable once VirtualMemberCallInConstructor
+		// ReSharper disable once MemberCanBePrivate.Global
+		protected Command(string name,
+						  ProviderIdentifier providerLimitation,
+						  ICommandResultFactory commandResultFactory,
+						  IFactory<ICommandStructureBuilder<TData>> structureBuilderFactory)
+			: base(name, providerLimitation, commandResultFactory)
+		{
+			var structureBuilder = structureBuilderFactory.Create();
+			ConfigureStructure(structureBuilder);
+			Structure = structureBuilder.Build();
+		}
+
+		public override ICommandResult Execute(ICommandData? data)
 		{
 			try
 			{
@@ -57,15 +84,5 @@ namespace Botted.Core.Abstractions.Services.Commands
 		public abstract ICommandResult Execute(TData data);
 
 		protected abstract void ConfigureStructure(ICommandStructureBuilder<TData> builder);
-
-		protected ICommandResult Ok(string message) 
-			=> _commandResultFactory.Ok(message);
-
-		// ReSharper disable once MemberCanBePrivate.Global
-		protected ICommandResult Error(string message) 
-			=> _commandResultFactory.Error(message);
-
-		protected ICommandResult Error(Exception exception) 
-			=> _commandResultFactory.Error(exception);
 	}
 }

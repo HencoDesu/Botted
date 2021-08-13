@@ -9,8 +9,8 @@ namespace Botted.Core.Abstractions.Services.Commands
 		
 		ProviderIdentifier ProviderLimitation { get; }
 		
-		ICommandStructure Structure { get; }
+		ICommandStructure? Structure { get; }
 		
-		ICommandResult Execute(ICommandData args);
+		ICommandResult Execute(ICommandData? args);
 	}
 }

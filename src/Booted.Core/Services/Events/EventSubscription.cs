@@ -10,6 +10,7 @@ namespace Booted.Core.Services.Events
 		public void Dispose()
 		{
 			Unsubscribed?.Invoke();
+			GC.SuppressFinalize(this);
 		}
 	}
 }

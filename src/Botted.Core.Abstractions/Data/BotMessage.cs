@@ -4,8 +4,8 @@ namespace Botted.Core.Abstractions.Data
 {
 	public class BotMessage
 	{
-		public ProviderIdentifier Provider { get; set; }
-		public string Text { get; set; }
-		public long UserId { get; set; }
+		public ProviderIdentifier Provider { get; init; }
+		public string Text { get; init; }
+		public long UserId { get; init; }
 	}
 }
