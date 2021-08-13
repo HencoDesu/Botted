@@ -66,6 +66,6 @@ namespace Botted.Core.Abstractions.Services.Commands
 			=> _commandResultFactory.Error(message);
 
 		protected ICommandResult Error(Exception exception) 
-			=> _commandResultFactory.Error(exception.ToString());
+			=> _commandResultFactory.Error(exception);
 	}
 }

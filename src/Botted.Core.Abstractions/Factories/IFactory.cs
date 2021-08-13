@@ -1,7 +1,12 @@
 ﻿namespace Botted.Core.Abstractions.Factories
 {
-	public interface IFactory<out TResult>
+	public interface IFactory
 	{
-		TResult Create();
+		object Create();
+	}
+	
+	public interface IFactory<out TResult> : IFactory
+	{
+		new TResult Create();
 	}
 }

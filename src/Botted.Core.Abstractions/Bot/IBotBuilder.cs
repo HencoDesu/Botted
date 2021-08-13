@@ -6,5 +6,6 @@
 		IBotBuilder RegisterServices();
 		IBotBuilder RegisterEvents();
 		IBotBuilder RegisterCommands();
+		IBotBuilder RegisterFactories();
 	}
 }

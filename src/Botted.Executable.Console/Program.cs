@@ -11,6 +11,7 @@ namespace Botted.Executable.Console
 									  .RegisterServices()
 									  .RegisterEvents()
 									  .RegisterCommands()
+									  .RegisterFactories()
 									  .Build();
 			System.Console.WriteLine("Нажмите Пробел для закрытия бота");
 			while (System.Console.ReadKey().Key != ConsoleKey.Spacebar) { }
