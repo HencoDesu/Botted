@@ -26,18 +26,18 @@ namespace Botted.Tests.TestEnvironment
 			return (TData)_eventData[@event];
 		}
 
-		public override void Raise<TEvent>()
+		public override void Rise<TEvent>()
 		{
 			_raisedEvents.Add(_events.OfType<TEvent>().First());
-			base.Raise<TEvent>();
+			base.Rise<TEvent>();
 		}
 
-		public override void Raise<TEvent, TData>(TData data)
+		public override void Rise<TEvent, TData>(TData data)
 		{
 			var @event = _events.OfType<TEvent>().First();
 			_raisedEvents.Add(@event);
 			_eventData[@event] = data;
-			base.Raise<TEvent, TData>(data);
+			base.Rise<TEvent, TData>(data);
 		}
 	}
 }

@@ -5,7 +5,7 @@ using Botted.Core.Abstractions.Data;
 using Botted.Core.Abstractions.Factories;
 using Botted.Core.Abstractions.Services.Commands;
 using Botted.Core.Abstractions.Services.Events;
-using Botted.Core.Abstractions.Services.Providers;
+using NLog;
 using Botted.Core.Abstractions.Services.Providers.Events;
 using Pidgin;
 
@@ -16,6 +16,7 @@ namespace Botted.Core.Services.Commands
 		private readonly IEventService _eventService;
 		private readonly IEnumerable<ICommand> _commands;
 		private readonly ICommandResultFactory _commandResultFactory;
+		private readonly ILogger _logger = LogManager.GetCurrentClassLogger();
 
 		public CommandService(IEventService eventService, 
 							  IEnumerable<ICommand> commands, 
@@ -45,6 +46,7 @@ namespace Botted.Core.Services.Commands
 				OnCommandExecuted(result, message);
 			} catch (Exception e)
 			{
+				_logger.Error(e, "Error on handling message: {0}", message.Text);
 				OnCommandExecuted(_commandResultFactory.Error(e), message);
 			}
 		}
@@ -57,7 +59,7 @@ namespace Botted.Core.Services.Commands
 				Text = commandResult.Text,
 				UserId = inputMessage.UserId
 			};
-			_eventService.Raise<NeedSendMessage, BotMessage>(finalMessage);
+			_eventService.Rise<NeedSendMessage, BotMessage>(finalMessage);
 		}
 	}
 }

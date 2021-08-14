@@ -9,6 +9,7 @@ using Botted.Core.Abstractions.Services;
 using Botted.Core.Abstractions.Services.Commands;
 using Botted.Core.Abstractions.Services.Database;
 using Botted.Core.Abstractions.Services.Events;
+using NLog;
 using Botted.Core.Services.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -18,6 +19,7 @@ namespace Botted.Core.Bot
 {
 	public class BotBuilder : IBotBuilder
 	{
+		private readonly ILogger _logger = LogManager.GetCurrentClassLogger();
 		private readonly ContainerBuilder _builder = new();
 
 		public BotBuilder()
@@ -28,6 +30,8 @@ namespace Botted.Core.Bot
 
 		public IBotBuilder LoadPlugins()
 		{
+			_logger.Info("Load plugins...");
+
 			var pluginsPath = Path.Combine(Environment.CurrentDirectory, "Plugins");
 			var allPlugins = new DirectoryInfo(pluginsPath).GetFiles();
 			foreach (var plugin in allPlugins)
@@ -39,16 +43,28 @@ namespace Botted.Core.Bot
 		}
 
 		public IBotBuilder RegisterEvents()
-			=> RegisterInheritedTypes(typeof(IEvent));
+		{
+			_logger.Info("Register events...");
+			return RegisterInheritedTypes(typeof(IEvent));
+		}
 
 		public IBotBuilder RegisterServices()
-			=> RegisterInheritedTypes(typeof(IService));
+		{
+			_logger.Info("Register services...");
+			return RegisterInheritedTypes(typeof(IService));
+		}
 
 		public IBotBuilder RegisterCommands()
-			=> RegisterInheritedTypes(typeof(ICommand));
+		{
+			_logger.Info("Register commands...");
+			return RegisterInheritedTypes(typeof(ICommand));
+		}
 
 		public IBotBuilder RegisterFactories()
-			=> RegisterInheritedTypes(typeof(IFactory));
+		{
+			_logger.Info("Register factories...");
+			return RegisterInheritedTypes(typeof(IFactory));
+		}
 
 		public IBotBuilder ReadConfig()
 		{
@@ -77,6 +93,7 @@ namespace Botted.Core.Bot
 
 		public IBot Build()
 		{
+			_logger.Info("Bot intialization done!");
 			var bot = _builder.Build().Resolve<Bot>();
 			return bot;
 		}

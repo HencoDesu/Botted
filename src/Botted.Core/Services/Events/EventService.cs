@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Botted.Core.Abstractions.Services.Events;
+using NLog;
 
 namespace Botted.Core.Services.Events
 {
 	public class EventService : IEventService
 	{
+		private readonly ILogger _logger = LogManager.GetCurrentClassLogger();
 		private readonly Dictionary<Type, List<MulticastDelegate>> _events = new();
 
 		[SuppressMessage("ReSharper", "MemberCanBeProtected.Global")]
@@ -19,18 +21,20 @@ namespace Botted.Core.Services.Events
 			}
 		}
 
-		public virtual void Raise<TEvent>() 
+		public virtual void Rise<TEvent>() 
 			where TEvent : IEvent
 		{
+			_logger.Info("{0} event rised");
 			foreach (var handler in _events[typeof(TEvent)].OfType<Action>())
 			{
 				handler.Invoke();
 			}
 		}
 
-		public virtual void Raise<TEvent, TData>(TData data) 
+		public virtual void Rise<TEvent, TData>(TData data) 
 			where TEvent : IEvent<TData>
 		{
+			_logger.Info("{0} event rised");
 			foreach (var handler in _events[typeof(TEvent)].OfType<Action<TData>>())
 			{
 				handler.Invoke(data);

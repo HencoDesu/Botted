@@ -11,11 +11,11 @@ namespace Botted.Core.Abstractions.Services.Providers
 		private readonly ProviderIdentifier _identifier;
 		
 		protected ProviderService(IEventService eventService, 
-						   ProviderIdentifier identifier)
+								  ProviderIdentifier identifier)
 		{
-			EventService = eventService;
 			_identifier = identifier;
-			
+			EventService = eventService;
+
 			EventService.Subscribe<NeedSendMessage, BotMessage>(OnNeedSendMessage);
 		}
 		
@@ -25,7 +25,7 @@ namespace Botted.Core.Abstractions.Services.Providers
 
 		protected void OnMessageReceived(BotMessage message)
 		{
-			EventService.Raise<MessageReceived, BotMessage>(message);
+			EventService.Rise<MessageReceived, BotMessage>(message);
 		}
 		
 		protected void OnNeedSendMessage(BotMessage message)

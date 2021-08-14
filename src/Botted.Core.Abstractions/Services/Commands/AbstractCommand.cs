@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Botted.Core.Abstractions.Factories;
 using Botted.Core.Abstractions.Services.Commands.Structure;
 using Botted.Core.Abstractions.Services.Providers;
+using NLog;
 
 namespace Botted.Core.Abstractions.Services.Commands
 {
@@ -34,7 +36,6 @@ namespace Botted.Core.Abstractions.Services.Commands
 		protected ICommandResult Ok(string message)
 			=> _commandResultFactory.Ok(message);
 
-		// ReSharper disable once MemberCanBePrivate.Global
 		protected ICommandResult Error(string message)
 			=> _commandResultFactory.Error(message);
 
@@ -42,45 +43,59 @@ namespace Botted.Core.Abstractions.Services.Commands
 			=> _commandResultFactory.Error(exception);
 	}
 
+	[SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+	[SuppressMessage("ReSharper", "MemberCanBeProtected.Global")]
 	public abstract class Command<TData> : Command
 		where TData : class, ICommandData, new()
 	{
 		protected Command(string name,
 						  ICommandResultFactory commandResultFactory,
-						  IFactory<ICommandStructureBuilder<TData>> structureBuilderFactory)
-			: this(name, ProviderIdentifier.Any, commandResultFactory, structureBuilderFactory)
-		{ }
+						  IFactory<ICommandStructureBuilder<TData>> structureBuilderFactory, 
+						  ILogger logger)
+			: this(name, 
+				   ProviderIdentifier.Any, 
+				   commandResultFactory, 
+				   structureBuilderFactory, 
+				   logger)
+		{
+			Logger = logger;
+		}
 
-		// ReSharper disable once VirtualMemberCallInConstructor
-		// ReSharper disable once MemberCanBePrivate.Global
+		[SuppressMessage("ReSharper", "VirtualMemberCallInConstructor")]
 		protected Command(string name,
 						  ProviderIdentifier providerLimitation,
 						  ICommandResultFactory commandResultFactory,
-						  IFactory<ICommandStructureBuilder<TData>> structureBuilderFactory)
-			: base(name, providerLimitation, commandResultFactory)
+						  IFactory<ICommandStructureBuilder<TData>> structureBuilderFactory,
+						  ILogger logger)
+			: base(name, 
+				   providerLimitation, 
+				   commandResultFactory)
 		{
+			Logger = logger;
+			
 			var structureBuilder = structureBuilderFactory.Create();
 			ConfigureStructure(structureBuilder);
 			Structure = structureBuilder.Build();
 		}
+		
+		protected ILogger Logger { get; }
 
 		public override ICommandResult Execute(ICommandData? data)
 		{
+			if (data is not TData commandData)
+			{
+				return Error("Incorrect data");
+			}
 			try
 			{
-				if (data is TData commandData)
-				{
-					return Execute(commandData);
-				}
+				return Execute(commandData);
 			} catch (Exception e)
 			{
+				Logger.Error(e, "Exception during command {0}", Name);
 				return Error(e);
 			}
-
-			return Error("Incorrect data");
 		}
 
-		// ReSharper disable once MemberCanBeProtected.Global
 		public abstract ICommandResult Execute(TData data);
 
 		protected abstract void ConfigureStructure(ICommandStructureBuilder<TData> builder);
