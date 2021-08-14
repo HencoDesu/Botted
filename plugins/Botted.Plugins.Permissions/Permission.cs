@@ -30,11 +30,14 @@ namespace Botted.Plugins.Permissions
 		}
 
 		public bool IsMatching(Permission permission)
-			=> permission.Name == All.Name
+			=> permission.Name == All.Name 
 			|| permission.Name == Name
-			|| _additionalPermissions.Contains(permission);
+			|| _additionalPermissions.Contains(permission)
+			|| permission._additionalPermissions.Contains(this);
 
 		private void AddPermission(Permission additionalIdentifier)
 			=> _additionalPermissions.Add(additionalIdentifier);
+
+		public override string ToString() => Name;
 	}
 }

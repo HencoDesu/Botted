@@ -26,7 +26,8 @@ namespace Botted.Core.Abstractions.Services.Providers
 		{
 			return this == Any 
 				|| this == providerIdentifier 
-				|| _additionalIdentifiers.Contains(providerIdentifier);
+				|| _additionalIdentifiers.Contains(providerIdentifier)
+				|| providerIdentifier._additionalIdentifiers.Contains(this);
 		}
 
 		private void AddIdentifier(ProviderIdentifier additionalIdentifier) 

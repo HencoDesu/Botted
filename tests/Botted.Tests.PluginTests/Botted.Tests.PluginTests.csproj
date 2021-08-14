@@ -15,7 +15,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\Botted.Core\Botted.Core.csproj" />
+      <ProjectReference Include="..\..\plugins\Botted.Plugins.Permissions\Botted.Plugins.Permissions.csproj" />
       <ProjectReference Include="..\Botted.Tests.TestEnvironment\Botted.Tests.TestEnvironment.csproj" />
     </ItemGroup>
 

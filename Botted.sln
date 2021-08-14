@@ -22,6 +22,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Botted.Tests.CoreTests", "t
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Botted.Plugins.Permissions", "plugins\Botted.Plugins.Permissions\Botted.Plugins.Permissions.csproj", "{32817870-FD84-41B5-A092-697B721A130C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Botted.Tests.PluginTests", "tests\Botted.Tests.PluginTests\Botted.Tests.PluginTests.csproj", "{3D2F7561-70D0-4390-A012-19417DD3A0F8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -56,6 +58,10 @@ Global
 		{32817870-FD84-41B5-A092-697B721A130C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{32817870-FD84-41B5-A092-697B721A130C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{32817870-FD84-41B5-A092-697B721A130C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D2F7561-70D0-4390-A012-19417DD3A0F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D2F7561-70D0-4390-A012-19417DD3A0F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D2F7561-70D0-4390-A012-19417DD3A0F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D2F7561-70D0-4390-A012-19417DD3A0F8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{E849794B-2445-404B-BB89-349570C15A8E} = {80F94CC0-BEC9-4905-8789-6EEEF7FFE553}
@@ -65,5 +71,6 @@ Global
 		{CC84908F-F75B-4281-A99B-FE14614AC2FE} = {580504EC-B96D-43DA-807E-BB340A967A9E}
 		{3DF6DD50-D0FE-4E76-8003-839D359B622D} = {580504EC-B96D-43DA-807E-BB340A967A9E}
 		{32817870-FD84-41B5-A092-697B721A130C} = {C54E908D-B187-42D8-9B91-2F9D239B4000}
+		{3D2F7561-70D0-4390-A012-19417DD3A0F8} = {580504EC-B96D-43DA-807E-BB340A967A9E}
 	EndGlobalSection
 EndGlobal

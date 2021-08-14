@@ -8,6 +8,7 @@ namespace Botted.Tests.TestEnvironment
 	public class TestEventService : EventService
 	{
 		private readonly List<IEvent> _raisedEvents = new();
+		private readonly Dictionary<IEvent, object> _eventData = new();
 		private readonly IEvent[] _events;
 
 		public TestEventService(params IEvent[] events) : base(events)
@@ -18,22 +19,25 @@ namespace Botted.Tests.TestEnvironment
 		public bool IsRaised(IEvent @event)
 			=> _raisedEvents.Contains(@event);
 
+		public TData GetLastData<TEvent, TData>()
+			where TEvent : IEvent<TData>
+		{
+			var @event = _events.OfType<TEvent>().First();
+			return (TData)_eventData[@event];
+		}
+
 		public override void Raise<TEvent>()
 		{
-			MarkRaised<TEvent>();
+			_raisedEvents.Add(_events.OfType<TEvent>().First());
 			base.Raise<TEvent>();
 		}
 
 		public override void Raise<TEvent, TData>(TData data)
 		{
-			MarkRaised<TEvent>();
+			var @event = _events.OfType<TEvent>().First();
+			_raisedEvents.Add(@event);
+			_eventData[@event] = data;
 			base.Raise<TEvent, TData>(data);
-		}
-
-		private void MarkRaised<TEvent>()
-			where TEvent : IEvent
-		{
-			_raisedEvents.Add(_events.OfType<TEvent>().First());
 		}
 	}
 }
