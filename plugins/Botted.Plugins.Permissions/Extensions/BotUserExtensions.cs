@@ -1,9 +1,10 @@
 ﻿using System;
 using Botted.Core.Abstractions.Services.Users.Data;
+using Botted.Plugins.Permissions.Data;
 using Botted.Plugins.Permissions.Exceptions;
 using NLog;
 
-namespace Botted.Plugins.Permissions
+namespace Botted.Plugins.Permissions.Extensions
 {
 	public static class BotUserExtensions
 	{

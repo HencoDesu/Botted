@@ -1,13 +1,18 @@
-﻿using System;
+﻿using Botted.Core.Abstractions.Services.Commands.Events;
 using Botted.Core.Abstractions.Services.Database;
 using Botted.Core.Abstractions.Services.Events;
+using Botted.Core.Abstractions.Services.Providers.Events;
 using Botted.Core.Abstractions.Services.Users.Data;
 using Botted.Core.Abstractions.Services.Users.Events;
-using Botted.Core.Services.Database;
+using Botted.Core.Factories;
+using Botted.Core.Services.Commands;
 using Botted.Core.Services.Users;
 using Botted.Plugins.Permissions;
+using Botted.Plugins.Permissions.Data;
 using Botted.Plugins.Permissions.Exceptions;
+using Botted.Plugins.Permissions.Extensions;
 using Botted.Tests.TestEnvironment;
+using Botted.Tests.TestEnvironment.Commands;
 using FakeItEasy;
 using NUnit.Framework;
 
@@ -39,14 +44,14 @@ namespace Botted.Tests.PluginTests
 			Assert.True(permission1.IsMatching(Permission.All));
 			Assert.True(permission2.IsMatching(Permission.All));
 			Assert.False(permission1.IsMatching(permission2));
-			Assert.True(permission1.IsMatching(permission1 | permission2));
-			Assert.True(permission2.IsMatching(permission1 | permission2));
+			Assert.True((permission1 | permission2).IsMatching(permission1));
+			Assert.True((permission1 | permission2).IsMatching(permission2));
 		}
 
 		[Test]
 		public void InitialTest()
 		{
-			var eventService = new TestEventService(new UserRegistered());
+			var eventService = new TestEventService(new UserRegistered(), new CommandExecuting());
 			var userService = new UserService(A.Fake<IBotDatabase>(), eventService);
 			var service = new PermissionsService(eventService);
 			var permission1 = service.CreatePermission("test1");
@@ -85,6 +90,27 @@ namespace Botted.Tests.PluginTests
 			Assert.DoesNotThrow(() => user.TakePermission(permission));
 			Assert.False(user.HasPermission(permission));
 			Assert.Throws<NoSuchPermissionException>(() => user.TakePermission(permission));
+		}
+
+		[Test]
+		public void ExecutePermissionsTest()
+		{
+			var user = new BotUser();
+			var eventService = new TestEventService(new UserRegistered(), new CommandExecuting(), new MessageReceived(), new NeedSendMessage());
+			var service = new PermissionsService(eventService);
+			var permission = service.CreatePermission("test");
+			var command = new SimpleTestCommand();
+			var commandsService = new CommandService(eventService, new [] {command}, new CommandResultFactory());
+			var provider = new TestProvider(eventService);
+
+			command.ConfigurePermissions(permission);
+			provider.ReceiveMessage("!test", user);
+			Assert.Null(provider.LastSentMessage);
+			
+			user.GrantPermission(permission);
+			provider.ReceiveMessage("!test", user);
+			Assert.NotNull(provider.LastSentMessage);
+			Assert.AreEqual("Success!", provider.LastSentMessage.Text);
 		}
 	}
 }

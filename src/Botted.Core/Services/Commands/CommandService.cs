@@ -4,6 +4,8 @@ using System.Linq;
 using Botted.Core.Abstractions.Data;
 using Botted.Core.Abstractions.Factories;
 using Botted.Core.Abstractions.Services.Commands;
+using Botted.Core.Abstractions.Services.Commands.Data;
+using Botted.Core.Abstractions.Services.Commands.Events;
 using Botted.Core.Abstractions.Services.Events;
 using NLog;
 using Botted.Core.Abstractions.Services.Providers.Events;
@@ -18,8 +20,8 @@ namespace Botted.Core.Services.Commands
 		private readonly ICommandResultFactory _commandResultFactory;
 		private readonly ILogger _logger = LogManager.GetCurrentClassLogger();
 
-		public CommandService(IEventService eventService, 
-							  IEnumerable<ICommand> commands, 
+		public CommandService(IEventService eventService,
+							  IEnumerable<ICommand> commands,
 							  ICommandResultFactory commandResultFactory)
 		{
 			_eventService = eventService;
@@ -28,38 +30,39 @@ namespace Botted.Core.Services.Commands
 
 			_eventService.Subscribe<MessageReceived, BotMessage>(OnMessageReceived);
 		}
-		
+
 		private void OnMessageReceived(BotMessage message)
 		{
 			try
 			{
 				var commandName = Parser.CommandName.ParseOrThrow(message.Text);
 				var command = _commands.FirstOrDefault(c => c.Name == commandName);
-			
-				if (command is null || !command.ProviderLimitation.IsMatching(message.Provider))
+				
+				if (command is null)
 				{
 					return;
-				} 
-			
-				var data = command.Structure?.ParseData(message);
-				var result = command.Execute(data);
-				OnCommandExecuted(result, message);
+				}
+				
+				var canExecute = command.ProviderLimitation.IsMatching(message.Provider);
+				var context = new CommandExecuteContext(command, message.User, canExecute);
+				_eventService.Rise<CommandExecuting, CommandExecuteContext>(context);
+
+				if (context.CanExecute)
+				{
+					var data = command.Structure?.ParseData(message);
+					var result = command.Execute(data);
+					OnCommandExecuted(result, message);
+				}
 			} catch (Exception e)
 			{
 				_logger.Error(e, "Error on handling message: {0}", message.Text);
 				OnCommandExecuted(_commandResultFactory.Error(e), message);
 			}
 		}
-		
+
 		private void OnCommandExecuted(ICommandResult commandResult, BotMessage inputMessage)
 		{
-			var finalMessage = new BotMessage
-			{
-				Provider = inputMessage.Provider,
-				Text = commandResult.Text,
-				UserId = inputMessage.UserId
-			};
-			_eventService.Rise<NeedSendMessage, BotMessage>(finalMessage);
+			_eventService.Rise<NeedSendMessage, BotMessage>(inputMessage with { Text = commandResult.Text });
 		}
 	}
 }

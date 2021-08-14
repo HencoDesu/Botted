@@ -1,3 +1,4 @@
+using Botted.Core.Abstractions.Services.Commands.Events;
 using Botted.Core.Factories;
 using Botted.Core.Services.Commands;
 using Botted.Core.Abstractions.Services.Providers.Events;
@@ -15,7 +16,8 @@ namespace Botted.Tests.CoreTests
 			var command = "!test";
 			var commandResult = "Success!";
 			var sendEvent = new NeedSendMessage();
-			var eventService = new TestEventService(new MessageReceived(), sendEvent);
+			var executingEvent = new CommandExecuting();
+			var eventService = new TestEventService(new MessageReceived(), sendEvent, executingEvent);
 			var testCommand = new SimpleTestCommand();
 			var commandsService = new CommandService(eventService, new [] {testCommand}, new CommandResultFactory());
 			var provider = new TestProvider(eventService);
@@ -24,6 +26,7 @@ namespace Botted.Tests.CoreTests
 			
 			Assert.IsTrue(testCommand.Executed);
 			Assert.IsTrue(eventService.IsRaised(sendEvent));
+			Assert.IsTrue(eventService.IsRaised(executingEvent));
 			Assert.NotNull(provider.LastSentMessage);
 			Assert.AreEqual(commandResult, provider.LastSentMessage.Text);
 		}
@@ -36,7 +39,7 @@ namespace Botted.Tests.CoreTests
 			var command = $"!test {intData} {stringData}";
 			var commandResult = $"{intData} {stringData}";
 			var sendEvent = new NeedSendMessage();
-			var eventService = new TestEventService(new MessageReceived(), sendEvent);
+			var eventService = new TestEventService(new MessageReceived(), sendEvent, new CommandExecuting());
 			var testCommand = new TestCommandWithData();
 			var commandsService = new CommandService(eventService, new [] {testCommand}, new CommandResultFactory());
 			var provider = new TestProvider(eventService);

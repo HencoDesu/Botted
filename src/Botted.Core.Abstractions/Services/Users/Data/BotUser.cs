@@ -4,7 +4,7 @@ using Botted.Core.Abstractions.Data;
 
 namespace Botted.Core.Abstractions.Services.Users.Data
 {
-	public class BotUser
+	public class BotUser : IHasAdditionalData
 	{
 		private readonly List<IAdditionalData> _additionalData = new ();
 
@@ -13,12 +13,10 @@ namespace Botted.Core.Abstractions.Services.Users.Data
 
 		public TData? GetAdditionalData<TData>()
 			where TData : IAdditionalData
-			=> _additionalData.OfType<TData>().FirstOrDefault();
+			=> _additionalData.OfType<TData>().SingleOrDefault();
 
 		public void SaveAdditionalData<TData>(TData data) 
-			where TData : IAdditionalData
-		{
-			_additionalData.Add(data);
-		}
+			where TData : IAdditionalData 
+			=> _additionalData.Add(data);
 	}
 }
