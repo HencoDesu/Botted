@@ -8,10 +8,10 @@ namespace Botted.Core.Abstractions.Services.Events
 	[SuppressMessage("ReSharper", "UnusedMethodReturnValue.Global")]
 	public interface IEventService : IService
 	{
-		void Raise<TEvent>()
+		void Rise<TEvent>()
 			where TEvent : IEvent;
 
-		void Raise<TEvent, TData>(TData data) 
+		void Rise<TEvent, TData>(TData data) 
 			where TEvent : IEvent<TData>;
 		
 		IEventSubscription Subscribe<TEvent>(Action handler) 

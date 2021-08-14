@@ -18,16 +18,16 @@ namespace Botted.Tests.TestEnvironment
 		public bool IsRaised(IEvent @event)
 			=> _raisedEvents.Contains(@event);
 
-		public override void Raise<TEvent>()
+		public override void Rise<TEvent>()
 		{
 			MarkRaised<TEvent>();
-			base.Raise<TEvent>();
+			base.Rise<TEvent>();
 		}
 
-		public override void Raise<TEvent, TData>(TData data)
+		public override void Rise<TEvent, TData>(TData data)
 		{
 			MarkRaised<TEvent>();
-			base.Raise<TEvent, TData>(data);
+			base.Rise<TEvent, TData>(data);
 		}
 
 		private void MarkRaised<TEvent>()

@@ -3,15 +3,17 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 using Botted.Core.Abstractions.Services.Commands;
+using Botted.Core.Abstractions.Services.Commands.Exceptions;
 using Botted.Core.Abstractions.Services.Commands.Structure;
 
 namespace Botted.Core.Services.Commands.Structure
 {
-	public class CommandStructureBuilder<TData> : ICommandStructureBuilder<TData> 
+	public class CommandStructureBuilder<TData> : ICommandStructureBuilder<TData>
 		where TData : class, ICommandData, new()
 	{
-		private readonly List<IArgumentStructure> _arguments = new ();
-		public ICommandStructureBuilder<TData> WithArgument<TArgument>(Expression<Func<TData, TArgument>> expression, 
+		private readonly List<IArgumentStructure> _arguments = new();
+
+		public ICommandStructureBuilder<TData> WithArgument<TArgument>(Expression<Func<TData, TArgument>> expression,
 																	   Func<string, TArgument> converter)
 		{
 			try
@@ -23,8 +25,7 @@ namespace Botted.Core.Services.Commands.Structure
 				return this;
 			} catch (NullReferenceException _)
 			{
-				// TODO: Custom exception type here
-				throw new Exception("Only properties can be an argument", _);
+				throw new CommandStructureException("Only properties can be an argument", _);
 			}
 		}
 
