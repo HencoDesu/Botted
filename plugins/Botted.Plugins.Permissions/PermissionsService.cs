@@ -4,6 +4,7 @@ using System.Linq;
 using Botted.Core.Abstractions.Services.Events;
 using Botted.Core.Abstractions.Services.Users.Data;
 using Botted.Core.Abstractions.Services.Users.Events;
+using Botted.Plugins.Permissions.Exceptions;
 
 namespace Botted.Plugins.Permissions
 {
@@ -22,8 +23,7 @@ namespace Botted.Plugins.Permissions
 		{
 			if (_permissions.Any(p => p.Name == permissionName))
 			{
-				//TODO: Custom exception here
-				throw new Exception("Permission with the same name was already registered");
+				throw new PermissionException("Permission with the same name was already registered");
 			}
 
 			var permission = new Permission(permissionName);

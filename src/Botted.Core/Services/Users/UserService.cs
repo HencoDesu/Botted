@@ -6,6 +6,7 @@ using Botted.Core.Abstractions.Services.Events;
 using Botted.Core.Abstractions.Services.Users;
 using Botted.Core.Abstractions.Services.Users.Data;
 using Botted.Core.Abstractions.Services.Users.Events;
+using Botted.Core.Abstractions.Services.Users.Exceptions;
 
 namespace Botted.Core.Services.Users
 {
@@ -23,8 +24,7 @@ namespace Botted.Core.Services.Users
 		public BotUser GetUserById(ulong userId)
 		{
 			var user = _database.Users.SingleOrDefault(u => u.Id == userId);
-			//TODO: Custom exception here
-			return user ?? throw new Exception("User not found");
+			return user ?? throw new UserNotFoundException($"User with id {userId} not found");
 		}
 
 		public IReadOnlyCollection<BotUser> GetUsers()
@@ -35,7 +35,7 @@ namespace Botted.Core.Services.Users
 			var user = new BotUser();
 			_database.Users.Add(user);
 			configurator(user);
-			_eventService.Raise<UserRegistered, BotUser>(user);
+			_eventService.Rise<UserRegistered, BotUser>(user);
 			_database.SaveChanges();
 		}
 	}

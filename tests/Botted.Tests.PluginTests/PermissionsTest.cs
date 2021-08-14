@@ -6,6 +6,7 @@ using Botted.Core.Abstractions.Services.Users.Events;
 using Botted.Core.Services.Database;
 using Botted.Core.Services.Users;
 using Botted.Plugins.Permissions;
+using Botted.Plugins.Permissions.Exceptions;
 using Botted.Tests.TestEnvironment;
 using FakeItEasy;
 using NUnit.Framework;
@@ -25,7 +26,7 @@ namespace Botted.Tests.PluginTests
 			var permission2 = service.CreatePermission("test2");
 			Assert.AreEqual("test2", permission2.Name);
 
-			Assert.Throws<Exception>(() => service.CreatePermission("test1"));
+			Assert.Throws<PermissionException>(() => service.CreatePermission("test1"));
 		}
 		
 		[Test]
@@ -59,6 +60,15 @@ namespace Botted.Tests.PluginTests
 			userService.RegisterUser(_ => { });
 			user = eventService.GetLastData<UserRegistered, BotUser>();
 			Assert.True(user.HasPermission(permission1));
+			
+			var permission2 = service.CreatePermission("test2");
+			service.ConfigureInitialPermissions(p => p.RemovePermission(permission1)
+													  .AddPermission(permission2));
+			
+			userService.RegisterUser(_ => { });
+			user = eventService.GetLastData<UserRegistered, BotUser>();
+			Assert.False(user.HasPermission(permission1));
+			Assert.True(user.HasPermission(permission2));
 		}
 
 		[Test]
@@ -67,14 +77,14 @@ namespace Botted.Tests.PluginTests
 			var user = new BotUser();
 			var service = new PermissionsService(A.Fake<IEventService>());
 			var permission = service.CreatePermission("test");
-			
-			user.GrantPermission(permission);
+
+			Assert.DoesNotThrow(() => user.GrantPermission(permission));
 			Assert.True(user.HasPermission(permission));
-
-			user.TakePermission(permission);
+			Assert.Throws<PermissionAlreadyGrantedException>(() => user.GrantPermission(permission));
+			
+			Assert.DoesNotThrow(() => user.TakePermission(permission));
 			Assert.False(user.HasPermission(permission));
-
-			Assert.Throws<Exception>(() => user.TakePermission(permission));
+			Assert.Throws<NoSuchPermissionException>(() => user.TakePermission(permission));
 		}
 	}
 }

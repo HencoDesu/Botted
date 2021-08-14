@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Botted.Core.Abstractions;
+using Botted.Plugins.Permissions.Exceptions;
 
 namespace Botted.Plugins.Permissions
 {
@@ -12,8 +12,7 @@ namespace Botted.Plugins.Permissions
 		{
 			if (!_permissions.Add(permission) && !ignoreException)
 			{
-				//TODO: Custom exception here
-				throw new Exception($"Permission {permission} already added");
+				throw new PermissionException($"Permission {permission} already added");
 			}
 
 			return this;
@@ -23,8 +22,7 @@ namespace Botted.Plugins.Permissions
 		{
 			if (!_permissions.Remove(permission) && !ignoreException)
 			{
-				//TODO: Custom exception here
-				throw new Exception($"Permission {permission} wasn't added before");
+				throw new PermissionException($"Permission {permission} wasn't added before");
 			}
 
 			return this;

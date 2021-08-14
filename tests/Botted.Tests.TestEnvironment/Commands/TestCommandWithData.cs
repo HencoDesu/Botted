@@ -2,6 +2,7 @@
 using Botted.Core.Abstractions.Extensions;
 using Botted.Core.Abstractions.Services.Commands;
 using Botted.Core.Abstractions.Services.Commands.Structure;
+using NLog;
 
 namespace Botted.Tests.TestEnvironment.Commands
 {
@@ -16,7 +17,8 @@ namespace Botted.Tests.TestEnvironment.Commands
 		public TestCommandWithData()
 			: base("test",
 				   new CommandResultFactory(),
-				   new CommandStructureBuilderFactory<TestData>())
+				   new CommandStructureBuilderFactory<TestData>(), 
+				   LogManager.CreateNullLogger())
 		{ }
 
 		public bool Executed { get; private set; }

@@ -1,4 +1,5 @@
-﻿using Botted.Core.Abstractions.Services.Users.Data;
+﻿using System;
+using Botted.Core.Abstractions.Services.Users.Data;
 using Botted.Core.Services.Database;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,7 +9,7 @@ namespace Botted.Tests.TestEnvironment
 	{
 		public TestDatabase(params BotUser[] users)
 			: base(new DbContextOptionsBuilder<BotDatabase>()
-				   .UseInMemoryDatabase("BotDatabase")
+				   .UseInMemoryDatabase(Guid.NewGuid().ToString())
 				   .Options)
 		{
 			foreach (var user in users)
