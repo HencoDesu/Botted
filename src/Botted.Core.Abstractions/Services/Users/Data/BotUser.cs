@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Botted.Core.Abstractions.Data;
 
@@ -7,6 +8,15 @@ namespace Botted.Core.Abstractions.Services.Users.Data
 	public class BotUser : IHasAdditionalData
 	{
 		private readonly List<IAdditionalData> _additionalData = new ();
+
+		public BotUser() : this(0, string.Empty) {}
+		
+		public BotUser(ulong id, 
+					   string nickname)
+		{
+			Id = id;
+			Nickname = nickname;
+		}
 
 		public ulong Id { get; set; }
 		public string Nickname { get; set; }

@@ -1,12 +1,11 @@
-﻿using Botted.Core.Factories;
-using Botted.Core.Abstractions.Extensions;
+﻿using Botted.Core.Abstractions.Factories;
 using Botted.Core.Abstractions.Services.Commands;
 using Botted.Core.Abstractions.Services.Commands.Structure;
 using NLog;
 
 namespace Botted.Tests.TestEnvironment.Commands
 {
-	public class TestCommandWithData : Command<TestCommandWithData.TestData>
+	public class TestCommandWithData : CommandWithData<TestCommandWithData.TestData>
 	{
 		public class TestData : ICommandData
 		{
@@ -14,10 +13,12 @@ namespace Botted.Tests.TestEnvironment.Commands
 			public string StringData { get; set; }
 		}
 
-		public TestCommandWithData()
+		public TestCommandWithData(
+			ICommandResultFactory resultFactory,
+			ICommandStructureBuilderFactory structureBuilderFactory)
 			: base("test",
-				   new CommandResultFactory(),
-				   new CommandStructureBuilderFactory<TestData>(), 
+				   resultFactory,
+				   structureBuilderFactory, 
 				   LogManager.CreateNullLogger())
 		{ }
 

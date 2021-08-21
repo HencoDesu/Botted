@@ -4,15 +4,15 @@ using System.Reflection;
 using Autofac;
 using Botted.Core.Extensions;
 using Botted.Core.Abstractions.Bot;
+using Botted.Core.Abstractions.Extensions;
 using Botted.Core.Abstractions.Factories;
 using Botted.Core.Abstractions.Services;
 using Botted.Core.Abstractions.Services.Commands;
 using Botted.Core.Abstractions.Services.Database;
 using Botted.Core.Abstractions.Services.Events;
+using Botted.Core.Abstractions.Services.Parsing;
 using NLog;
-using Botted.Core.Services.Database;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration;
 
 namespace Botted.Core.Bot
@@ -45,25 +45,37 @@ namespace Botted.Core.Bot
 		public IBotBuilder RegisterEvents()
 		{
 			_logger.Info("Register events...");
-			return RegisterInheritedTypes(typeof(IEvent));
+			_builder.RegisterInheritedTypes(typeof(IEvent));
+			return this;
 		}
 
 		public IBotBuilder RegisterServices()
 		{
 			_logger.Info("Register services...");
-			return RegisterInheritedTypes(typeof(IService));
+			_builder.RegisterInheritedTypes(typeof(IService));
+			return this;
 		}
 
 		public IBotBuilder RegisterCommands()
 		{
 			_logger.Info("Register commands...");
-			return RegisterInheritedTypes(typeof(ICommand));
+			_builder.RegisterInheritedTypes(typeof(ICommand));
+			return this;
 		}
 
 		public IBotBuilder RegisterFactories()
 		{
 			_logger.Info("Register factories...");
-			return RegisterInheritedTypes(typeof(IFactory));
+			_builder.RegisterInheritedTypes(typeof(IFactory));
+			return this;
+		}
+
+		public IBotBuilder RegisterConverters()
+		{
+			_logger.Info("Register factories...");
+			_builder.RegisterInheritedTypes(typeof(IConverter<,>));
+			_builder.RegisterInheritedTypes(typeof(IEnumConverter<>));
+			return this;
 		}
 
 		public IBotBuilder ReadConfig()
@@ -71,22 +83,23 @@ namespace Botted.Core.Bot
 			var configuration = new ConfigurationBuilder().SetBasePath(Environment.CurrentDirectory)
 														  .AddJsonFile("botSettings.json")
 														  .Build();
-			
+
 			_builder.RegisterInstance(configuration)
 					.As<IConfigurationRoot>()
 					.SingleInstance();
 			return this;
 		}
-		
-		public IBotBuilder ConfigureDb<TDb>(Action<DbContextOptionsBuilder<TDb>> builder) 
+
+		public IBotBuilder ConfigureDb<TDb>(Action<DbContextOptionsBuilder<TDb>>? builder = null)
 			where TDb : DbContext, IBotDatabase
 		{
 			var contextBuilder = new DbContextOptionsBuilder<TDb>();
-			builder(contextBuilder);
-			
+			contextBuilder.Invoke(builder);
+
 			_builder.RegisterType<TDb>()
 					.WithParameter("options", contextBuilder.Options)
 					.AsSelf()
+					.AsImplementedInterfaces()
 					.SingleInstance();
 			return this;
 		}
@@ -96,17 +109,6 @@ namespace Botted.Core.Bot
 			_logger.Info("Bot intialization done!");
 			var bot = _builder.Build().Resolve<Bot>();
 			return bot;
-		}
-
-		private IBotBuilder RegisterInheritedTypes(Type type)
-		{
-			_builder.RegisterAssemblyTypes(AppDomain.CurrentDomain.GetAssemblies())
-					.PublicOnly()
-					.Where(t => t.InheritedFrom(type))
-					.AsImplementedInterfaces()
-					.AsSelf()
-					.SingleInstance();
-			return this;
 		}
 	}
 }

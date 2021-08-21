@@ -1,35 +1,34 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Botted.Core.Abstractions.Data;
+﻿using System;
+using System.Collections.Generic;
 using Botted.Core.Abstractions.Services.Commands;
 using Botted.Core.Abstractions.Services.Commands.Structure;
-using Pidgin;
 
 namespace Botted.Core.Services.Commands.Structure
 {
-	public class CommandStructure<TData> : ICommandStructure
-		where TData : class, ICommandData, new()
+	public class CommandStructure : ICommandStructure
 	{
-		private readonly IList<IArgumentStructure> _arguments;
+		/// <inheritdoc />
+		public IReadOnlyList<IArgumentStructure> Arguments 
+			=> throw new NotImplementedException();
 
-		public CommandStructure(IList<IArgumentStructure> arguments)
+		/// <inheritdoc />
+		public Func<ICommandData> DataFactory 
+			=> throw new NotImplementedException();
+	}
+	
+	public class CommandStructure<TData> : ICommandStructure
+		where TData : ICommandData, new()
+	{
+		private readonly List<IArgumentStructure> _arguments;
+
+		public CommandStructure(List<IArgumentStructure> arguments)
 		{
 			_arguments = arguments;
 		}
 
-		public ICommandData ParseData(BotMessage message)
-		{
-			var data = new TData();
-			var args = Parser.CommandName
-							 .IgnoreResult()
-							 .Then(Parser.Argument.Many())
-							 .ParseOrThrow(message.Text)
-							 .ToList();
-			for (var i = 0; i < args.Count; i++)
-			{
-				_arguments[i].PopulateValue(data, args[i]);
-			}
-			return data;
-		}
+		public IReadOnlyList<IArgumentStructure> Arguments => _arguments;
+
+		public Func<ICommandData> DataFactory { get; } 
+			= () => new TData();
 	}
 }

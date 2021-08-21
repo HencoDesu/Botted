@@ -9,4 +9,13 @@
       <ProjectReference Include="..\Botted.Core\Botted.Core.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="botSettings.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="bot.db">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>

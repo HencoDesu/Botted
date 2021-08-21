@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
 
 namespace Botted.Core.Extensions
 {
@@ -25,5 +26,11 @@ namespace Botted.Core.Extensions
 
 			return false;
 		}
+
+		public static object? Invoke(
+			this MethodInfo? method,
+			object instance,
+			params object[] arguments)
+			=> method.Invoke(instance, arguments);
 	}
 }

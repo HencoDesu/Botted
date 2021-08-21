@@ -1,13 +1,16 @@
-﻿using Botted.Core.Abstractions.Services.Commands.Events;
+﻿using Autofac;
+using Botted.Core.Abstractions.Services.Commands.Events;
 using Botted.Core.Abstractions.Services.Database;
 using Botted.Core.Abstractions.Services.Events;
 using Botted.Core.Abstractions.Services.Providers.Events;
+using Botted.Core.Abstractions.Services.Users;
 using Botted.Core.Abstractions.Services.Users.Data;
 using Botted.Core.Abstractions.Services.Users.Events;
 using Botted.Core.Factories;
 using Botted.Core.Services.Commands;
 using Botted.Core.Services.Users;
 using Botted.Plugins.Permissions;
+using Botted.Plugins.Permissions.Abstractions;
 using Botted.Plugins.Permissions.Data;
 using Botted.Plugins.Permissions.Exceptions;
 using Botted.Plugins.Permissions.Extensions;
@@ -18,12 +21,13 @@ using NUnit.Framework;
 
 namespace Botted.Tests.PluginTests
 {
-	public class PermissionsTest
+	public class PermissionsTest : BaseTest
 	{
 		[Test]
 		public void CreatingTest()
 		{
-			var service = new PermissionsService(A.Fake<IEventService>());
+			Container.BeginLifetimeScope();
+			var service = Container.Resolve<PermissionsService>();
 			
 			var permission1 = service.CreatePermission("test1");
 			Assert.AreEqual("test1", permission1.Name);
@@ -37,7 +41,8 @@ namespace Botted.Tests.PluginTests
 		[Test]
 		public void MatchingTest()
 		{
-			var service = new PermissionsService(A.Fake<IEventService>());
+			Container.BeginLifetimeScope();
+			var service = Container.Resolve<PermissionsService>();
 			var permission1 = service.CreatePermission("test1");
 			var permission2 = service.CreatePermission("test2");
 			
@@ -51,18 +56,18 @@ namespace Botted.Tests.PluginTests
 		[Test]
 		public void InitialTest()
 		{
-			var eventService = new TestEventService(new UserRegistered(), new CommandExecuting());
-			var userService = new UserService(A.Fake<IBotDatabase>(), eventService);
-			var service = new PermissionsService(eventService);
+			Container.BeginLifetimeScope();
+			var eventService = Container.Resolve<TestEventService>();
+			var service = Container.Resolve<PermissionsService>();
 			var permission1 = service.CreatePermission("test1");
 			
-			userService.RegisterUser(_ => { });
+			eventService.Rise<UserRegistered, BotUser>(new BotUser());
 			var user = eventService.GetLastData<UserRegistered, BotUser>();
 			Assert.False(user.HasPermission(permission1));
 			
 			service.ConfigureInitialPermissions(p => p.AddPermission(permission1));
 			
-			userService.RegisterUser(_ => { });
+			eventService.Rise<UserRegistered, BotUser>(new BotUser());
 			user = eventService.GetLastData<UserRegistered, BotUser>();
 			Assert.True(user.HasPermission(permission1));
 			
@@ -70,7 +75,7 @@ namespace Botted.Tests.PluginTests
 			service.ConfigureInitialPermissions(p => p.RemovePermission(permission1)
 													  .AddPermission(permission2));
 			
-			userService.RegisterUser(_ => { });
+			eventService.Rise<UserRegistered, BotUser>(new BotUser());
 			user = eventService.GetLastData<UserRegistered, BotUser>();
 			Assert.False(user.HasPermission(permission1));
 			Assert.True(user.HasPermission(permission2));
@@ -79,8 +84,9 @@ namespace Botted.Tests.PluginTests
 		[Test]
 		public void GrantAndTakeTest()
 		{
+			Container.BeginLifetimeScope();
 			var user = new BotUser();
-			var service = new PermissionsService(A.Fake<IEventService>());
+			var service = Container.Resolve<PermissionsService>();
 			var permission = service.CreatePermission("test");
 
 			Assert.DoesNotThrow(() => user.GrantPermission(permission));
@@ -95,13 +101,12 @@ namespace Botted.Tests.PluginTests
 		[Test]
 		public void ExecutePermissionsTest()
 		{
+			Container.BeginLifetimeScope();
 			var user = new BotUser();
-			var eventService = new TestEventService(new UserRegistered(), new CommandExecuting(), new MessageReceived(), new NeedSendMessage());
-			var service = new PermissionsService(eventService);
+			var provider = Container.Resolve<TestProvider>();
+			var service = Container.Resolve<PermissionsService>();
+			var command = Container.Resolve<SimpleTestCommand>();
 			var permission = service.CreatePermission("test");
-			var command = new SimpleTestCommand();
-			var commandsService = new CommandService(eventService, new [] {command}, new CommandResultFactory());
-			var provider = new TestProvider(eventService);
 
 			command.ConfigurePermissions(permission);
 			provider.ReceiveMessage("!test", user);

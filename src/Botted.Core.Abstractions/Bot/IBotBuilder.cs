@@ -13,8 +13,9 @@ namespace Botted.Core.Abstractions.Bot
 		IBotBuilder RegisterEvents();
 		IBotBuilder RegisterCommands();
 		IBotBuilder RegisterFactories();
+		IBotBuilder RegisterConverters();
 		IBotBuilder ReadConfig();
-		IBotBuilder ConfigureDb<TDb>(Action<DbContextOptionsBuilder<TDb>> builder)
+		IBotBuilder ConfigureDb<TDb>(Action<DbContextOptionsBuilder<TDb>>? builder = null)
 			where TDb : DbContext, IBotDatabase;
 	}
 }

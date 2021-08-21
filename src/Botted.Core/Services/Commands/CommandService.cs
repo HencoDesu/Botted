@@ -35,7 +35,7 @@ namespace Botted.Core.Services.Commands
 		{
 			try
 			{
-				var commandName = Parser.CommandName.ParseOrThrow(message.Text);
+				var commandName = Parser.ParseCommandName(message);
 				var command = _commands.FirstOrDefault(c => c.Name == commandName);
 				
 				if (command is null)
@@ -44,12 +44,12 @@ namespace Botted.Core.Services.Commands
 				}
 				
 				var canExecute = command.ProviderLimitation.IsMatching(message.Provider);
-				var context = new CommandExecuteContext(command, message.User, canExecute);
+				var data = Parser.ParseCommandData(message, command.Structure);
+				var context = new CommandExecuteContext(command, message.User, canExecute, data);
 				_eventService.Rise<CommandExecuting, CommandExecuteContext>(context);
 
 				if (context.CanExecute)
 				{
-					var data = command.Structure?.ParseData(message);
 					var result = command.Execute(data);
 					OnCommandExecuted(result, message);
 				}

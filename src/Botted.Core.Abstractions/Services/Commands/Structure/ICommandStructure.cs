@@ -1,9 +1,12 @@
-﻿using Botted.Core.Abstractions.Data;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Botted.Core.Abstractions.Services.Commands.Structure
 {
 	public interface ICommandStructure
 	{
-		ICommandData ParseData(BotMessage message);
+		IReadOnlyList<IArgumentStructure> Arguments { get; }
+		
+		Func<ICommandData> DataFactory { get; }
 	}
 }

@@ -1,12 +1,12 @@
-﻿using Botted.Core.Factories;
+﻿using Botted.Core.Abstractions.Factories;
 using Botted.Core.Abstractions.Services.Commands;
 
 namespace Botted.Tests.TestEnvironment.Commands
 {
 	public class SimpleTestCommand : Command
 	{
-		public SimpleTestCommand()
-			: base("test", new CommandResultFactory())
+		public SimpleTestCommand(ICommandResultFactory resultFactory)
+			: base("test", resultFactory)
 		{ }
 
 		

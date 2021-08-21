@@ -1,5 +1,6 @@
 ﻿using System;
 using Botted.Core.Bot;
+using Botted.Core.Services.Database;
 
 namespace Botted.Executable.Console
 {
@@ -12,6 +13,10 @@ namespace Botted.Executable.Console
 									  .RegisterEvents()
 									  .RegisterCommands()
 									  .RegisterFactories()
+									  .RegisterFactories()
+									  .RegisterConverters()
+									  .ReadConfig()
+									  .ConfigureDb<BotDatabase>()
 									  .Build();
 			System.Console.WriteLine("Нажмите Пробел для закрытия бота");
 			while (System.Console.ReadKey().Key != ConsoleKey.Spacebar) { }

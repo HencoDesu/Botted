@@ -7,9 +7,6 @@ namespace Botted.Core.Factories
 {
 	public class CommandResultFactory : ICommandResultFactory
 	{
-		object IFactory.Create()
-			=> Create();
-
 		public ICommandResult Create()
 			=> new NoneCommandResult();
 

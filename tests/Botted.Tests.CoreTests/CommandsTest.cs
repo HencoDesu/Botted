@@ -1,5 +1,5 @@
+using Autofac;
 using Botted.Core.Abstractions.Services.Commands.Events;
-using Botted.Core.Factories;
 using Botted.Core.Services.Commands;
 using Botted.Core.Abstractions.Services.Providers.Events;
 using Botted.Tests.TestEnvironment;
@@ -8,19 +8,20 @@ using NUnit.Framework;
 
 namespace Botted.Tests.CoreTests
 {
-	public class CommandsTest
+	public class CommandsTest : BaseTest
 	{
 		[Test]
 		public void SimpleCommandTest()
 		{
 			var command = "!test";
 			var commandResult = "Success!";
-			var sendEvent = new NeedSendMessage();
-			var executingEvent = new CommandExecuting();
-			var eventService = new TestEventService(new MessageReceived(), sendEvent, executingEvent);
-			var testCommand = new SimpleTestCommand();
-			var commandsService = new CommandService(eventService, new [] {testCommand}, new CommandResultFactory());
-			var provider = new TestProvider(eventService);
+			Container.BeginLifetimeScope();
+			var sendEvent = Container.Resolve<NeedSendMessage>();
+			var executingEvent = Container.Resolve<CommandExecuting>();
+			var eventService = Container.Resolve<TestEventService>();
+			var testCommand = Container.Resolve<SimpleTestCommand>();
+			var commandsService = Container.Resolve<CommandService>();
+			var provider = Container.Resolve<TestProvider>();
 			
 			provider.ReceiveMessage("!test");
 			
@@ -38,11 +39,12 @@ namespace Botted.Tests.CoreTests
 			const string stringData = "items";
 			var command = $"!test {intData} {stringData}";
 			var commandResult = $"{intData} {stringData}";
-			var sendEvent = new NeedSendMessage();
-			var eventService = new TestEventService(new MessageReceived(), sendEvent, new CommandExecuting());
-			var testCommand = new TestCommandWithData();
-			var commandsService = new CommandService(eventService, new [] {testCommand}, new CommandResultFactory());
-			var provider = new TestProvider(eventService);
+			Container.BeginLifetimeScope();
+			var sendEvent = Container.Resolve<NeedSendMessage>();
+			var eventService = Container.Resolve<TestEventService>();
+			var testCommand = Container.Resolve<TestCommandWithData>();
+			var commandsService = Container.Resolve<CommandService>();
+			var provider = Container.Resolve<TestProvider>();
 			
 			provider.ReceiveMessage(command);
 			

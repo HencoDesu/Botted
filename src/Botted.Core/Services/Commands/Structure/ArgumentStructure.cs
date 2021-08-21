@@ -1,24 +1,24 @@
 ﻿using System;
 using System.Reflection;
-using Botted.Core.Abstractions.Services.Commands;
 using Botted.Core.Abstractions.Services.Commands.Structure;
 
 namespace Botted.Core.Services.Commands.Structure
 {
-	public class ArgumentStructure<TValue> : IArgumentStructure
+	public class ArgumentStructure : IArgumentStructure
 	{
-		private readonly PropertyInfo _property;
-		private readonly Func<string, TValue> _converter;
-
-		public ArgumentStructure(PropertyInfo property, Func<string, TValue> converter)
+		public ArgumentStructure(MethodInfo? target, 
+								 MethodInfo? source, 
+								 Func<object, object> converter)
 		{
-			_property = property;
-			_converter = converter;
+			Target = target;
+			Source = source;
+			Converter = converter;
 		}
 
-		public void PopulateValue(ICommandData data, string value)
-		{
-			_property.SetMethod!.Invoke(data, new object[] { _converter(value)! });
-		}
+		public MethodInfo Target { get; }
+
+		public MethodInfo Source { get; }
+
+		public Func<object, object>? Converter { get; }
 	}
 }

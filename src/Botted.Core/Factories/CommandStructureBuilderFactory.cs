@@ -1,16 +1,25 @@
-﻿using Botted.Core.Abstractions.Factories;
-using Botted.Core.Abstractions.Services.Commands;
+﻿using Autofac;
+using Botted.Core.Abstractions.Factories;
+using Botted.Core.Abstractions.Services.Commands.Structure;
 using Botted.Core.Services.Commands.Structure;
 
 namespace Botted.Core.Factories
 {
-	public class CommandStructureBuilderFactory<TData> : IFactory<CommandStructureBuilder<TData>> 
-		where TData : class, ICommandData, new()
+	public class CommandStructureBuilderFactory : ICommandStructureBuilderFactory
 	{
-		public CommandStructureBuilder<TData> Create()
-			=> new ();
+		private readonly ILifetimeScope _lifetimeScope;
 
-		object IFactory.Create() 
-			=> Create();
+		public CommandStructureBuilderFactory(ILifetimeScope lifetimeScope)
+		{
+			_lifetimeScope = lifetimeScope;
+		}
+
+		/// <inheritdoc />
+		public ICommandStructureBuilder Create()
+			=> new CommandStructureBuilder();
+
+		/// <inheritdoc />
+		ICommandStructureBuilder<TData> ICommandStructureBuilderFactory.Create<TData>() 
+			=> new CommandStructureBuilder<TData>(_lifetimeScope);
 	}
 }
