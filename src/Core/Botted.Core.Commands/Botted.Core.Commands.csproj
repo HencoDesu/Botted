@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <LangVersion>preview</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Botted.Core.Abstractions\Botted.Core.Abstractions.csproj" />
+      <ProjectReference Include="..\Botted.Core.Commands.Abstractions\Botted.Core.Commands.Abstractions.csproj" />
+      <ProjectReference Include="..\Botted.Core.Events.Abstractions\Botted.Core.Events.Abstractions.csproj" />
+      <ProjectReference Include="..\Botted.Core.Providers.Data\Botted.Core.Providers.Data.csproj" />
+      <ProjectReference Include="..\Botted.Core.Parsing.Converters\Botted.Core.Parsing.Converters.csproj" />
+      <ProjectReference Include="..\Botted.Core.Users.Abstractions\Botted.Core.Users.Abstractions.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Pidgin" Version="2.5.0" />
+    </ItemGroup>
+
+</Project>
