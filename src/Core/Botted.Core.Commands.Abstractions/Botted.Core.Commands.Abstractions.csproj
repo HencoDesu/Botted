@@ -10,9 +10,8 @@
     <ItemGroup>
         <PackageReference Include="System.Runtime.Experimental" Version="6.0.0-preview.7.21377.19" />
         <ProjectReference Include="..\..\Botted.Core.Abstractions\Botted.Core.Abstractions.csproj" />
-        <ProjectReference Include="..\Botted.Core.Providers.Data\Botted.Core.Providers.Data.csproj" />
+        <ProjectReference Include="..\Botted.Core.Providers.Abstractions\Botted.Core.Providers.Abstractions.csproj" />
         <ProjectReference Include="..\Botted.Core.Users.Abstractions\Botted.Core.Users.Abstractions.csproj" />
-        <ProjectReference Include="..\Botted.Core.Users.Data\Botted.Core.Users.Data.csproj" />
     </ItemGroup>
 
 </Project>

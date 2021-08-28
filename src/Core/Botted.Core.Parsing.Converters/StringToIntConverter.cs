@@ -1,6 +1,6 @@
-﻿using Botted.Parsing.Converters.Abstractions.Abstractions;
+﻿using Botted.Parsing.Converters.Abstractions;
 
-namespace Botted.Parsing.Converters.Abstractions
+namespace Botted.Parsing.Converters
 {
 	/// <inheritdoc />
 	public class StringToIntConverter : IConverter<string, int>

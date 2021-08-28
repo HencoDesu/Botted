@@ -10,7 +10,7 @@
       <ProjectReference Include="..\..\Botted.Core.Abstractions\Botted.Core.Abstractions.csproj" />
       <ProjectReference Include="..\Botted.Core.Commands.Abstractions\Botted.Core.Commands.Abstractions.csproj" />
       <ProjectReference Include="..\Botted.Core.Events.Abstractions\Botted.Core.Events.Abstractions.csproj" />
-      <ProjectReference Include="..\Botted.Core.Providers.Data\Botted.Core.Providers.Data.csproj" />
+      <ProjectReference Include="..\Botted.Core.Providers.Abstractions\Botted.Core.Providers.Abstractions.csproj" />
       <ProjectReference Include="..\Botted.Core.Parsing.Converters\Botted.Core.Parsing.Converters.csproj" />
       <ProjectReference Include="..\Botted.Core.Users.Abstractions\Botted.Core.Users.Abstractions.csproj" />
     </ItemGroup>

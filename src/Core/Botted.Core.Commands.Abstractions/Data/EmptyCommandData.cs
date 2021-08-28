@@ -1,7 +1,6 @@
-﻿using Botted.Core.Commands.Abstractions.Data;
-using Botted.Core.Commands.Abstractions.Data.Structure;
+﻿using Botted.Core.Commands.Abstractions.Data.Structure;
 
-namespace Botted.Core.Commands.Data
+namespace Botted.Core.Commands.Abstractions.Data
 {
 	public class EmptyCommandData : ICommandData
 	{

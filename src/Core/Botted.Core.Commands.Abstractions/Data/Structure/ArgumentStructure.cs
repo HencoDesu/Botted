@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 
 namespace Botted.Core.Commands.Abstractions.Data.Structure
 {
@@ -6,7 +7,7 @@ namespace Botted.Core.Commands.Abstractions.Data.Structure
 	public class ArgumentStructure : IArgumentStructure
 	{
 		public ArgumentStructure(MethodInfo targetProperty, 
-								 MethodInfo dataSource,
+								 Func<ICommandParsingContext, object?> dataSource,
 								 bool optional)
 		{
 			TargetProperty = targetProperty;
@@ -16,7 +17,7 @@ namespace Botted.Core.Commands.Abstractions.Data.Structure
 
 		public MethodInfo TargetProperty { get; }
 
-		public MethodInfo DataSource { get; }
+		public Func<ICommandParsingContext, object?> DataSource { get; }
 
 		public bool Optional { get; }
 	}

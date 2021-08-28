@@ -1,6 +1,6 @@
 ﻿using Botted.Core.Commands.Abstractions.Data;
 using Botted.Core.Commands.Abstractions.Data.Structure;
-using Botted.Core.Providers.Abstractions;
+using Botted.Core.Providers.Abstractions.Data;
 
 namespace Botted.Core.Commands.Abstractions
 {

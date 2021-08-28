@@ -5,7 +5,7 @@ using Botted.Core.Commands.Abstractions.Data;
 using Botted.Core.Commands.Abstractions.Data.Structure;
 using Botted.Core.Commands.Abstractions.Result;
 using Botted.Core.Events.Abstractions;
-using Botted.Core.Providers.Abstractions;
+using Botted.Core.Providers.Abstractions.Data;
 using Botted.Core.Providers.Abstractions.Events;
 
 namespace Botted.Core.Commands

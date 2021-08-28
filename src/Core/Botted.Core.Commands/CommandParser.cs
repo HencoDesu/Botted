@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Botted.Core.Commands.Abstractions;
 using Botted.Core.Commands.Abstractions.Data;
 using Botted.Core.Commands.Abstractions.Data.Structure;
-using Botted.Core.Providers.Abstractions;
-using Botted.Parsing.Converters.Abstractions.Abstractions;
+using Botted.Core.Commands.Extensions;
+using Botted.Core.Providers.Abstractions.Data;
+using Botted.Parsing.Converters.Abstractions;
 using Pidgin;
 using static Pidgin.Parser;
 
@@ -51,16 +53,20 @@ namespace Botted.Core.Commands
 
 		public CommandParser()
 		{
+			var converterInterface = typeof(IConverter<,>);
 			foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
 			{
-				var converters = assembly.GetTypes().Where(t => t.IsAssignableTo(typeof(IConverter<,>)));
+				var converters = assembly.GetTypes()
+										 .Where(t => !t.IsInterface)
+										 .Where(t => t.GetInterface(converterInterface.Name) is not null);
 				foreach (var converter in converters)
 				{
-					var sourceType = converter.GenericTypeArguments[0];
-					var targetType = converter.GenericTypeArguments[1];
-					var convert = converter.GetMethod("Convert");
+					var interfaces = converter.GetInterface(converterInterface.Name)!;
+					var sourceType = interfaces.GenericTypeArguments[0];
+					var targetType = interfaces.GenericTypeArguments[1];
+					var convert = converter.GetMethod("Convert")!;
 					var instance = Activator.CreateInstance(converter);
-					_converters.Add((sourceType, targetType), d => convert.Invoke(instance, new [] { d }));
+					_converters.Add((sourceType, targetType), d => convert.Invoke(instance, new [] { d })!);
 				}
 			}
 		}
@@ -76,11 +82,22 @@ namespace Botted.Core.Commands
 		{
 			var data = structure.Empty;
 			var textArgs = Arguments.ParseOrThrow(message.Text);
-			var context = new CommandParsingContext(textArgs, null);
+			var context = new CommandParsingContext(textArgs, message.User);
 
 			foreach (var argumentStructure in structure.Arguments)
 			{
-				var source = argumentStructure.DataSource.Invoke(context, Array.Empty<object>());
+				var source = argumentStructure.DataSource.Invoke(context);
+				if (source is null)
+				{
+					if (!argumentStructure.Optional)
+					{
+						//TODO: Custom exception here
+						throw new Exception("Error while parsing argument");
+					}
+					
+					continue;
+				}
+				
 				var sourceType = source.GetType();
 				var targetType = argumentStructure.TargetProperty.GetParameters().First().ParameterType;
 				if (sourceType != targetType)

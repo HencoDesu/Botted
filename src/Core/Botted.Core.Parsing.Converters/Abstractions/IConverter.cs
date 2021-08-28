@@ -1,4 +1,4 @@
-﻿namespace Botted.Parsing.Converters.Abstractions.Abstractions
+﻿namespace Botted.Parsing.Converters.Abstractions
 {
 	public interface IConverter<in TSource, out TTarget>
 	{

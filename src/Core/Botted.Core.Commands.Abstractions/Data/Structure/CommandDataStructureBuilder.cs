@@ -27,15 +27,10 @@ namespace Botted.Core.Commands.Abstractions.Data.Structure
 				MemberExpression { Member: PropertyInfo { SetMethod: { } } property } => property.SetMethod,
 				_ => throw new Exception() // TODO: Custom exception here
 			};
+
+			var sourceMethod = source.Compile();
 			
-			var sourceMethod = source.Body switch
-			{
-				MemberExpression { Member: PropertyInfo { GetMethod: { } } property } => property.GetMethod,
-				MethodCallExpression method => method.Method,
-				_ => throw new Exception() // TODO: Custom exception here
-			};
-			
-			var argumentStructure = new ArgumentStructure(targetMethod, sourceMethod, optional);
+			var argumentStructure = new ArgumentStructure(targetMethod, c => sourceMethod(c), optional);
 			_arguments.Add(argumentStructure);
 			return this;
 		}

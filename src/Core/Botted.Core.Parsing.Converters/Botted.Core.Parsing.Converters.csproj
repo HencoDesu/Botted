@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
         <Nullable>enable</Nullable>
-        <RootNamespace>Botted.Parsing.Converters.Abstractions</RootNamespace>
+        <RootNamespace>Botted.Parsing.Converters</RootNamespace>
     </PropertyGroup>
 
 </Project>

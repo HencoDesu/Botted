@@ -9,6 +9,7 @@
     <ItemGroup>
       <ProjectReference Include="..\..\Botted.Core.Abstractions\Botted.Core.Abstractions.csproj" />
       <ProjectReference Include="..\Botted.Core.Providers.Data\Botted.Core.Providers.Data.csproj" />
+      <ProjectReference Include="..\Botted.Core.Users.Abstractions\Botted.Core.Users.Abstractions.csproj" />
     </ItemGroup>
 
 </Project>
