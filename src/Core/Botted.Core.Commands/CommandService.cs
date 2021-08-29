@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using Botted.Core.Commands.Abstractions;
+using Botted.Core.Commands.Abstractions.Context;
 using Botted.Core.Commands.Abstractions.Data;
 using Botted.Core.Commands.Abstractions.Data.Structure;
+using Botted.Core.Commands.Abstractions.Events;
 using Botted.Core.Commands.Abstractions.Result;
+using Botted.Core.Commands.Context;
 using Botted.Core.Events.Abstractions;
 using Botted.Core.Providers.Abstractions.Data;
 using Botted.Core.Providers.Abstractions.Events;
@@ -53,8 +56,13 @@ namespace Botted.Core.Commands
 			}
 
 			var data = _parser.ParseCommandData(message, dataStructure);
-			var result = handler(data);
-			_eventService.Raise<MessageHandled, Message>(message with { Text = result.ToString() });
+			var executingContext = new CommandExecutingContext(commandName, data, true);
+			_eventService.Raise<CommandExecuting, ICommandExecutingContext>(executingContext);
+			if (executingContext.CanExecute)
+			{
+				var result = handler(data);
+				_eventService.Raise<MessageHandled, Message>(message with { Text = result.Text });
+			}
 		}
 	}
 }

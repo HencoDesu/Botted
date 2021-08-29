@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq.Expressions;
+using Botted.Core.Commands.Abstractions.Context;
 
 namespace Botted.Core.Commands.Abstractions.Data.Structure
 {

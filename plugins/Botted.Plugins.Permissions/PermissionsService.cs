@@ -6,6 +6,11 @@ using Botted.Core.Abstractions.Services.Commands.Events;
 using Botted.Core.Abstractions.Services.Events;
 using Botted.Core.Abstractions.Services.Users.Data;
 using Botted.Core.Abstractions.Services.Users.Events;
+using Botted.Core.Commands.Abstractions.Context;
+using Botted.Core.Commands.Abstractions.Events;
+using Botted.Core.Events.Abstractions;
+using Botted.Core.Users.Abstractions.Data;
+using Botted.Core.Users.Abstractions.Events;
 using Botted.Plugins.Permissions.Abstractions;
 using Botted.Plugins.Permissions.Data;
 using Botted.Plugins.Permissions.Exceptions;
@@ -20,8 +25,8 @@ namespace Botted.Plugins.Permissions
 
 		public PermissionsService(IEventService eventService)
 		{
-			eventService.Subscribe<UserRegistered, BotUser>(OnUserRegistered);
-			eventService.Subscribe<CommandExecuting, CommandExecuteContext>(OnCommandExecuting);
+			eventService.Subscribe<UserRegistered, User>(OnUserRegistered);
+			eventService.Subscribe<CommandExecuting, ICommandExecutingContext>(OnCommandExecuting);
 		}
 
 		public Permission CreatePermission(string permissionName)
@@ -39,13 +44,31 @@ namespace Botted.Plugins.Permissions
 		public void ConfigureInitialPermissions(Action<PermissionsBuilder> configurator)
 			=> configurator(InitialPermissionsBuilder);
 
-		private void OnUserRegistered(BotUser user)
+		/// <inheritdoc />
+		public bool HasPermission(User user, Permission permission)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <inheritdoc />
+		public bool GrantPermission(User user, Permission permission)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <inheritdoc />
+		public bool TakePermission(User user, Permission permission)
+		{
+			throw new NotImplementedException();
+		}
+
+		private void OnUserRegistered(User user)
 		{
 			var permissions = InitialPermissionsBuilder.Build();
 			user.SaveAdditionalData(permissions);
 		}
 
-		private void OnCommandExecuting(CommandExecuteContext context)
+		private void OnCommandExecuting(ICommandExecutingContext context)
 		{
 			if (context.CanExecute == false) return;
 			

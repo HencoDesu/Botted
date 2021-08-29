@@ -23,5 +23,7 @@
 			|| permission.Name == Name;
 
 		public override string ToString() => Name;
+
+		public override int GetHashCode() => Name.GetHashCode();
 	}
 }

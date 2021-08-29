@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Botted.Core.Users.Abstractions.Data;
 
-namespace Botted.Core.Commands.Abstractions
+namespace Botted.Core.Commands.Abstractions.Context
 {
 	/// <summary>
 	/// Context of executed command

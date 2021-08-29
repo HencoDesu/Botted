@@ -1,12 +1,12 @@
-﻿using Botted.Core.Abstractions.Factories;
-using Botted.Core.Abstractions.Services.Commands;
-using Botted.Core.Abstractions.Services.Commands.Structure;
-using Botted.Core.Abstractions.Services.Users.Data;
-using NLog;
+﻿using Botted.Core.Commands.Abstractions;
+using Botted.Core.Commands.Abstractions.Data;
+using Botted.Core.Commands.Abstractions.Data.Structure;
+using Botted.Core.Commands.Abstractions.Result;
+using Botted.Core.Users.Abstractions.Data;
 
 namespace Botted.Plugins.Permissions.Commands
 {
-	public class PermissionsCommand : CommandWithData<PermissionsCommand.PermissionsCommandData>
+	public class PermissionsCommand : AbstractCommand<PermissionsCommand.PermissionsCommandData>
 	{
 		public enum CommandMode
 		{
@@ -18,19 +18,22 @@ namespace Botted.Plugins.Permissions.Commands
 
 		public class PermissionsCommandData : ICommandData
 		{
+			public static ICommandDataStructure Structure { get; }
+				= ICommandData.GetBuilder(() => new PermissionsCommandData())
+							  .WithArgument(d => d.Mode, c => c.TextArgs[0])
+							  .WithArgument(d => d.Permission, c => c.TextArgs[1])
+							  .WithArgument(d => d.User, c => c.User)
+							  .Build();
+			
 			public CommandMode Mode { get; set; }
 
 			public string Permission { get; set; }
 
-			public BotUser User { get; set; }
+			public User User { get; set; }
 		}
-
-		public PermissionsCommand(ICommandResultFactory commandResultFactory,
-								  ICommandStructureBuilderFactory structureBuilderFactory)
-			: base("permissions",
-				   commandResultFactory,
-				   structureBuilderFactory,
-				   LogManager.GetCurrentClassLogger())
+		
+		/// <inheritdoc />
+		public PermissionsCommand() : base("permissions")
 		{ }
 
 		public override ICommandResult Execute(PermissionsCommandData data)
@@ -42,13 +45,6 @@ namespace Botted.Plugins.Permissions.Commands
 				CommandMode.All => OnAllMode(data),
 				_ => Error("Unknown mode")
 			};
-
-		protected override void ConfigureStructure(ICommandStructureBuilder<PermissionsCommandData> builder)
-		{
-			builder.WithEnumArgument(d => d.Mode, c => c.TextArgs[0])
-				   .WithArgument(d => d.Permission, c => c.TextArgs[1])
-				   .WithArgument(d => d.User, c => c.User);
-		}
 
 		private ICommandResult OnGrantMode(PermissionsCommandData data)
 		{

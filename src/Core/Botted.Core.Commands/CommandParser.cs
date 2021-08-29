@@ -5,6 +5,7 @@ using System.Reflection;
 using Botted.Core.Commands.Abstractions;
 using Botted.Core.Commands.Abstractions.Data;
 using Botted.Core.Commands.Abstractions.Data.Structure;
+using Botted.Core.Commands.Context;
 using Botted.Core.Commands.Extensions;
 using Botted.Core.Providers.Abstractions.Data;
 using Botted.Parsing.Converters.Abstractions;
@@ -49,7 +50,7 @@ namespace Botted.Core.Commands
 						 .Then(Argument.Many())
 						 .Map(args => args.ToList());
 
-		private readonly Dictionary<(Type, Type), Func<object, object>> _converters = new ();
+		private readonly Dictionary<(Type, Type), Func<object, object?, object>> _converters = new ();
 
 		public CommandParser()
 		{
@@ -66,7 +67,7 @@ namespace Botted.Core.Commands
 					var targetType = interfaces.GenericTypeArguments[1];
 					var convert = converter.GetMethod("Convert")!;
 					var instance = Activator.CreateInstance(converter);
-					_converters.Add((sourceType, targetType), d => convert.Invoke(instance, new [] { d })!);
+					_converters.Add((sourceType, targetType), (d, a) => convert.Invoke(instance, new [] { d, a })!);
 				}
 			}
 		}
@@ -102,8 +103,10 @@ namespace Botted.Core.Commands
 				var targetType = argumentStructure.TargetProperty.GetParameters().First().ParameterType;
 				if (sourceType != targetType)
 				{
-					var converter = _converters[(sourceType, targetType)];
-					source = converter(source);
+					var converter = targetType.IsEnum 
+						? _converters[(sourceType, typeof(Enum))] 
+						: _converters[(sourceType, targetType)];
+					source = converter(source, targetType);
 				}
 				
 				argumentStructure.TargetProperty.Invoke(data, new[] { source });

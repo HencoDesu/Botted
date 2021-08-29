@@ -1,11 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\..\src\Botted.Core.Abstractions\Botted.Core.Abstractions.csproj" />
+      <ProjectReference Include="..\..\src\Core\Botted.Core.Commands.Abstractions\Botted.Core.Commands.Abstractions.csproj" />
+      <ProjectReference Include="..\..\src\Core\Botted.Core.Events.Abstractions\Botted.Core.Events.Abstractions.csproj" />
+      <ProjectReference Include="..\..\src\Core\Botted.Core.Users.Abstractions\Botted.Core.Users.Abstractions.csproj" />
     </ItemGroup>
 
 </Project>

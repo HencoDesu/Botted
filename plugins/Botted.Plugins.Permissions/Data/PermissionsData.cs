@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Botted.Core.Abstractions.Data;
 
 namespace Botted.Plugins.Permissions.Data
 {
-	public class PermissionsData : IAdditionalData
+	public class PermissionsData
 	{
 		private readonly HashSet<Permission> _permissions;
 

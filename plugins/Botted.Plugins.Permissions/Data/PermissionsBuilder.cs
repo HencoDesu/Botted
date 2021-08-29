@@ -4,7 +4,7 @@ using Botted.Plugins.Permissions.Exceptions;
 
 namespace Botted.Plugins.Permissions.Data
 {
-	public class PermissionsBuilder : IBuilder<PermissionsData>
+	public class PermissionsBuilder
 	{
 		private readonly HashSet<Permission> _permissions = new();
 

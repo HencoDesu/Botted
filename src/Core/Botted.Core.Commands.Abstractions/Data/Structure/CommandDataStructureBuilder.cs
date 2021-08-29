@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
+using Botted.Core.Commands.Abstractions.Context;
 
 namespace Botted.Core.Commands.Abstractions.Data.Structure
 {
