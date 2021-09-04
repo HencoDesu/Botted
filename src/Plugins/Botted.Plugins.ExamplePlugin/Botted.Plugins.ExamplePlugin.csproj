@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <OutputPath>..\..\..\bin\Plugins\ExamplePlugin\Debug\</OutputPath>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <OutputPath>..\..\..\bin\Plugins\ExamplePlugin\Release\</OutputPath>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Core\Botted.Core.Commands.Abstractions\Botted.Core.Commands.Abstractions.csproj" />
+      <ProjectReference Include="..\..\Core\Botted.Core.Plugins.Abstractions\Botted.Core.Plugins.Abstractions.csproj" />
+    </ItemGroup>
+
+</Project>

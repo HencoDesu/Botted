@@ -20,7 +20,12 @@
       <ProjectReference Include="..\Botted.Core.Abstractions\Botted.Core.Abstractions.csproj" />
       <ProjectReference Include="..\Botted.Core.Commands.Abstractions\Botted.Core.Commands.Abstractions.csproj" />
       <ProjectReference Include="..\Botted.Core.Events.Abstractions\Botted.Core.Events.Abstractions.csproj" />
+      <ProjectReference Include="..\Botted.Core.Plugins.Abstractions\Botted.Core.Plugins.Abstractions.csproj" />
       <ProjectReference Include="..\Botted.Core.Providers.Abstractions\Botted.Core.Providers.Abstractions.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Serilog" Version="2.11.0-dev-01367" />
     </ItemGroup>
 
 </Project>

@@ -36,6 +36,18 @@ namespace Botted.Core.Commands.Abstractions.Extensions
 		/// </summary>
 		/// <param name="builder">Current bot builder</param>
 		/// <typeparam name="TCommand">Command to register</typeparam>
+		/// <returns>Current <see cref="IBotBuilder"/></returns>
+		public static IBotBuilder RegisterCommand<TCommand>(this IBotBuilder builder)
+			where TCommand : ICommand<EmptyCommandData>
+		{
+			return builder.RegisterCommand<TCommand, EmptyCommandData>();
+		}
+		
+		/// <summary>
+		/// Register command to bot
+		/// </summary>
+		/// <param name="builder">Current bot builder</param>
+		/// <typeparam name="TCommand">Command to register</typeparam>
 		/// <typeparam name="TData">Command data type</typeparam>
 		/// <returns>Current <see cref="IBotBuilder"/></returns>
 		public static IBotBuilder RegisterCommand<TCommand, TData>(this IBotBuilder builder)

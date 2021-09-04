@@ -1,9 +1,4 @@
-﻿using System.Threading.Tasks;
-using Botted.Core;
-using Botted.Core.Commands.Abstractions;
-using Botted.Core.Commands.Abstractions.Data;
-using Botted.Core.Commands.Abstractions.Extensions;
-using Botted.Core.Commands.Abstractions.Result;
+﻿using Botted.Core;
 using Botted.Core.Commands.Extensions;
 using Botted.Core.Events.Extensions;
 using Botted.Core.Providers.Abstractions.Extensions;
@@ -11,12 +6,12 @@ using Botted.Plugins.Providers.Console;
 using Microsoft.Extensions.Logging;
 using Serilog;
 
-var bot = new BotBuilder().UseProvider<ConsoleProvider>()
+var bot = new BotBuilder().ConfigureLogger(ConfigureLogger)
 						  .UseDefaultEventService()
 						  .UseDefaultCommandService()
 						  .UseDefaultCommandParser()
-						  .RegisterCommand<PingCommand, EmptyCommandData>()
-						  .ConfigureLogger(ConfigureLogger)
+						  .UseProvider<ConsoleProvider>()
+						  .LoadPlugins("Plugins")
 						  .Build();
 bot.Start();
 
@@ -26,15 +21,4 @@ void ConfigureLogger(ILoggerFactory loggerFactory)
 										  .CreateLogger();
 	loggerFactory.AddSerilog();
 	Log.Information("Logger configured");
-}
-
-class PingCommand : AbstractCommand
-{
-	public PingCommand() : base("ping")
-	{ }
-	
-	public override Task<ICommandResult> Execute()
-	{
-		return Ok("pong");
-	}
 }
