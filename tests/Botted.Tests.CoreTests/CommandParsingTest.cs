@@ -21,10 +21,20 @@ namespace Botted.Tests.CoreTests
 			IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 		}
 
+		private readonly CommandsConfiguration _configuration;
+
+		public CommandParsingTest()
+		{
+			_configuration = new CommandsConfiguration()
+			{
+				CommandPrefix = '!'
+			};
+		}
+
 		[Fact]
 		public void ParseCommandName()
 		{
-			var parser = new CommandParser();
+			var parser = new CommandParser(_configuration);
 			var message = TestMessageGenerator.GenerateMessage("!test");
 
 			parser.TryParseCommandName(message, out var commandName);
@@ -35,7 +45,7 @@ namespace Botted.Tests.CoreTests
 		[ClassData(typeof(TestData))]
 		public void ParseCommandData(Message testMessage, TestCommandData expectedData)
 		{
-			var parser = new CommandParser();
+			var parser = new CommandParser(_configuration);
 			var structure = TestCommandData.Structure;
 
 			var data = parser.ParseCommandData(testMessage, structure);

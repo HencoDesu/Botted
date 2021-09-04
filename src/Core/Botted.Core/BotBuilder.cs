@@ -7,6 +7,7 @@ using Botted.Core.Abstractions;
 using Botted.Core.Abstractions.Builders;
 using Botted.Core.Abstractions.Extensions;
 using Botted.Core.Plugins.Abstractions;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Serilog;
 
@@ -33,7 +34,6 @@ namespace Botted.Core
 		public IBotBuilder LoadPlugins(string pluginsDirectory)
 		{
 			var path = Path.Combine(_botPath, pluginsDirectory);
-
 			var assemblies = Directory.GetFiles(path, "*.dll")
 									  .Select(Assembly.LoadFile);
 			var pluginTypes = assemblies.SelectMany(a => a.GetTypes())
@@ -45,10 +45,23 @@ namespace Botted.Core
 			return this;
 		}
 
-		public IBotBuilder LoadConfig(string configFileName)
+		public IBotBuilder LoadConfigs(string configDirectory)
 		{
+			var path = Path.Combine(_botPath, configDirectory);
+			var configurationBuilder = new ConfigurationBuilder();
+			
+			configurationBuilder.SetBasePath(path);
+			var files = Directory.GetFiles(path, "*.json")
+								 .Apply(f => configurationBuilder.AddJsonFile(f))
+								 .ToList();
+
+			_containerBuilder.RegisterInstance(configurationBuilder.Build())
+							 .As<IConfiguration>()
+							 .SingleInstance();
+
 			return this;
 		}
+
 
 		public IBotBuilder ConfigureLogger(Action<ILoggerFactory> configure)
 		{

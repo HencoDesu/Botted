@@ -1,5 +1,6 @@
 ﻿using System;
 using Autofac;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace Botted.Core.Abstractions.Builders
@@ -12,16 +13,16 @@ namespace Botted.Core.Abstractions.Builders
 		/// <summary>
 		/// Loads all plugins from specific directory
 		/// </summary>
-		/// <param name="pluginsDirectory"></param>
+		/// <param name="pluginsDirectory">Directory to load plugins</param>
 		/// <returns>Current <see cref="IBotBuilder"/></returns>
 		IBotBuilder LoadPlugins(string pluginsDirectory);
 
 		/// <summary>
-		/// Loads specific config
+		/// Loads all .json files in specific directory as configs
 		/// </summary>
-		/// <param name="configFileName">Config file to load</param>
+		/// <param name="configsDirectory">Directory to get configs</param>
 		/// <returns>Current <see cref="IBotBuilder"/></returns>
-		IBotBuilder LoadConfig(string configFileName);
+		IBotBuilder LoadConfigs(string configsDirectory);
 
 		/// <summary>
 		/// Configures logger for bot

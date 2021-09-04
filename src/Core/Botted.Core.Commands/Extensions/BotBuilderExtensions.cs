@@ -1,4 +1,5 @@
 ﻿using Botted.Core.Abstractions.Builders;
+using Botted.Core.Abstractions.Extensions;
 using Botted.Core.Commands.Abstractions;
 using Botted.Core.Commands.Abstractions.Extensions;
 
@@ -20,8 +21,9 @@ namespace Botted.Core.Commands.Extensions
 		/// <param name="builder">Current bot builder</param>
 		/// <returns>Current <see cref="IBotBuilder"/></returns>
 		public static IBotBuilder UseDefaultCommandParser(this IBotBuilder builder)
-			=> builder.UseCommandParser<CommandParser>();
-
-		
+		{
+			return builder.UseCommandParser<CommandParser>()
+						  .RegisterConfiguration<CommandsConfiguration>("Commands");
+		}
 	}
 }

@@ -15,60 +15,42 @@ namespace Botted.Core.Commands
 	/// <inheritdoc />
 	public class CommandParser : ICommandParser
 	{
-		private static Parser<char, Unit> CommandPrefix { get; }
-			= Char('!').IgnoreResult();
+		private Dictionary<(Type, Type), Func<object, object?, object>> _converters = new ();
 
-		private static Parser<char, Unit> Space { get; }
-			= Char(' ').IgnoreResult();
-
-		private static Parser<char, Unit> Brace { get; }
-			= Char('"').IgnoreResult();
-
-		private static Parser<char, string> Word { get; }
-			= AnyCharExcept(' ', '"').AtLeastOnce()
-									 .Map(s => new string(s.ToArray()));
-
-		private static Parser<char, string> SimpleArgument { get; }
-			= Word.Before(SkipWhitespaces);
-
-		private static Parser<char, string> ComplexArgument { get; }
-			= Brace.Then(SimpleArgument.AtLeastOnce()
-									   .Map(s => string.Join(' ', s)))
-				   .Before(Brace)
-				   .Before(SkipWhitespaces);
-
-		private static Parser<char, string> Argument { get; }
-			= OneOf(SimpleArgument, ComplexArgument);
-
-		private static Parser<char, string> CommandName { get; }
-			= CommandPrefix.Then(Word).Before(Space.Optional());
-
-		private static Parser<char, List<string>> Arguments { get; }
-			= CommandName.IgnoreResult()
-						 .Then(Argument.Many())
-						 .Map(args => args.ToList());
-
-		private readonly Dictionary<(Type, Type), Func<object, object?, object>> _converters = new ();
-
-		public CommandParser()
+		public CommandParser(CommandsConfiguration configuration)
 		{
-			var converterInterface = typeof(IConverter<,>);
-			foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
-			{
-				var converters = assembly.GetTypes()
-										 .Where(t => !t.IsInterface)
-										 .Where(t => t.GetInterface(converterInterface.Name) is not null);
-				foreach (var converter in converters)
-				{
-					var interfaces = converter.GetInterface(converterInterface.Name)!;
-					var sourceType = interfaces.GenericTypeArguments[0];
-					var targetType = interfaces.GenericTypeArguments[1];
-					var convert = converter.GetMethod("Convert")!;
-					var instance = Activator.CreateInstance(converter);
-					_converters.Add((sourceType, targetType), (d, a) => convert.Invoke(instance, new [] { d, a })!);
-				}
-			}
+			RegisterConverters();
+
+			CommandPrefix = Char(configuration.CommandPrefix).IgnoreResult();
+			Space = Char(' ').IgnoreResult();
+			Quote = Char('"').IgnoreResult();
+			Word = AnyCharExcept(' ', '"').AtLeastOnce()
+										  .Map(s => new string(s.ToArray()));
+			SimpleArgument = Word.Before(SkipWhitespaces);
+			ComplexArgument = Quote.Then(SimpleArgument.AtLeastOnce()
+													   .Map(s => string.Join(' ', s)))
+								   .Before(Quote)
+								   .Before(SkipWhitespaces);
+			Argument = OneOf(SimpleArgument, ComplexArgument);
+			CommandName = CommandPrefix.Then(Word).Before(Space.Optional());
+			Arguments = CommandName.IgnoreResult()
+								   .Then(Argument.Many())
+								   .Map(args => args.ToList());
 		}
+
+		#region Parsers
+
+		private Parser<char, Unit> CommandPrefix { get; }
+		private Parser<char, Unit> Space { get; }
+		private Parser<char, Unit> Quote { get; }
+		private Parser<char, string> Word { get; }
+		private Parser<char, string> SimpleArgument { get; }
+		private Parser<char, string> ComplexArgument { get; }
+		private Parser<char, string> Argument { get; }
+		private Parser<char, string> CommandName { get; }
+		private Parser<char, List<string>> Arguments { get; }
+
+		#endregion
 
 		public bool TryParseCommandName(Message message, out string commandName)
 		{
@@ -110,6 +92,26 @@ namespace Botted.Core.Commands
 			}
 			
 			return data;
+		}
+
+		private void RegisterConverters()
+		{
+			var converterInterface = typeof(IConverter<,>);
+			foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+			{
+				var converters = assembly.GetTypes()
+										 .Where(t => !t.IsInterface)
+										 .Where(t => t.GetInterface(converterInterface.Name) is not null);
+				foreach (var converter in converters)
+				{
+					var interfaces = converter.GetInterface(converterInterface.Name)!;
+					var sourceType = interfaces.GenericTypeArguments[0];
+					var targetType = interfaces.GenericTypeArguments[1];
+					var convert = converter.GetMethod("Convert")!;
+					var instance = Activator.CreateInstance(converter);
+					_converters.Add((sourceType, targetType), (d, a) => convert.Invoke(instance, new [] { d, a })!);
+				}
+			}
 		}
 	}
 }

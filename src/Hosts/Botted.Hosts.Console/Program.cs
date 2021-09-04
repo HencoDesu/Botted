@@ -11,6 +11,7 @@ var bot = new BotBuilder().ConfigureLogger(ConfigureLogger)
 						  .UseDefaultCommandService()
 						  .UseDefaultCommandParser()
 						  .UseProvider<ConsoleProvider>()
+						  .LoadConfigs("Configs")
 						  .LoadPlugins("Plugins")
 						  .Build();
 bot.Start();

@@ -16,11 +16,21 @@ namespace Botted.Tests.CoreTests
 {
 	public class CommandServiceTest
 	{
+		private readonly CommandsConfiguration _configuration;
+
+		public CommandServiceTest()
+		{
+			_configuration = new CommandsConfiguration()
+			{
+				CommandPrefix = '!'
+			};
+		}
+
 		[Fact]
 		public async Task CommandSuccessExecutionTest()
 		{
 			var eventService = new EventService(A.Fake<ILogger<EventService>>());
-			var commandParser = new CommandParser();
+			var commandParser = new CommandParser(_configuration);
 			var message = TestMessageGenerator.GenerateMessage("!test");
 			var command = new TestCommand();
 			var commandService = new CommandService(eventService, commandParser);
@@ -36,7 +46,7 @@ namespace Botted.Tests.CoreTests
 		public async Task WrongCommandExecutionTest()
 		{
 			var eventService = new EventService(A.Fake<ILogger<EventService>>());
-			var commandParser = new CommandParser();
+			var commandParser = new CommandParser(_configuration);
 			var message = TestMessageGenerator.GenerateMessage("!tests");
 			var command = new TestCommand();
 			var commandService = new CommandService(eventService, commandParser);
@@ -52,7 +62,7 @@ namespace Botted.Tests.CoreTests
 		public async Task NotACommandExecutionTest()
 		{
 			var eventService = new EventService(A.Fake<ILogger<EventService>>());
-			var commandParser = new CommandParser();
+			var commandParser = new CommandParser(_configuration);
 			var message = TestMessageGenerator.GenerateMessage("test");
 			var command = new TestCommand();
 			var commandService = new CommandService(eventService, commandParser);
