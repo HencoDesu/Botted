@@ -4,9 +4,23 @@ namespace Botted.Core.Providers.Abstractions.Data
 {
 	public record Message()
 	{
-		public string Text { get; init; }
-		public ProviderIdentifier Provider { get; init; }
+		public Message(string text)
+			: this(text, ProviderIdentifier.Any, null)
+		{ }
 
-		public User User { get; set; }
+		public Message(string text,
+					   ProviderIdentifier provider,
+					   User? user)
+			: this()
+		{
+			Text = text;
+			Provider = provider;
+			User = user;
+		}
+
+		public string Text { get; init; }
+		public ProviderIdentifier Provider { get; }
+
+		public User? User { get; }
 	}
 }

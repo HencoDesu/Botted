@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <PackageVersion>0.0.1</PackageVersion>
+        <Title>Botted.Core</Title>
+        <Authors>HencoDesu</Authors>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <OutputPath>..\..\..\bin\Debug\</OutputPath>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <OutputPath>..\..\..\bin\Release\</OutputPath>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Botted.Core.Abstractions\Botted.Core.Abstractions.csproj" />
+      <ProjectReference Include="..\Botted.Core.Commands.Abstractions\Botted.Core.Commands.Abstractions.csproj" />
+      <ProjectReference Include="..\Botted.Core.Events.Abstractions\Botted.Core.Events.Abstractions.csproj" />
+      <ProjectReference Include="..\Botted.Core.Providers.Abstractions\Botted.Core.Providers.Abstractions.csproj" />
+    </ItemGroup>
+
+</Project>

@@ -5,8 +5,15 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <OutputPath>..\..\..\bin\Debug\</OutputPath>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <OutputPath>..\..\..\bin\Release\</OutputPath>
+    </PropertyGroup>
+
     <ItemGroup>
-      <ProjectReference Include="..\..\Botted.Core.Abstractions\Botted.Core.Abstractions.csproj" />
       <ProjectReference Include="..\Botted.Core.Users.Abstractions\Botted.Core.Users.Abstractions.csproj" />
     </ItemGroup>
 

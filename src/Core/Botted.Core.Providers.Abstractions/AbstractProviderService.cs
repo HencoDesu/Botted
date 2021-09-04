@@ -1,4 +1,5 @@
 ﻿using Botted.Core.Events.Abstractions;
+using Botted.Core.Providers.Abstractions.Data;
 using Botted.Core.Providers.Abstractions.Events;
 
 namespace Botted.Core.Providers.Abstractions
@@ -6,27 +7,27 @@ namespace Botted.Core.Providers.Abstractions
 	/// <inheritdoc />
 	public abstract class AbstractProviderService : IProviderService
 	{
-		private readonly Data.ProviderIdentifier _identifier;
+		private readonly ProviderIdentifier _identifier;
 		
 		protected AbstractProviderService(IEventService eventService, 
-										  Data.ProviderIdentifier identifier)
+										  ProviderIdentifier identifier)
 		{
 			_identifier = identifier;
 			EventService = eventService;
 
-			EventService.Subscribe<MessageHandled, Data.Message>(OnMessageHandled);
+			EventService.Subscribe<MessageHandled, Message>(OnMessageHandled);
 		}
 		
 		protected IEventService EventService { get; }
 
-		public abstract void SendMessage(Data.Message message);
+		public abstract void SendMessage(Message message);
 
-		protected void OnMessageReceived(Data.Message message)
+		protected void OnMessageReceived(Message message)
 		{
-			EventService.Raise<MessageReceived, Data.Message>(message);
+			EventService.Raise<MessageReceived, Message>(message);
 		}
 		
-		protected void OnMessageHandled(Data.Message message)
+		protected void OnMessageHandled(Message message)
 		{
 			if (message.Provider.IsMatching(_identifier))
 			{

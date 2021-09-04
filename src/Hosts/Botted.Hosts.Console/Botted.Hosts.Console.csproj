@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <OutputPath>..\..\..\bin\Hosts\Console\Debug\</OutputPath>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <OutputPath>..\..\..\bin\Hosts\Console\Release\</OutputPath>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Core\Botted.Core.Commands\Botted.Core.Commands.csproj" />
+      <ProjectReference Include="..\..\Core\Botted.Core.Events\Botted.Core.Events.csproj" />
+      <ProjectReference Include="..\..\Core\Botted.Core.Providers.Abstractions\Botted.Core.Providers.Abstractions.csproj" />
+      <ProjectReference Include="..\..\Core\Botted.Core\Botted.Core.csproj" />
+      <ProjectReference Include="..\..\Plugins\Botted.Plugins.Providers.Console\Botted.Plugins.Providers.Console.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Serilog.Extensions.Logging" Version="3.0.2-dev-10289" />
+      <PackageReference Include="Serilog.Sinks.Console" Version="4.0.1-dev-00876" />
+    </ItemGroup>
+
+</Project>

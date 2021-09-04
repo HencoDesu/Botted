@@ -1,4 +1,5 @@
-﻿using Botted.Core.Abstractions;
+﻿using Botted.Core.Abstractions.Builders;
+using Botted.Core.Abstractions.Extensions;
 
 namespace Botted.Core.Events.Abstractions.Extensions
 {
@@ -12,6 +13,8 @@ namespace Botted.Core.Events.Abstractions.Extensions
 		/// <returns>Current <see cref="IBotBuilder"/></returns>
 		public static IBotBuilder UseEventService<TEventService>(this IBotBuilder builder)
 			where TEventService : IEventService
-			=> builder.RegisterService<IEventService, TEventService>();
+		{
+			return builder.RegisterService<IEventService, TEventService>();
+		}
 	}
 }

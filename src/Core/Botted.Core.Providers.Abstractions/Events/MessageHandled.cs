@@ -1,6 +1,7 @@
-﻿using Botted.Core.Events.Abstractions;
+﻿using Botted.Core.Events.Abstractions.Events;
+using Botted.Core.Providers.Abstractions.Data;
 
 namespace Botted.Core.Providers.Abstractions.Events
 {
-	public class MessageHandled : IEventWithData<Data.Message> { }
+	public class MessageHandled : EventWithData<Message> { }
 }

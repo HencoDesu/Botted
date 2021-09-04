@@ -1,4 +1,4 @@
-﻿using Botted.Core.Abstractions;
+﻿using Botted.Core.Abstractions.Builders;
 using Botted.Core.Commands.Abstractions;
 using Botted.Core.Commands.Abstractions.Extensions;
 
@@ -21,5 +21,7 @@ namespace Botted.Core.Commands.Extensions
 		/// <returns>Current <see cref="IBotBuilder"/></returns>
 		public static IBotBuilder UseDefaultCommandParser(this IBotBuilder builder)
 			=> builder.UseCommandParser<CommandParser>();
+
+		
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Botted.Core.Commands.Abstractions.Data;
 using Botted.Core.Commands.Abstractions.Result;
 
@@ -21,30 +22,42 @@ namespace Botted.Core.Commands.Abstractions
 		public string Name { get; }
 
 		/// <inheritdoc />
-		public abstract ICommandResult Execute(TData data);
+		public abstract Task<ICommandResult> Execute(TData data);
 
 		/// <summary>
 		/// Provides a <see cref="OkCommandResult"/>
 		/// </summary>
 		/// <param name="message">Result message</param>
 		/// <returns><see cref="OkCommandResult"/></returns>
-		protected ICommandResult Ok(string message) 
-			=> new OkCommandResult(message);
+		protected Task<ICommandResult> Ok(string message) 
+			=> Task.FromResult<ICommandResult>(new OkCommandResult(message));
 
 		/// <summary>
 		/// Provides a <see cref="ErrorCommandResult"/>
 		/// </summary>
 		/// <param name="message">Result message</param>
 		/// <returns><see cref="ErrorCommandResult"/></returns>
-		protected ICommandResult Error(string message)
-			=> new ErrorCommandResult(message);
+		protected Task<ICommandResult> Error(string message)
+			=> Task.FromResult<ICommandResult>( new ErrorCommandResult(message));
 
 		/// <summary>
 		/// Provides a <see cref="ErrorCommandResult"/>
 		/// </summary>
 		/// <param name="exception"></param>
 		/// <returns><see cref="ErrorCommandResult"/></returns>
-		protected ICommandResult Error(Exception exception)
-			=> new ErrorCommandResult(exception.Message);
+		protected Task<ICommandResult> Error(Exception exception)
+			=> Task.FromResult<ICommandResult>(new ErrorCommandResult(exception.Message));
+	}
+
+	/// <inheritdoc />
+	public abstract class AbstractCommand : AbstractCommand<EmptyCommandData>
+	{
+		protected AbstractCommand(string name) : base(name)
+		{ }
+		
+		public override Task<ICommandResult> Execute(EmptyCommandData data)
+			=> Execute();
+
+		public abstract Task<ICommandResult> Execute();
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Botted.Core.Users.Abstractions;
 using Botted.Core.Users.Abstractions.Data;
 using Microsoft.EntityFrameworkCore;
@@ -12,11 +13,22 @@ namespace Botted.Core.Users
 		public UserDatabase(DbContextOptions<UserDatabase> options) 
 			: base(options)
 		{ }
-
+		
 		/// <inheritdoc />
 		[SuppressMessage("ReSharper", "UnassignedGetOnlyAutoProperty")]
 		[SuppressMessage("ReSharper", "ReplaceAutoPropertyWithComputedProperty")]
-		public DbSet<User> Users { get; } = null!;
+		IQueryable<User> IUserDatabase.Users => UsersTable;
+
+		private DbSet<User> UsersTable { get; set; }
+
+		/// <inheritdoc />
+		public User RegisterUser()
+		{
+			var user = new User();
+			UsersTable.Add(user);
+			SaveChanges();
+			return user;
+		}
 
 		/// <inheritdoc />
 		public new void SaveChanges()

@@ -1,7 +1,9 @@
-﻿using Botted.Core.Commands.Abstractions.Context;
-using Botted.Core.Events.Abstractions;
+﻿using System.Diagnostics.CodeAnalysis;
+using Botted.Core.Commands.Abstractions.Context;
+using Botted.Core.Events.Abstractions.Events;
 
 namespace Botted.Core.Commands.Abstractions.Events
 {
-	public class CommandExecuting : IEventWithData<ICommandExecutingContext> { }
+	[SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
+	public class CommandExecuting : EventWithData<ICommandExecutingContext> { }
 }

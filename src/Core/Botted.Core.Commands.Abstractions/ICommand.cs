@@ -1,4 +1,5 @@
-﻿using Botted.Core.Commands.Abstractions.Data;
+﻿using System.Threading.Tasks;
+using Botted.Core.Commands.Abstractions.Data;
 using Botted.Core.Commands.Abstractions.Result;
 
 namespace Botted.Core.Commands.Abstractions
@@ -20,6 +21,6 @@ namespace Botted.Core.Commands.Abstractions
 		/// </summary>
 		/// <param name="data">Command data</param>
 		/// <returns>Execution result</returns>
-		ICommandResult Execute(TData data);
+		Task<ICommandResult> Execute(TData data);
 	}
 }

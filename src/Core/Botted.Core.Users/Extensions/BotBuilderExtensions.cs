@@ -1,32 +1,29 @@
 ﻿using System;
-using Botted.Core.Abstractions;
-using Botted.Core.Database.Abstractions.Extensions;
+using Botted.Core.Abstractions.Builders;
+using Botted.Core.Users.Abstractions;
+using Botted.Core.Users.Abstractions.Extensions;
 using Microsoft.EntityFrameworkCore;
 
-namespace Botted.Core.Users.Abstractions.Extensions
+namespace Botted.Core.Users.Extensions
 {
 	public static class BotBuilderExtensions
 	{
 		/// <summary>
-		/// Register selected <see cref="IUserService"/> as default
+		/// Use default implementation of <see cref="IUserService"/>
 		/// </summary>
 		/// <param name="builder">Current <see cref="IBotBuilder"/></param>
-		/// <typeparam name="TUserService">Provider</typeparam>
 		/// <returns>Current <see cref="IBotBuilder"/></returns>
-		public static IBotBuilder UseUserService<TUserService>(this IBotBuilder builder) 
-			where TUserService : IUserService 
-			=> builder.RegisterService<IUserService, TUserService>();
+		public static IBotBuilder UseDefaultUserService(this IBotBuilder builder) 
+			=> builder.UseUserService<UserService>();
 
 		/// <summary>
-		/// Register <see cref="IUserDatabase"/> implementation
+		/// Use default implementation of <see cref="IUserDatabase"/>
 		/// </summary>
 		/// <param name="builder">Current <see cref="IBotBuilder"/></param>
 		/// <param name="configure">Context options builder</param>
-		/// <typeparam name="TUserDatabase">Database implementation</typeparam>
 		/// <returns>Current <see cref="IBotBuilder"/></returns>
-		public static IBotBuilder UseUserDatabase<TUserDatabase>(this IBotBuilder builder,
-																 Action<DbContextOptionsBuilder<TUserDatabase>> configure)
-			where TUserDatabase : DbContext, IUserDatabase
-			=> builder.UseDatabase<IUserDatabase, TUserDatabase>(configure);
+		public static IBotBuilder UseDefaultUserDatabase(this IBotBuilder builder, 
+														 Action<DbContextOptionsBuilder<UserDatabase>> configure)
+			=> builder.UseUserDatabase(configure);
 	}
 }

@@ -7,7 +7,7 @@ namespace Botted.Core.Commands.Context
 	/// <inheritdoc />
 	public class CommandParsingContext : ICommandParsingContext
 	{
-		public CommandParsingContext(IReadOnlyList<string> textArgs, User user)
+		public CommandParsingContext(IReadOnlyList<string> textArgs, User? user)
 		{
 			TextArgs = textArgs;
 			User = user;
@@ -15,6 +15,6 @@ namespace Botted.Core.Commands.Context
 
 		public IReadOnlyList<string> TextArgs { get; }
 
-		public User User { get; }
+		public User? User { get; }
 	}
 }

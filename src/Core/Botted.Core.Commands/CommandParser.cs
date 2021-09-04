@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Botted.Core.Commands.Abstractions;
 using Botted.Core.Commands.Abstractions.Data;
 using Botted.Core.Commands.Abstractions.Data.Structure;
 using Botted.Core.Commands.Context;
-using Botted.Core.Commands.Extensions;
 using Botted.Core.Providers.Abstractions.Data;
 using Botted.Parsing.Converters.Abstractions;
 using Pidgin;
@@ -17,35 +15,35 @@ namespace Botted.Core.Commands
 	/// <inheritdoc />
 	public class CommandParser : ICommandParser
 	{
-		public static Parser<char, Unit> CommandPrefix { get; }
+		private static Parser<char, Unit> CommandPrefix { get; }
 			= Char('!').IgnoreResult();
 
-		public static Parser<char, Unit> Space { get; }
+		private static Parser<char, Unit> Space { get; }
 			= Char(' ').IgnoreResult();
 
-		public static Parser<char, Unit> Brace { get; }
+		private static Parser<char, Unit> Brace { get; }
 			= Char('"').IgnoreResult();
 
-		public static Parser<char, string> Word { get; }
+		private static Parser<char, string> Word { get; }
 			= AnyCharExcept(' ', '"').AtLeastOnce()
 									 .Map(s => new string(s.ToArray()));
 
-		public static Parser<char, string> SimpleArgument { get; }
+		private static Parser<char, string> SimpleArgument { get; }
 			= Word.Before(SkipWhitespaces);
 
-		public static Parser<char, string> ComplexArgument { get; }
+		private static Parser<char, string> ComplexArgument { get; }
 			= Brace.Then(SimpleArgument.AtLeastOnce()
 									   .Map(s => string.Join(' ', s)))
 				   .Before(Brace)
 				   .Before(SkipWhitespaces);
 
-		public static Parser<char, string> Argument { get; }
+		private static Parser<char, string> Argument { get; }
 			= OneOf(SimpleArgument, ComplexArgument);
 
-		public static Parser<char, string> CommandName { get; }
+		private static Parser<char, string> CommandName { get; }
 			= CommandPrefix.Then(Word).Before(Space.Optional());
 
-		public static Parser<char, List<string>> Arguments { get; }
+		private static Parser<char, List<string>> Arguments { get; }
 			= CommandName.IgnoreResult()
 						 .Then(Argument.Many())
 						 .Map(args => args.ToList());
@@ -87,29 +85,28 @@ namespace Botted.Core.Commands
 
 			foreach (var argumentStructure in structure.Arguments)
 			{
-				var source = argumentStructure.DataSource.Invoke(context);
-				if (source is null)
+				try
+				{
+					var source = argumentStructure.DataSource.Invoke(context)!;
+					var sourceType = source.GetType();
+					var targetType = argumentStructure.TargetProperty.GetParameters().First().ParameterType;
+					if (sourceType != targetType)
+					{
+						var converter = targetType.IsEnum
+							? _converters[(sourceType, typeof(Enum))]
+							: _converters[(sourceType, targetType)];
+						source = converter(source, targetType);
+					}
+
+					argumentStructure.TargetProperty.Invoke(data, new[] { source });
+				} catch (Exception e)
 				{
 					if (!argumentStructure.Optional)
 					{
 						//TODO: Custom exception here
-						throw new Exception("Error while parsing argument");
+						throw new Exception("Error while parsing argument", e);
 					}
-					
-					continue;
 				}
-				
-				var sourceType = source.GetType();
-				var targetType = argumentStructure.TargetProperty.GetParameters().First().ParameterType;
-				if (sourceType != targetType)
-				{
-					var converter = targetType.IsEnum 
-						? _converters[(sourceType, typeof(Enum))] 
-						: _converters[(sourceType, targetType)];
-					source = converter(source, targetType);
-				}
-				
-				argumentStructure.TargetProperty.Invoke(data, new[] { source });
 			}
 			
 			return data;

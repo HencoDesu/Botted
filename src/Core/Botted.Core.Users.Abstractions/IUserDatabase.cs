@@ -1,6 +1,6 @@
-﻿using Botted.Core.Database.Abstractions;
+﻿using System.Linq;
+using Botted.Core.Database.Abstractions;
 using Botted.Core.Users.Abstractions.Data;
-using Microsoft.EntityFrameworkCore;
 
 namespace Botted.Core.Users.Abstractions
 {
@@ -12,6 +12,12 @@ namespace Botted.Core.Users.Abstractions
 		/// <summary>
 		/// Users of the bot
 		/// </summary>
-		DbSet<User> Users { get; }
+		IQueryable<User> Users { get; }
+
+		/// <summary>
+		/// Register new user
+		/// </summary>
+		/// <returns></returns>
+		User RegisterUser();
 	}
 }

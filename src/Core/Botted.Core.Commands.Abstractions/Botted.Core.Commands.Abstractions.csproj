@@ -7,9 +7,16 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <OutputPath>..\..\..\bin\Debug\</OutputPath>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <OutputPath>..\..\..\bin\Release\</OutputPath>
+    </PropertyGroup>
+
     <ItemGroup>
         <PackageReference Include="System.Runtime.Experimental" Version="6.0.0-preview.7.21377.19" />
-        <ProjectReference Include="..\..\Botted.Core.Abstractions\Botted.Core.Abstractions.csproj" />
         <ProjectReference Include="..\Botted.Core.Providers.Abstractions\Botted.Core.Providers.Abstractions.csproj" />
         <ProjectReference Include="..\Botted.Core.Users.Abstractions\Botted.Core.Users.Abstractions.csproj" />
     </ItemGroup>

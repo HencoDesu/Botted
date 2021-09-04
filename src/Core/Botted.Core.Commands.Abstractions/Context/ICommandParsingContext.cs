@@ -16,6 +16,6 @@ namespace Botted.Core.Commands.Abstractions.Context
 		/// <summary>
 		/// User executed command
 		/// </summary>
-		User User { get; }
+		User? User { get; }
 	}
 }

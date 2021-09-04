@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="FakeItEasy" Version="7.2.0" />
         <PackageReference Include="FluentAssertions" Version="6.1.0" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
         <PackageReference Include="xunit" Version="2.4.1" />
@@ -24,7 +25,9 @@
     <ItemGroup>
       <ProjectReference Include="..\..\src\Core\Botted.Core.Commands.Abstractions\Botted.Core.Commands.Abstractions.csproj" />
       <ProjectReference Include="..\..\src\Core\Botted.Core.Commands\Botted.Core.Commands.csproj" />
+      <ProjectReference Include="..\..\src\Core\Botted.Core.Events\Botted.Core.Events.csproj" />
       <ProjectReference Include="..\..\src\Core\Botted.Core.Providers.Abstractions\Botted.Core.Providers.Abstractions.csproj" />
+      <ProjectReference Include="..\..\src\Core\Botted.Core.Users\Botted.Core.Users.csproj" />
     </ItemGroup>
 
 </Project>

@@ -1,5 +1,6 @@
 ﻿using System;
-using Botted.Core.Abstractions;
+using Botted.Core.Abstractions.Builders;
+using Botted.Core.Abstractions.Extensions;
 using Botted.Core.Database.Abstractions.Extensions;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,9 +14,11 @@ namespace Botted.Core.Users.Abstractions.Extensions
 		/// <param name="builder">Current <see cref="IBotBuilder"/></param>
 		/// <typeparam name="TUserService">Provider</typeparam>
 		/// <returns>Current <see cref="IBotBuilder"/></returns>
-		public static IBotBuilder UseUserService<TUserService>(this IBotBuilder builder) 
-			where TUserService : IUserService 
-			=> builder.RegisterService<IUserService, TUserService>();
+		public static IBotBuilder UseUserService<TUserService>(this IBotBuilder builder)
+			where TUserService : IUserService
+		{
+			return builder.RegisterService<IUserService, TUserService>();
+		}
 
 		/// <summary>
 		/// Register <see cref="IUserDatabase"/> implementation
@@ -27,6 +30,8 @@ namespace Botted.Core.Users.Abstractions.Extensions
 		public static IBotBuilder UseUserDatabase<TUserDatabase>(this IBotBuilder builder,
 																 Action<DbContextOptionsBuilder<TUserDatabase>> configure)
 			where TUserDatabase : DbContext, IUserDatabase
-			=> builder.UseDatabase<IUserDatabase, TUserDatabase>(configure);
+		{
+			return builder.UseDatabase<IUserDatabase, TUserDatabase>(configure);
+		}
 	}
 }

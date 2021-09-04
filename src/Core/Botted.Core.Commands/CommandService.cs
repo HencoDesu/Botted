@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 using Botted.Core.Commands.Abstractions;
 using Botted.Core.Commands.Abstractions.Context;
 using Botted.Core.Commands.Abstractions.Data;
@@ -14,9 +16,10 @@ using Botted.Core.Providers.Abstractions.Events;
 namespace Botted.Core.Commands
 {
 	/// <inheritdoc />
+	[SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
 	public class CommandService : ICommandService
 	{
-		private readonly Dictionary<string, Func<ICommandData, ICommandResult>> _handlers = new();
+		private readonly Dictionary<string, Func<ICommandData, Task<ICommandResult>>> _handlers = new();
 		private readonly Dictionary<string, ICommandDataStructure> _dataStructures = new ();
 		private readonly IEventService _eventService;
 		private readonly ICommandParser _parser;
@@ -30,17 +33,19 @@ namespace Botted.Core.Commands
 			_eventService.Subscribe<MessageReceived, Message>(OnMessageReceived);
 		}
 
-		public void RegisterCommand<TData>(ICommand<TData> command) where TData : class, ICommandData
+		public void RegisterCommand<TData>(ICommand<TData> command) 
+			where TData : class, ICommandData
 		{
 			if (_handlers.ContainsKey(command.Name) || _dataStructures.ContainsKey(command.Name)) {
-				throw new Exception(); // TODO: Custom exception here
+				// TODO: Custom exception here
+				throw new Exception();
 			}
 			
 			_handlers.Add(command.Name, data => command.Execute((data as TData)!));
 			_dataStructures.Add(command.Name, TData.Structure);
 		}
 		
-		private void OnMessageReceived(Message message)
+		private async Task OnMessageReceived(Message message)
 		{
 			if (!_parser.TryParseCommandName(message, out var commandName))
 			{
@@ -52,7 +57,8 @@ namespace Botted.Core.Commands
 
 			if (handler is null || dataStructure is null)
 			{
-				throw new Exception(); // TODO: Custom exception here
+				// TODO: Custom exception here
+				throw new Exception();
 			}
 
 			var data = _parser.ParseCommandData(message, dataStructure);
@@ -60,7 +66,7 @@ namespace Botted.Core.Commands
 			_eventService.Raise<CommandExecuting, ICommandExecutingContext>(executingContext);
 			if (executingContext.CanExecute)
 			{
-				var result = handler(data);
+				var result = await handler(data);
 				_eventService.Raise<MessageHandled, Message>(message with { Text = result.Text });
 			}
 		}
