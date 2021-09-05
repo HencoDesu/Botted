@@ -4,7 +4,8 @@ using Botted.Core.Events.Extensions;
 using Microsoft.Extensions.Logging;
 using Serilog;
 
-var bot = new BotBuilder().ConfigureLogger(ConfigureLogger)
+var bot = new BotBuilder().LoadLibraries("Libraries")
+						  .ConfigureLogger(ConfigureLogger)
 						  .UseDefaultEventService()
 						  .UseDefaultCommandService()
 						  .UseDefaultCommandParser()
@@ -16,6 +17,7 @@ bot.Start();
 void ConfigureLogger(ILoggerFactory loggerFactory)
 {
 	Log.Logger = new LoggerConfiguration().WriteTo.Console()
+										  .WriteTo.File("Logs\\Log-.txt", rollingInterval: RollingInterval.Minute)
 										  .CreateLogger();
 	loggerFactory.AddSerilog();
 	Log.Information("Logger configured");

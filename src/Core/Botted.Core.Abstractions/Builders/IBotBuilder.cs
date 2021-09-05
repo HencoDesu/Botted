@@ -11,6 +11,13 @@ namespace Botted.Core.Abstractions.Builders
 	public interface IBotBuilder : IBuilder<IBot>
 	{
 		/// <summary>
+		/// Loads all libraries from specific directory
+		/// </summary>
+		/// <param name="librariesDirectory">Directory to load libraries</param>
+		/// <returns>Current <see cref="IBotBuilder"/></returns>
+		IBotBuilder LoadLibraries(string librariesDirectory);
+		
+		/// <summary>
 		/// Loads all plugins from specific directory
 		/// </summary>
 		/// <param name="pluginsDirectory">Directory to load plugins</param>

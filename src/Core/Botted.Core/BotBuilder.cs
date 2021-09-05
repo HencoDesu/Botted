@@ -31,6 +31,15 @@ namespace Botted.Core
 							 .As<IBot>();
 		}
 
+		public IBotBuilder LoadLibraries(string librariesDirectory)
+		{
+			var path = Path.Combine(_botPath, librariesDirectory);
+			var assemblies = Directory.GetFiles(path, "*.dll")
+									  .Select(Assembly.LoadFrom)
+									  .ToList();
+			return this;
+		}
+
 		public IBotBuilder LoadPlugins(string pluginsDirectory)
 		{
 			var path = Path.Combine(_botPath, pluginsDirectory);
