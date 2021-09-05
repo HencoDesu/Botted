@@ -35,8 +35,9 @@ namespace Botted.Core
 		{
 			var path = Path.Combine(_botPath, pluginsDirectory);
 			var assemblies = Directory.GetFiles(path, "*.dll")
-									  .Select(Assembly.LoadFile);
-			var pluginTypes = assemblies.SelectMany(a => a.GetTypes())
+									  .Select(Assembly.LoadFrom)
+									  .ToList();
+			var pluginTypes = assemblies.SelectMany(a => a.GetExportedTypes())
 										.Where(t => t.IsAssignableTo(typeof(IPlugin)));
 			var plugins = pluginTypes.Select(Activator.CreateInstance)
 									 .Cast<IPlugin>()

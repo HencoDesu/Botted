@@ -10,7 +10,7 @@ namespace Botted.Plugins.ExamplePlugin
 
 		public void OnLoad(IBotBuilder botBuilder)
 		{
-			botBuilder.RegisterCommand<ExampleCommand>();
+			botBuilder.RegisterCommand<ExampleCommand, ExampleCommand.ExampleCommandData>();
 		}
 	}
 }

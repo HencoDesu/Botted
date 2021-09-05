@@ -58,6 +58,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Botted.Core.Plugins.Abstrac
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Botted.Plugins.ExamplePlugin", "src\Plugins\Botted.Plugins.ExamplePlugin\Botted.Plugins.ExamplePlugin.csproj", "{59FF6042-51F5-4D69-912C-498761FC5689}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Botted.Plugins.Providers.Telegram", "src\Plugins\Botted.Plugins.Providers.Telegram\Botted.Plugins.Providers.Telegram.csproj", "{30C8F807-696F-4282-8513-9D0618055467}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -132,6 +134,10 @@ Global
 		{59FF6042-51F5-4D69-912C-498761FC5689}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{59FF6042-51F5-4D69-912C-498761FC5689}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{59FF6042-51F5-4D69-912C-498761FC5689}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30C8F807-696F-4282-8513-9D0618055467}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30C8F807-696F-4282-8513-9D0618055467}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30C8F807-696F-4282-8513-9D0618055467}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30C8F807-696F-4282-8513-9D0618055467}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{73A5F193-593F-478C-AB08-24908E4E4B50} = {80F94CC0-BEC9-4905-8789-6EEEF7FFE553}
@@ -159,5 +165,6 @@ Global
 		{6D10733E-1FF1-41AF-BD7F-0585B16A0DCC} = {80F94CC0-BEC9-4905-8789-6EEEF7FFE553}
 		{376DCB89-3DA8-4B51-9C49-3800FFFE5C7D} = {6D10733E-1FF1-41AF-BD7F-0585B16A0DCC}
 		{59FF6042-51F5-4D69-912C-498761FC5689} = {9AEACED8-9063-48FB-B35D-39C3F7277EB6}
+		{30C8F807-696F-4282-8513-9D0618055467} = {9AEACED8-9063-48FB-B35D-39C3F7277EB6}
 	EndGlobalSection
 EndGlobal

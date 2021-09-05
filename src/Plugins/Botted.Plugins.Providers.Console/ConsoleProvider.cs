@@ -1,4 +1,5 @@
-﻿using Botted.Core.Events.Abstractions;
+﻿using System.Threading.Tasks;
+using Botted.Core.Events.Abstractions;
 using Botted.Core.Events.Abstractions.Events;
 using Botted.Core.Providers.Abstractions;
 using Botted.Core.Providers.Abstractions.Data;
@@ -24,7 +25,7 @@ namespace Botted.Plugins.Providers.Console
 			}
 		}
 
-		public override void SendMessage(Message message)
+		public override async Task SendMessage(Message message)
 		{
 			System.Console.WriteLine(message.Text);
 		}
