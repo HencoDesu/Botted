@@ -5,5 +5,5 @@ using Botted.Core.Events.Abstractions.Events;
 namespace Botted.Core.Commands.Abstractions.Events
 {
 	[SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
-	public class CommandExecuting : EventWithData<ICommandExecutingContext> { }
+	public class CommandExecuting : EventWithData<ICommandExecutionContext> { }
 }

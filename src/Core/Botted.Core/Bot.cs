@@ -16,7 +16,7 @@ namespace Botted.Core
 
 		public void Start()
 		{
-			_eventService.RaiseAndWait<BotStarted>();
+			_eventService.Raise<BotStarted>();
 		}
 
 		public void Stop()

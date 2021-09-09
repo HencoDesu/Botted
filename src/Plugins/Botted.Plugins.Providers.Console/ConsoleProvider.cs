@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Botted.Core.Events.Abstractions;
 using Botted.Core.Events.Abstractions.Events;
+using Botted.Core.Events.Abstractions.Extensions;
 using Botted.Core.Providers.Abstractions;
 using Botted.Core.Providers.Abstractions.Data;
 using Botted.Core.Users.Abstractions.Data;
@@ -14,7 +15,8 @@ namespace Botted.Plugins.Providers.Console
 		public ConsoleProvider(IEventService eventService)
 			: base(eventService, Identifier)
 		{
-			eventService.Subscribe<BotStarted>(OnBotStarted);
+			eventService.GetEvent<BotStarted>()
+						.Subscribe(OnBotStarted);
 		}
 
 		private void OnBotStarted()

@@ -4,9 +4,9 @@ using Botted.Core.Commands.Abstractions.Data;
 namespace Botted.Core.Commands.Context
 {
 	/// <inheritdoc />
-	public class CommandExecutingContext : ICommandExecutingContext
+	public class CommandExecutionContext : ICommandExecutionContext
 	{
-		public CommandExecutingContext(string commandName, 
+		public CommandExecutionContext(string commandName, 
 									   ICommandData commandData, 
 									   bool canExecute)
 		{

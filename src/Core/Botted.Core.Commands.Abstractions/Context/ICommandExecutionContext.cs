@@ -5,7 +5,7 @@ namespace Botted.Core.Commands.Abstractions.Context
 	/// <summary>
 	/// Represents a simple context of executing command
 	/// </summary>
-	public interface ICommandExecutingContext
+	public interface ICommandExecutionContext
 	{
 		/// <summary>
 		/// Name of executing command

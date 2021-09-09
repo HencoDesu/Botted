@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Botted.Core.Commands;
 using Botted.Core.Commands.Abstractions;
 using Botted.Core.Events;
@@ -9,7 +8,6 @@ using Botted.Core.Providers.Abstractions.Events;
 using Botted.Tests.CoreTests.TestData;
 using FakeItEasy;
 using FluentAssertions;
-using Microsoft.Extensions.Logging;
 using Xunit;
 
 namespace Botted.Tests.CoreTests
@@ -20,55 +18,55 @@ namespace Botted.Tests.CoreTests
 
 		public CommandServiceTest()
 		{
-			_configuration = new CommandsConfiguration()
+			_configuration = new CommandsConfiguration
 			{
 				CommandPrefix = '!'
 			};
 		}
 
 		[Fact]
-		public async Task CommandSuccessExecutionTest()
+		public void CommandSuccessExecutionTest()
 		{
-			var eventService = new EventService(A.Fake<ILogger<EventService>>());
+			var eventService = new EventService();
 			var commandParser = new CommandParser(_configuration);
 			var message = TestMessageGenerator.GenerateMessage("!test");
 			var command = new TestCommand();
 			var commandService = new CommandService(eventService, commandParser);
 			commandService.RegisterCommand(command);
 
-			Func<Task> act = () => eventService.RaiseAndWait<MessageReceived, Message>(message);
+			Action act = () => eventService.Raise<MessageReceived, Message>(message);
 
-			await act.Should().NotThrowAsync();
+			act.Should().NotThrow();
 			command.Executed.Should().BeTrue();
 		}
 		
 		[Fact]
-		public async Task WrongCommandExecutionTest()
+		public void WrongCommandExecutionTest()
 		{
-			var eventService = new EventService(A.Fake<ILogger<EventService>>());
+			var eventService = new EventService();
 			var commandParser = new CommandParser(_configuration);
 			var message = TestMessageGenerator.GenerateMessage("!tests");
 			var command = new TestCommand();
 			var commandService = new CommandService(eventService, commandParser);
 			commandService.RegisterCommand(command);
 
-			Func<Task> act = () => eventService.RaiseAndWait<MessageReceived, Message>(message);
+			Action act = () => eventService.Raise<MessageReceived, Message>(message);
 
-			await act.Should().ThrowAsync<Exception>();
+			act.Should().Throw<Exception>();
 			command.Executed.Should().BeFalse();
 		}
 		
 		[Fact]
-		public async Task NotACommandExecutionTest()
+		public void NotACommandExecutionTest()
 		{
-			var eventService = new EventService(A.Fake<ILogger<EventService>>());
+			var eventService = new EventService();
 			var commandParser = new CommandParser(_configuration);
 			var message = TestMessageGenerator.GenerateMessage("test");
 			var command = new TestCommand();
 			var commandService = new CommandService(eventService, commandParser);
 			commandService.RegisterCommand(command);
 
-			await eventService.RaiseAndWait<MessageReceived, Message>(message);
+			eventService.Raise<MessageReceived, Message>(message);
 			command.Executed.Should().BeFalse();
 		}
 

@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Botted.Core.Events.Abstractions;
 using Botted.Core.Events.Abstractions.Events;
+using Botted.Core.Events.Abstractions.Extensions;
 using Botted.Core.Providers.Abstractions;
 using Botted.Core.Providers.Abstractions.Data;
 using Serilog;
@@ -26,7 +27,8 @@ namespace Botted.Plugins.Providers.Telegram
 			: base(eventService, Identifier)
 		{
 			_telegramBotClient = telegramBotClient;
-			eventService.Subscribe<BotStarted>(OnBotStarted);
+			eventService.GetEvent<BotStarted>()
+						.Subscribe(OnBotStarted);
 		}
 
 		public override async Task SendMessage(Message message)

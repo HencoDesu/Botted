@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Botted.Core.Events.Abstractions;
+using Botted.Core.Events.Abstractions.Extensions;
 using Botted.Core.Providers.Abstractions.Data;
 using Botted.Core.Providers.Abstractions.Events;
 
@@ -16,7 +17,8 @@ namespace Botted.Core.Providers.Abstractions
 			_identifier = identifier;
 			EventService = eventService;
 
-			EventService.Subscribe<MessageHandled, Message>(OnMessageHandled);
+			EventService.GetEvent<MessageHandled>()
+						.SafeSubscribeAsync(OnMessageHandled);
 		}
 		
 		protected IEventService EventService { get; }
