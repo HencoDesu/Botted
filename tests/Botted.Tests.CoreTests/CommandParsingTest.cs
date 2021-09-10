@@ -37,8 +37,22 @@ namespace Botted.Tests.CoreTests
 			var parser = new CommandParser(_configuration);
 			var message = TestMessageGenerator.GenerateMessage("!test");
 
-			parser.TryParseCommandName(message, out var commandName);
+			var result = parser.TryParseCommandName(message, out var commandName);
+
+			result.Should().BeTrue();
 			commandName.Should().Be("test");
+		}
+
+		[Fact]
+		public void ParseWrongCommandName()
+		{
+			var parser = new CommandParser(_configuration);
+			var message = TestMessageGenerator.GenerateMessage("@test");
+
+			var result = parser.TryParseCommandName(message, out var commandName);
+
+			result.Should().BeFalse();
+			commandName.Should().BeEmpty();
 		}
 
 		[Theory]
@@ -49,6 +63,7 @@ namespace Botted.Tests.CoreTests
 			var structure = TestCommandData.Structure;
 
 			var data = parser.ParseCommandData(testMessage, structure);
+			
 			data.Should().BeOfType<TestCommandData>();
 			data.Should().Be(expectedData);
 		}

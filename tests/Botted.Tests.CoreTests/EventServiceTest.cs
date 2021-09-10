@@ -1,7 +1,5 @@
-﻿using System;
-using Botted.Core.Events;
+﻿using Botted.Core.Events;
 using Botted.Core.Events.Abstractions.Events;
-using Botted.Core.Events.Abstractions.Extensions;
 using FluentAssertions;
 using Xunit;
 
@@ -12,35 +10,52 @@ namespace Botted.Tests.CoreTests
 		class TestEvent : EventWithData<int> { }
 
 		[Fact]
+		public void EventCreatingTest()
+		{
+			var eventService = new EventService();
+			
+			var firstEvent = eventService.GetEvent<TestEvent>();
+			var secondEvent = eventService.GetEvent<TestEvent>();
+
+			secondEvent.Should().Be(firstEvent);
+		}
+		
+		[Fact]
 		public void SubscribeUnsubscribeTest()
 		{
 			var eventService = new EventService();
+			var testEvent = eventService.GetEvent<TestEvent>();
 			var invocations = 0;
 			
-			var subscription = eventService.GetEvent<TestEvent>()
-										   .Subscribe(() => invocations++);
-			eventService.Raise<TestEvent>();
+			var subscription = testEvent.Subscribe(() => invocations++);
+			testEvent.Raise();
 			invocations.Should().Be(1);
 			
 			subscription.Dispose();
-			eventService.Raise<TestEvent>();
+			testEvent.Raise();
 			invocations.Should().Be(1);
 		}
 
 		[Fact]
-		public void SyncSubscribeUnsubscribeWithDataTest()
+		public void SubscribeUnsubscribeWithDataTest()
 		{
 			var eventService = new EventService();
+			var testEvent = eventService.GetEvent<TestEvent>();
 			var invocations = 0;
 			
-			var subscription = eventService.GetEvent<TestEvent>()
-										   .Subscribe(_ => invocations++);
-			eventService.Raise<TestEvent, int>(invocations);
+			var subscription = testEvent.Subscribe(TestHandler);
+			testEvent.Raise(invocations);
 			invocations.Should().Be(1);
 			
 			subscription.Dispose();
-			eventService.Raise<TestEvent, int>(invocations);
+			testEvent.Raise(invocations);
 			invocations.Should().Be(1);
+
+			void TestHandler(int data)
+			{
+				data.Should().Be(invocations);
+				invocations++;
+			}
 		}
 	}
 }

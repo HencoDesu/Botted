@@ -1,12 +1,11 @@
 ﻿using System;
+using Botted.Core.Abstractions.Extensions;
 using Botted.Core.Commands;
 using Botted.Core.Commands.Abstractions;
 using Botted.Core.Events;
 using Botted.Core.Events.Abstractions;
-using Botted.Core.Providers.Abstractions.Data;
 using Botted.Core.Providers.Abstractions.Events;
 using Botted.Tests.CoreTests.TestData;
-using FakeItEasy;
 using FluentAssertions;
 using Xunit;
 
@@ -14,27 +13,26 @@ namespace Botted.Tests.CoreTests
 {
 	public class CommandServiceTest
 	{
-		private readonly CommandsConfiguration _configuration;
+		private readonly IEventService _eventService;
+		private readonly ICommandParser _commandParser;
 
 		public CommandServiceTest()
 		{
-			_configuration = new CommandsConfiguration
-			{
-				CommandPrefix = '!'
-			};
+			_eventService = new EventService();
+			_commandParser = new CommandParser(
+				new CommandsConfiguration 
+				{ 
+					CommandPrefix = '!' 
+				});
 		}
 
 		[Fact]
 		public void CommandSuccessExecutionTest()
 		{
-			var eventService = new EventService();
-			var commandParser = new CommandParser(_configuration);
-			var message = TestMessageGenerator.GenerateMessage("!test");
-			var command = new TestCommand();
-			var commandService = new CommandService(eventService, commandParser);
-			commandService.RegisterCommand(command);
+			var commandService = CreateCommandService();
+			var command = CreateAndRegisterCommand(commandService);
 
-			Action act = () => eventService.Raise<MessageReceived, Message>(message);
+			Action act = () => ReceiveMessage("!test");
 
 			act.Should().NotThrow();
 			command.Executed.Should().BeTrue();
@@ -43,14 +41,10 @@ namespace Botted.Tests.CoreTests
 		[Fact]
 		public void WrongCommandExecutionTest()
 		{
-			var eventService = new EventService();
-			var commandParser = new CommandParser(_configuration);
-			var message = TestMessageGenerator.GenerateMessage("!tests");
-			var command = new TestCommand();
-			var commandService = new CommandService(eventService, commandParser);
-			commandService.RegisterCommand(command);
+			var commandService = CreateCommandService();
+			var command = CreateAndRegisterCommand(commandService);
 
-			Action act = () => eventService.Raise<MessageReceived, Message>(message);
+			Action act = () => ReceiveMessage("!tests");
 
 			act.Should().Throw<Exception>();
 			command.Executed.Should().BeFalse();
@@ -59,26 +53,42 @@ namespace Botted.Tests.CoreTests
 		[Fact]
 		public void NotACommandExecutionTest()
 		{
-			var eventService = new EventService();
-			var commandParser = new CommandParser(_configuration);
-			var message = TestMessageGenerator.GenerateMessage("test");
-			var command = new TestCommand();
-			var commandService = new CommandService(eventService, commandParser);
-			commandService.RegisterCommand(command);
+			var commandService = CreateCommandService();
+			var command = CreateAndRegisterCommand(commandService);
 
-			eventService.Raise<MessageReceived, Message>(message);
+			Action act = () => ReceiveMessage("test");
+			
+			act.Should().NotThrow();
 			command.Executed.Should().BeFalse();
 		}
 
 		[Fact]
 		public void MultiplyRegistrationsTest()
 		{
-			var commandService = new CommandService(A.Fake<IEventService>(), A.Fake<ICommandParser>());
+			var commandService = CreateCommandService();
 			var command = new TestCommand();
+			
 			Action act = () => commandService.RegisterCommand(command);
 
 			act.Should().NotThrow();
 			act.Should().Throw<Exception>();
+		}
+
+		private ICommandService CreateCommandService()
+		{
+			return new CommandService(_eventService, _commandParser);
+		}
+
+		private void ReceiveMessage(string message)
+		{
+			var generatedMessage = TestMessageGenerator.GenerateMessage(message);
+			_eventService.GetEvent<MessageReceived>()
+						 .Raise(generatedMessage);
+		}
+
+		private TestCommand CreateAndRegisterCommand(ICommandService commandService)
+		{
+			return new TestCommand().Apply(commandService.RegisterCommand);
 		}
 	}
 }
