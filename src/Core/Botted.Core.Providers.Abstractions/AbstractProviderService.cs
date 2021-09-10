@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Botted.Core.Events.Abstractions;
-using Botted.Core.Events.Abstractions.Extensions;
 using Botted.Core.Providers.Abstractions.Data;
 using Botted.Core.Providers.Abstractions.Events;
 
@@ -18,7 +17,7 @@ namespace Botted.Core.Providers.Abstractions
 			EventService = eventService;
 
 			EventService.GetEvent<MessageHandled>()
-						.SafeSubscribeAsync(OnMessageHandled);
+						.Subscribe(OnMessageHandled);
 		}
 		
 		protected IEventService EventService { get; }
@@ -27,9 +26,9 @@ namespace Botted.Core.Providers.Abstractions
 
 		protected void OnMessageReceived(Message message)
 		{
-			EventService.Raise<MessageReceived, Message>(message);
+			EventService.GetEvent<MessageReceived>().Raise(message);
 		}
-		
+
 		protected async Task OnMessageHandled(Message message)
 		{
 			if (message.Provider.IsMatching(_identifier))

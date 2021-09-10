@@ -37,7 +37,7 @@ namespace Botted.Core.Users
 		public User Register()
 		{
 			var user = _database.RegisterUser();
-			_eventService.Raise<UserRegistered, User>(user);
+			_eventService.GetEvent<UserRegistered>().Raise(user);
 			return user;
 		}
 	}

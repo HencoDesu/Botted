@@ -34,13 +34,14 @@ namespace Botted.Core.Commands
 			_parser = parser;
 			
 			_eventService.GetEvent<MessageReceived>()
-						 .SafeSubscribe(OnMessageReceived);
+						 .Subscribe(OnMessageReceived);
 
 			_messageSubject.Select(ParseContext)
 						   .WhereNotNull()
 						   .Subscribe(context =>
 						   {
-							   _eventService.Raise<CommandExecuting, ICommandExecutionContext>(context);
+							   _eventService.GetEvent<CommandExecuting>()
+											.Raise(context);
 							   _executionSubject.OnNext(context);
 						   });
 		}
@@ -88,7 +89,7 @@ namespace Botted.Core.Commands
 		{
 			var result = await command.Execute(data);
 			var message = new Message(result.Text);
-			_eventService.Raise<MessageHandled, Message>(message);
+			_eventService.GetEvent<MessageHandled>().Raise(message);
 		}
 	}
 }

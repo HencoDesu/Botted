@@ -1,6 +1,5 @@
-﻿using System;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Botted.Core.Events.Abstractions;
 using Botted.Core.Events.Abstractions.Events;
 using JetBrains.Annotations;
@@ -11,24 +10,19 @@ namespace Botted.Core.Events
 	[UsedImplicitly]
 	public class EventService : IEventService
 	{
-		private readonly Subject<object> _subject = new ();
-
-		public IObservable<TEvent> GetEvent<TEvent>() 
-			where TEvent : Event
-		{
-			return _subject.OfType<TEvent>();
-		}
+		private readonly List<Event> _events = new();
 		
-		public void Raise<TEvent>() 
+		public TEvent GetEvent<TEvent>() 
 			where TEvent : Event, new()
 		{
-			_subject.OnNext(new TEvent());
-		}
+			var @event = _events.OfType<TEvent>().SingleOrDefault();
+			if (@event is null)
+			{
+				@event = new TEvent();
+				_events.Add(@event);
+			}
 
-		public void Raise<TEvent, TData>(TData data) 
-			where TEvent : EventWithData<TData>, new()
-		{
-			_subject.OnNext(new TEvent { Data = data });
+			return @event;
 		}
 	}
 }
