@@ -11,6 +11,7 @@
         <Product>Botted Telegram Provider</Product>
         <AssemblyVersion>0.0.1</AssemblyVersion>
         <FileVersion>0.0.1</FileVersion>
+        <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -24,12 +25,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Core\Botted.Core.Plugins.Abstractions\Botted.Core.Plugins.Abstractions.csproj" />
       <ProjectReference Include="..\..\Core\Botted.Core.Providers.Abstractions\Botted.Core.Providers.Abstractions.csproj" />
+      <ProjectReference Include="..\..\Tools\Botted.Tools.SourceGenerators\Botted.Tools.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Serilog" Version="2.11.0-dev-01367" />
       <PackageReference Include="Telegram.Bot" Version="17.0.0-alpha.3" />
       <PackageReference Include="Telegram.Bot.Extensions.Polling" Version="1.0.0-alpha.1" />
     </ItemGroup>

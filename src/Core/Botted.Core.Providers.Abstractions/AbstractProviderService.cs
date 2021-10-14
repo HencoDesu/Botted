@@ -6,7 +6,7 @@ using Botted.Core.Providers.Abstractions.Events;
 namespace Botted.Core.Providers.Abstractions
 {
 	/// <inheritdoc />
-	public abstract class AbstractProviderService : IProviderService
+	public abstract partial class AbstractProviderService : IProviderService
 	{
 		private readonly ProviderIdentifier _identifier;
 		
@@ -15,9 +15,8 @@ namespace Botted.Core.Providers.Abstractions
 		{
 			_identifier = identifier;
 			EventService = eventService;
-
-			EventService.GetEvent<MessageHandled>()
-						.Subscribe(OnMessageHandled);
+			
+			eventService.GetEvent<MessageHandled>().Subscribe(OnMessageHandled);
 		}
 		
 		protected IEventService EventService { get; }

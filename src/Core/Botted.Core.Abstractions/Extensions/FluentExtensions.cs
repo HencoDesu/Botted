@@ -26,12 +26,26 @@ namespace Botted.Core.Abstractions.Extensions
 		/// <param name="action">Action to apply to each object</param>
 		/// <typeparam name="T">Items type</typeparam>
 		/// <returns>Enumerable after applying</returns>
-		public static IEnumerable<T> Apply<T>(this IEnumerable<T> enumerable, Action<T> action)
+		public static IEnumerable<T> ApplyToEach<T>(this IEnumerable<T> enumerable, Action<T> action)
 		{
 			foreach (var item in enumerable)
 			{
 				action(item);
 				yield return item;
+			}
+		}
+
+		/// <summary>
+		/// Applies some <see cref="Action{T}"/> to each object in <see cref="IEnumerable{T}"/>
+		/// </summary>
+		/// <param name="enumerable">Enumerable to apply <see cref="Action{T}"/></param>
+		/// <param name="action">Action to apply to each object</param>
+		/// <typeparam name="T">Items type</typeparam>
+		public static void ApplyToEachImmediately<T>(this IEnumerable<T> enumerable, Action<T> action)
+		{
+			foreach (var item in enumerable)
+			{
+				action(item);
 			}
 		}
 	}

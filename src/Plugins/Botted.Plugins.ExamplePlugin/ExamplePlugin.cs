@@ -1,6 +1,6 @@
-﻿using Botted.Core.Abstractions.Builders;
+﻿using Autofac;
+using Botted.Core.Abstractions;
 using Botted.Core.Commands.Abstractions.Extensions;
-using Botted.Core.Plugins.Abstractions;
 
 namespace Botted.Plugins.ExamplePlugin
 {
@@ -8,9 +8,14 @@ namespace Botted.Plugins.ExamplePlugin
 	{
 		public string Name => "ExamplePlugin";
 
-		public void OnLoad(IBotBuilder botBuilder)
+		/// <inheritdoc />
+		public void OnInit(ContainerBuilder containerBuilder)
 		{
-			botBuilder.RegisterCommand<ExampleCommand, ExampleCommand.ExampleCommandData>();
+			containerBuilder.RegisterCommand<ExampleCommand, ExampleCommand.ExampleCommandData>();
 		}
+
+		/// <inheritdoc />
+		public void OnLoad(ILifetimeScope services)
+		{ }
 	}
 }

@@ -23,6 +23,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\Tools\Botted.Tools.SourceGenerators\Botted.Tools.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
       <ProjectReference Include="..\Botted.Core.Commands.Abstractions\Botted.Core.Commands.Abstractions.csproj" />
       <ProjectReference Include="..\Botted.Core.Events.Abstractions\Botted.Core.Events.Abstractions.csproj" />
       <ProjectReference Include="..\Botted.Core.Providers.Abstractions\Botted.Core.Providers.Abstractions.csproj" />

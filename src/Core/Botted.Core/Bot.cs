@@ -1,6 +1,9 @@
-﻿using Botted.Core.Abstractions;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using Botted.Core.Abstractions;
 using Botted.Core.Events.Abstractions;
 using Botted.Core.Events.Abstractions.Events;
+using Microsoft.Extensions.Hosting;
 
 namespace Botted.Core
 {
@@ -9,19 +12,24 @@ namespace Botted.Core
 	{
 		private readonly IEventService _eventService;
 
-		public Bot(IEventService eventService)
+		public Bot(IEventService eventService, IHostApplicationLifetime applicationLifetime)
 		{
 			_eventService = eventService;
 		}
 
-		public void Start()
+		/// <inheritdoc />
+		public Task StartAsync(CancellationToken cancellationToken)
 		{
-			_eventService.GetEvent<BotStarted>().Raise();
+			_eventService.GetEvent<BotStarted>()
+						 .Raise();
+			
+			return Task.CompletedTask;
 		}
 
-		public void Stop()
+		/// <inheritdoc />
+		public Task StopAsync(CancellationToken cancellationToken)
 		{
-			
+			return Task.CompletedTask;
 		}
 	}
 }

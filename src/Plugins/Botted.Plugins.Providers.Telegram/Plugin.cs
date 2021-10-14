@@ -1,9 +1,7 @@
 ﻿using Autofac;
-using Botted.Core.Abstractions.Builders;
+using Botted.Core.Abstractions;
 using Botted.Core.Abstractions.Extensions;
-using Botted.Core.Plugins.Abstractions;
 using Botted.Core.Providers.Abstractions.Extensions;
-using Serilog;
 using Telegram.Bot;
 
 namespace Botted.Plugins.Providers.Telegram
@@ -12,18 +10,18 @@ namespace Botted.Plugins.Providers.Telegram
 	{
 		public string Name => "Telegram Provider";
 
-		public void OnLoad(IBotBuilder botBuilder)
+		/// <inheritdoc />
+		public void OnInit(ContainerBuilder containerBuilder)
 		{
-			botBuilder.UseProvider<TelegramProvider>()
-					  .RegisterConfiguration<TelergamConfiguration>("Telegram")
-					  .ConfigureServices(ConfigureServices);
+			containerBuilder.UseProvider<TelegramProvider>()
+							.RegisterConfiguration<TelergamConfiguration>("Telegram");
+			
+			containerBuilder.Register(c => new TelegramBotClient(c.Resolve<TelergamConfiguration>().AccessToken))
+							.As<ITelegramBotClient>()
+							.SingleInstance();
 		}
 
-		private void ConfigureServices(ContainerBuilder builder)
-		{
-			builder.Register(c => new TelegramBotClient(c.Resolve<TelergamConfiguration>().AccessToken))
-				   .As<ITelegramBotClient>()
-				   .SingleInstance();
-		}
+		/// <inheritdoc />
+		public void OnLoad(ILifetimeScope services) { }
 	}
 }

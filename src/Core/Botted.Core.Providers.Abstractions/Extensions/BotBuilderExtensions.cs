@@ -1,5 +1,5 @@
-﻿using Botted.Core.Abstractions.Builders;
-using Botted.Core.Abstractions.Extensions;
+﻿using Autofac;
+using Botted.Core.Abstractions;
 
 namespace Botted.Core.Providers.Abstractions.Extensions
 {
@@ -10,11 +10,16 @@ namespace Botted.Core.Providers.Abstractions.Extensions
 		/// </summary>
 		/// <param name="builder">Current bot builder</param>
 		/// <typeparam name="TProvider">Provider</typeparam>
-		/// <returns>Current <see cref="IBotBuilder"/></returns>
-		public static IBotBuilder UseProvider<TProvider>(this IBotBuilder builder)
+		/// <returns>Current <see cref="ContainerBuilder"/></returns>
+		public static ContainerBuilder UseProvider<TProvider>(this ContainerBuilder builder)
 			where TProvider : IProviderService
 		{
-			return builder.RegisterService<IProviderService, TProvider>();
+			builder.RegisterType<TProvider>()
+				   .As<IProviderService>()
+				   .As<IService>()
+				   .SingleInstance()
+				   .AutoActivate();
+			return builder;
 		}
 	}
 }

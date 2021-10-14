@@ -3,10 +3,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Botted.Core.Events.Abstractions;
 using Botted.Core.Events.Abstractions.Events;
-using Botted.Core.Events.Abstractions.Extensions;
 using Botted.Core.Providers.Abstractions;
 using Botted.Core.Providers.Abstractions.Data;
-using Serilog;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
@@ -27,8 +25,8 @@ namespace Botted.Plugins.Providers.Telegram
 			: base(eventService, Identifier)
 		{
 			_telegramBotClient = telegramBotClient;
-			eventService.GetEvent<BotStarted>()
-						.Subscribe(OnBotStarted);
+
+			eventService.GetEvent<BotStarted>().Subscribe(OnBotStarted);
 		}
 
 		public override async Task SendMessage(Message message)
@@ -46,28 +44,26 @@ namespace Botted.Plugins.Providers.Telegram
 									  Exception exception,
 									  CancellationToken cancellationToken)
 		{
-			var ErrorMessage = exception switch
+			var errorMessage = exception switch
 			{
 				ApiRequestException apiRequestException =>
 					$"Telegram API Error:\n[{apiRequestException.ErrorCode}]\n{apiRequestException.Message}",
 				_ => exception.ToString()
 			};
 
-			Console.WriteLine(ErrorMessage);
+			Console.WriteLine(errorMessage);
 			return Task.CompletedTask;
 		}
 
-		private async Task HandleUpdateAsync(ITelegramBotClient botClient,
+		private Task HandleUpdateAsync(ITelegramBotClient botClient,
 											 Update update,
 											 CancellationToken cancellationToken)
 		{
-			if (update.Type != UpdateType.Message)
-				return;
-			if (update.Message.Type != MessageType.Text)
-				return;
+			if (update.Type != UpdateType.Message && update.Message?.Type != MessageType.Text)
+			{
+				return Task.CompletedTask;
+			}
 
-			Log.Logger.Information("Received a '{0}' message in chat {1}.", update.Message.Text,
-								   update.Message.Chat.Id);
 			var message = new Message(update.Message.Text, Identifier, null);
 			message.SetAdditionalData(update.Message);
 			OnMessageReceived(message);

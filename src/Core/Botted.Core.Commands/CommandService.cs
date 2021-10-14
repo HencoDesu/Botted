@@ -19,7 +19,7 @@ namespace Botted.Core.Commands
 {
 	/// <inheritdoc />
 	[UsedImplicitly]
-	public class CommandService : ICommandService
+	public partial class CommandService : ICommandService
 	{
 		private readonly Subject<Message> _messageSubject = new();
 		private readonly Subject<ICommandExecutionContext> _executionSubject = new();
@@ -32,9 +32,8 @@ namespace Botted.Core.Commands
 		{
 			_eventService = eventService;
 			_parser = parser;
-			
-			_eventService.GetEvent<MessageReceived>()
-						 .Subscribe(OnMessageReceived);
+
+			eventService.GetEvent<MessageReceived>().Subscribe(OnMessageReceived);
 
 			_messageSubject.Select(ParseContext)
 						   .WhereNotNull()
