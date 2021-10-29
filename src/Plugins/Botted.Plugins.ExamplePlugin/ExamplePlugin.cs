@@ -1,21 +1,18 @@
 ﻿using Botted.Core.Abstractions;
 using Botted.Core.Abstractions.Dependencies;
 using Botted.Core.Commands.Abstractions.Extensions;
+using Botted.Core.Plugins;
 
 namespace Botted.Plugins.ExamplePlugin
 {
-	public class ExamplePlugin : IPlugin
+	public class ExamplePlugin : BottedPlugin
 	{
-		public string Name => "ExamplePlugin";
-
-		/// <inheritdoc />
-		public void OnInit(IBottedBuilder bottedBuilder)
+		public override void OnInit(IBottedBuilder bottedBuilder)
 		{
 			bottedBuilder.RegisterCommand<ExampleCommand, ExampleCommand.ExampleCommandData>();
 		}
 
-		/// <inheritdoc />
-		public void OnLoad(IContainer services)
+		public override void OnLoad(IContainer services)
 		{ }
 	}
 }

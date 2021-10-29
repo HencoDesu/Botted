@@ -1,23 +1,20 @@
 ﻿using Botted.Core.Abstractions;
 using Botted.Core.Abstractions.Dependencies;
+using Botted.Core.Plugins;
 using Botted.Core.Providers.Abstractions.Extensions;
 using Telegram.Bot;
 
 namespace Botted.Plugins.Providers.Telegram
 {
-	public class Plugin : IPlugin
+	public class Plugin : BottedPlugin
 	{
-		public string Name => "Telegram Provider";
-
-		/// <inheritdoc />
-		public void OnInit(IBottedBuilder containerBuilder)
+		public override void OnInit(IBottedBuilder containerBuilder)
 		{
 			containerBuilder.UseProvider<TelegramProvider>()
 							.ConfigureContainer(ConfigureContainer);
 		}
 
-		/// <inheritdoc />
-		public void OnLoad(IContainer services) { }
+		public override void OnLoad(IContainer services) { }
 
 		private void ConfigureContainer(IContainerBuilder containerBuilder)
 		{

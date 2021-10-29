@@ -26,6 +26,7 @@
       <ProjectReference Include="..\Botted.Core.Commands\Botted.Core.Commands.csproj" />
       <ProjectReference Include="..\Botted.Core.Events.Abstractions\Botted.Core.Events.Abstractions.csproj" />
       <ProjectReference Include="..\Botted.Core.Events\Botted.Core.Events.csproj" />
+      <ProjectReference Include="..\Botted.Core.Plugins\Botted.Core.Plugins.csproj" />
       <ProjectReference Include="..\Botted.Core.Users\Botted.Core.Users.csproj" />
     </ItemGroup>
 

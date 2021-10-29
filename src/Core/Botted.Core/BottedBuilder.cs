@@ -1,12 +1,12 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using Autofac;
 using Botted.Core.Abstractions;
 using Botted.Core.Abstractions.Dependencies;
 using Botted.Core.Abstractions.Extensions;
 using Botted.Core.Dependencies;
+using Botted.Core.Plugins;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
@@ -38,7 +38,20 @@ namespace Botted.Core
 
 		public IBottedBuilder UsePluginsFolder(string pluginsPath)
 		{
-			LoadPlugins(Path.Combine(_botPath, pluginsPath));
+			var fullPath = Path.Combine(_botPath, pluginsPath);
+			CreateDirectoryIfNotExist(fullPath);
+
+			_containerBuilder.RegisterSingleton(c =>
+			{
+				var loader = new PluginLoader(c.Resolve<ILogger<PluginLoader>>(), fullPath);
+				var plugins = loader.LoadPlugins();
+				plugins.ApplyToEachImmediately(p => p.OnInit(this));
+				_containerBuilder.RegisterBuildCallback(container =>
+				{
+					plugins.ApplyToEachImmediately(p => p.OnLoad(container));
+				});
+				return loader;
+			});
 			return this;
 		}
 
@@ -60,32 +73,6 @@ namespace Botted.Core
 
 			Directory.GetFiles(librariesPath, "*.dll")
 					 .ApplyToEachImmediately(lib => Assembly.LoadFrom(lib));
-		}
-
-		private void LoadPlugins(string pluginsPath)
-		{
-			CreateDirectoryIfNotExist(pluginsPath);
-
-			var plugins = Directory.GetFiles(pluginsPath, "*.dll")
-								   .Select(Assembly.LoadFrom)
-								   .SelectMany(a => a.GetExportedTypes())
-								   .Where(t => t.IsAssignableTo(typeof(IPlugin)) && !t.IsAbstract)
-								   .Select(Activator.CreateInstance)
-								   .Cast<IPlugin>()
-								   .ToList();
-
-			plugins.ApplyToEachImmediately(plugin => plugin.OnInit(this));
-
-			_containerBuilder.RegisterBuildCallback(scope =>
-			{
-				var logger = scope.Resolve<ILogger<IBot>>();
-				plugins.ApplyToEachImmediately(plugin =>
-				{
-					logger.LogInformation("Loading plugin {plugin.Name}", plugin.Name);
-					plugin.OnLoad(scope);
-					logger.LogInformation("Plugin {plugin.Name} loaded", plugin.Name);
-				});
-			});
 		}
 
 		private void LoadConfigs(string configsPath)

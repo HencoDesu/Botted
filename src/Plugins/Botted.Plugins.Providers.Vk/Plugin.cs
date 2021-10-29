@@ -1,5 +1,6 @@
 ﻿using Botted.Core.Abstractions;
 using Botted.Core.Abstractions.Dependencies;
+using Botted.Core.Plugins;
 using Botted.Core.Providers.Abstractions.Extensions;
 using VkNet;
 using VkNet.Abstractions;
@@ -7,11 +8,9 @@ using VkNet.Model;
 
 namespace Botted.Plugins.Providers.Vk
 {
-	public class Plugin : IPlugin
+	public class Plugin : BottedPlugin
 	{
-		public string Name => "Vk Provider";
-		
-		public void OnLoad(IContainer services)
+		public override void OnLoad(IContainer services)
 		{
 			var configuration = services.Resolve<VkConfiguration>();
 			
@@ -22,7 +21,7 @@ namespace Botted.Plugins.Providers.Vk
 			});
 		}
 
-		public void OnInit(IBottedBuilder containerBuilder)
+		public override void OnInit(IBottedBuilder containerBuilder)
 		{
 			containerBuilder.UseProvider<VkProvider>()
 							.ConfigureContainer(ConfigureContainer);

@@ -54,7 +54,8 @@ namespace Botted.Core.Dependencies
 			_containerBuilder.Register(c => WithWrapped(c, creator))
 							 .As<TImplementation>()
 							 .As<TAbstraction>()
-							 .SingleInstance();
+							 .SingleInstance()
+							 .AutoActivate();
 		}
 
 		public void RegisterSingleton<TAbstraction, TImplementation>(TImplementation instance) 
