@@ -6,25 +6,6 @@ namespace Botted.Core.Abstractions.Extensions
 	public static class ContainerBuilderExtensions
 	{
 		/// <summary>
-		/// Shortcut to register any service
-		/// </summary>
-		/// <param name="builder">Builder to register service</param>
-		/// <typeparam name="TAbstraction">Service abstraction</typeparam>
-		/// <typeparam name="TService">Service implementation</typeparam>
-		/// <returns>Current <see cref="ContainerBuilder"/></returns>
-		public static ContainerBuilder RegisterService<TAbstraction, TService>(this ContainerBuilder builder)
-			where TAbstraction : IService
-			where TService : TAbstraction
-		{
-			builder.RegisterType<TService>()
-				   .As<TAbstraction>()
-				   .As<IService>()
-				   .SingleInstance()
-				   .AutoActivate();
-			return builder;
-		}
-
-		/// <summary>
 		/// Shortcut to register any type as auto activated singleton
 		/// </summary>
 		/// <param name="builder">Builder to register type</param>
@@ -66,12 +47,7 @@ namespace Botted.Core.Abstractions.Extensions
 			this ContainerBuilder builder, string sectionName)
 			where TConfiguration : notnull
 		{
-			builder.Register(c => c.Resolve<IConfiguration>()
-								   .GetSection(sectionName)
-								   .Get<TConfiguration>())
-				   .AsSelf()
-				   .SingleInstance()
-				   .AutoActivate();
+			
 
 			return builder;
 		}

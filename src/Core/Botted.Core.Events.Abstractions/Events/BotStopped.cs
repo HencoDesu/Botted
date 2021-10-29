@@ -3,8 +3,8 @@
 namespace Botted.Core.Events.Abstractions.Events
 {
 	/// <summary>
-	/// Event that occurs when bot started
+	/// Event that occurs when bot stopped
 	/// </summary>
 	[UsedImplicitly]
-	public class BotStarted : Event {}
+	public class BotStopped : Event { }
 }

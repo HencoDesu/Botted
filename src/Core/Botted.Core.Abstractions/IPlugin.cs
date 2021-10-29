@@ -1,4 +1,4 @@
-﻿using Autofac;
+﻿using Botted.Core.Abstractions.Dependencies;
 
 namespace Botted.Core.Abstractions
 {
@@ -9,8 +9,8 @@ namespace Botted.Core.Abstractions
 	{
 		string Name { get; }
 
-		void OnInit(ContainerBuilder containerBuilder);
+		void OnInit(IBottedBuilder bottedBuilder);
 		
-		void OnLoad(ILifetimeScope services);
+		void OnLoad(IContainer services);
 	}
 }

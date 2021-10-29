@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Botted.Core.Abstractions;
 using Botted.Core.Events.Abstractions;
 using Botted.Core.Events.Abstractions.Events;
-using Microsoft.Extensions.Hosting;
 
 namespace Botted.Core
 {
@@ -12,12 +11,11 @@ namespace Botted.Core
 	{
 		private readonly IEventService _eventService;
 
-		public Bot(IEventService eventService, IHostApplicationLifetime applicationLifetime)
+		public Bot(IEventService eventService)
 		{
 			_eventService = eventService;
 		}
 
-		/// <inheritdoc />
 		public Task StartAsync(CancellationToken cancellationToken)
 		{
 			_eventService.GetEvent<BotStarted>()
@@ -26,9 +24,11 @@ namespace Botted.Core
 			return Task.CompletedTask;
 		}
 
-		/// <inheritdoc />
 		public Task StopAsync(CancellationToken cancellationToken)
 		{
+			_eventService.GetEvent<BotStopped>()
+						 .Raise();
+			
 			return Task.CompletedTask;
 		}
 	}

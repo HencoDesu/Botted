@@ -1,6 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using Botted.Core.Events.Abstractions;
-using Botted.Core.Events.Abstractions.Events;
 using Botted.Core.Providers.Abstractions;
 using Botted.Core.Providers.Abstractions.Data;
 using Botted.Core.Users.Abstractions.Data;
@@ -13,27 +13,22 @@ namespace Botted.Plugins.Providers.Console
 
 		public ConsoleProvider(IEventService eventService)
 			: base(eventService, Identifier)
-		{
-			eventService.GetEvent<BotStarted>().Subscribe(OnBotStarted);
-		}
+		{ }
 
-		private void OnBotStarted()
-		{
-			while (true)
-			{
-				WaitForInput();
-			}
-		}
-
-		public override async Task SendMessage(Message message)
+		public override Task SendMessage(Message message)
 		{
 			System.Console.WriteLine(message.Text);
+			
+			return Task.CompletedTask;
 		}
 
-		public void WaitForInput()
+		protected override void WaitForUpdates(CancellationToken cancellationToken)
 		{
-			var message = System.Console.ReadLine();
-			OnMessageReceived(new Message(message!, Identifier, new User()));
+			while (!cancellationToken.IsCancellationRequested)
+			{
+				var message = System.Console.ReadLine();
+				OnMessageReceived(new Message(message!, Identifier, new User()));
+			}
 		}
 	}
 }

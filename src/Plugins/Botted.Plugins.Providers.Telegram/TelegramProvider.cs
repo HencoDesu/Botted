@@ -27,6 +27,7 @@ namespace Botted.Plugins.Providers.Telegram
 			_telegramBotClient = telegramBotClient;
 
 			eventService.GetEvent<BotStarted>().Subscribe(OnBotStarted);
+			eventService.GetEvent<BotStopped>().Subscribe(OnBotStopped);
 		}
 
 		public override async Task SendMessage(Message message)
@@ -35,9 +36,9 @@ namespace Botted.Plugins.Providers.Telegram
 			await _telegramBotClient.SendTextMessageAsync(tgMessage.Chat.Id, message.Text);
 		}
 
-		private void OnBotStarted()
+		protected override void OnBotStarted()
 		{
-			_telegramBotClient.StartReceiving(HandleUpdateAsync, HandleErrorAsync);
+			_telegramBotClient.StartReceiving(HandleUpdateAsync, HandleErrorAsync, null, Cts.Token);
 		}
 
 		private Task HandleErrorAsync(ITelegramBotClient botClient,
@@ -56,17 +57,20 @@ namespace Botted.Plugins.Providers.Telegram
 		}
 
 		private Task HandleUpdateAsync(ITelegramBotClient botClient,
-											 Update update,
-											 CancellationToken cancellationToken)
+									   Update update,
+									   CancellationToken cancellationToken)
 		{
-			if (update.Type != UpdateType.Message && update.Message?.Type != MessageType.Text)
+			if (update.Type == UpdateType.Message && 
+				update.Message is not null && 
+				update.Message.Type == MessageType.Text && 
+				update.Message.Text is not null)
 			{
-				return Task.CompletedTask;
+				var message = new Message(update.Message.Text, Identifier, null);
+				message.SetAdditionalData(update.Message);
+				OnMessageReceived(message);
 			}
 
-			var message = new Message(update.Message.Text, Identifier, null);
-			message.SetAdditionalData(update.Message);
-			OnMessageReceived(message);
+			return Task.CompletedTask;
 		}
 	}
 }

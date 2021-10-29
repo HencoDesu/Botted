@@ -1,5 +1,5 @@
-﻿using Autofac;
-using Botted.Core.Abstractions;
+﻿using Botted.Core.Abstractions;
+using Botted.Core.Abstractions.Dependencies;
 using Botted.Core.Providers.Abstractions.Extensions;
 
 namespace Botted.Plugins.Providers.Console
@@ -8,14 +8,12 @@ namespace Botted.Plugins.Providers.Console
 	{
 		public string Name => "Console Provider";
 
-		/// <inheritdoc />
-		public void OnInit(ContainerBuilder containerBuilder)
+		public void OnInit(IBottedBuilder bottedBuilder)
 		{
-			containerBuilder.UseProvider<ConsoleProvider>();
+			bottedBuilder.UseProvider<ConsoleProvider>();
 		}
-
-		/// <inheritdoc />
-		public void OnLoad(ILifetimeScope services)
+		
+		public void OnLoad(IContainer services)
 		{ }
 	}
 }

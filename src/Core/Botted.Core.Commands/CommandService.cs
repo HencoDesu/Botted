@@ -35,10 +35,14 @@ namespace Botted.Core.Commands
 
 			eventService.GetEvent<MessageReceived>().Subscribe(OnMessageReceived);
 
-			_messageSubject.Select(ParseContext)
-						   .WhereNotNull()
-						   .Subscribe(context =>
+			_messageSubject.Subscribe(message =>
 						   {
+							   var context = ParseContext(message);
+							   if (context is null)
+							   {
+								   return;
+							   }
+							   
 							   _eventService.GetEvent<CommandExecuting>()
 											.Raise(context);
 							   _executionSubject.OnNext(context);
@@ -54,10 +58,15 @@ namespace Botted.Core.Commands
 			}
 			
 			_dataStructures.Add(command.Name, TData.Structure);
-			_executionSubject.Where(context => context.CommandName == command.Name)
-							 .Where(context => context.CanExecute)
-							 .Select(context => context.CommandData)
-							 .SubscribeAsync(data => ExecuteCommand(command, (data as TData)!));
+			_executionSubject.SubscribeAsync(context =>
+			{
+				if (context.CommandName != command.Name || !context.CanExecute)
+				{
+					return Task.CompletedTask;
+				}
+
+				return ExecuteCommand(command, (context.CommandData as TData)!);
+			});
 		}
 		
 		private void OnMessageReceived(Message message)

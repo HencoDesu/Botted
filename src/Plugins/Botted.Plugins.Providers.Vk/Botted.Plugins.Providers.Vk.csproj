@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+      <OutputPath>..\..\..\bin\Plugins\VkProvider\Debug\</OutputPath>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+      <OutputPath>..\..\..\bin\Plugins\VkProvider\Release\</OutputPath>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Autofac" Version="6.2.0" />
+      <PackageReference Include="JetBrains.Annotations" Version="2021.2.0" />
+      <PackageReference Include="VkNet" Version="1.67.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Core\Botted.Core.Abstractions\Botted.Core.Abstractions.csproj" />
+      <ProjectReference Include="..\..\Core\Botted.Core\Botted.Core.csproj" />
+    </ItemGroup>
+
+</Project>
