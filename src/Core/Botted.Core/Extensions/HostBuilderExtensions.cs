@@ -1,52 +1,35 @@
 ﻿using System;
+using System.IO;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Botted.Core.Abstractions;
-using Botted.Core.Abstractions.Extensions;
-using Botted.Core.Commands.Extensions;
-using Botted.Core.Events.Extensions;
-using Botted.Core.Users.Extensions;
+using Botted.Core.Dependencies;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog.Extensions.Logging;
 
 namespace Botted.Core.Extensions
 {
 	public static class HostBuilderExtensions
 	{
-		public static IHostBuilder UseBotted<TBot>(this IHostBuilder builder) 
-			where TBot : class, IBot
-		{
-			return builder.UseBotted<TBot>(bottedBuilder =>
-			{
-				bottedBuilder.UseLibrariesFolder("Libs")
-							 .UsePluginsFolder("Plugins")
-							 .UseConfigsFolder("Configuration")
-							 .UseDefaultEventService()
-							 .UseDefaultCommandService()
-							 .UseDefaultCommandParser()
-							 .UseDefaultUserService()
-							 .UseDefaultUserDatabase();
-			});
-		}
-
-		public static IHostBuilder UseBotted<TBot>(this IHostBuilder builder, Action<IBottedBuilder> configureBot)
-			where TBot : class, IBot
+		/// <summary>
+		/// Use Botted in <see cref="IHost"/> built by <see cref="IHostBuilder"/>
+		/// </summary>
+		/// <param name="builder">Builder to create <see cref="IHost"/></param>
+		/// <param name="configureBot">Action to configure Botted</param>
+		/// <returns>Current <see cref="IHostBuilder"/></returns>
+		public static IHostBuilder UseBotted(this IHostBuilder builder, Action<IBottedBuilder> configureBot)
 		{
 			builder.UseServiceProviderFactory(new AutofacServiceProviderFactory())
-				   .ConfigureContainer<ContainerBuilder>((_, containerBuilder) =>
+				   .ConfigureContainer<ContainerBuilder>((hostBuilderContext, containerBuilder) =>
 				   {
-					   var bottedBuilder = new BottedBuilder<TBot>(containerBuilder).Apply(configureBot);
+					   var wrappedContainerBuilder = new AutofacContainerBuilder(containerBuilder);
+					   var loggerFactory = new SerilogLoggerFactory(Log.Logger);
+					   var rootDirectory = new DirectoryInfo(hostBuilderContext.HostingEnvironment.ContentRootPath);
+					   var bottedBuilder = new BottedBuilder(wrappedContainerBuilder, loggerFactory, rootDirectory);
+					   configureBot(bottedBuilder);
 
-					   containerBuilder.RegisterInstance(bottedBuilder)
-									   .As<IBottedBuilder>()
-									   .SingleInstance();
-
-					   containerBuilder.RegisterType<LoggerFactory>()
-									   .As<ILoggerFactory>()
-									   .SingleInstance();
-					   containerBuilder.RegisterGeneric(typeof(Logger<>))
-									   .As(typeof(ILogger<>))
-									   .SingleInstance();
+					   containerBuilder.RegisterType<Bot>().AsImplementedInterfaces().SingleInstance();
 				   });
 
 			return builder;

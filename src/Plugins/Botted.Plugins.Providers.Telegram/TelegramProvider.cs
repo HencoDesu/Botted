@@ -18,14 +18,14 @@ namespace Botted.Plugins.Providers.Telegram
 		private readonly ITelegramBotClient _telegramBotClient;
 		private readonly CancellationTokenSource _cts = new();
 
-		public TelegramProvider(IEventService eventService,
+		public TelegramProvider(IEventBottedService eventBottedService,
 								ITelegramBotClient telegramBotClient)
-			: base(eventService, Identifier)
+			: base(eventBottedService, Identifier)
 		{
 			_telegramBotClient = telegramBotClient;
 
-			eventService.GetEvent<BotStarted>().Subscribe(OnBotStarted);
-			eventService.GetEvent<BotStopped>().Subscribe(OnBotStopped);
+			eventBottedService.GetEvent<BotStarted>().Subscribe(OnBotStarted);
+			eventBottedService.GetEvent<BotStopped>().Subscribe(OnBotStopped);
 		}
 
 		public override async Task SendMessage(BottedMessage message)

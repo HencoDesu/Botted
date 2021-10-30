@@ -19,7 +19,7 @@ namespace Botted.Core.Database.Abstractions.Extensions
 				optionsBuilder.Apply(options);
 			}
 
-			return bottedBuilder.ConfigureContainer(c =>
+			return bottedBuilder.ConfigureServices(c =>
 			{
 				c.RegisterSingleton<TAbstraction, TDatabase>();
 				c.RegisterSingleton(optionsBuilder.Options);

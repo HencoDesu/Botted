@@ -9,16 +9,16 @@ namespace Botted.Core
 	/// <inheritdoc />
 	public class Bot : IBot
 	{
-		private readonly IEventService _eventService;
+		private readonly IEventBottedService _eventBottedService;
 
-		public Bot(IEventService eventService)
+		public Bot(IEventBottedService eventBottedService)
 		{
-			_eventService = eventService;
+			_eventBottedService = eventBottedService;
 		}
 
 		public Task StartAsync(CancellationToken cancellationToken)
 		{
-			_eventService.GetEvent<BotStarted>()
+			_eventBottedService.GetEvent<BotStarted>()
 						 .Raise();
 			
 			return Task.CompletedTask;
@@ -26,7 +26,7 @@ namespace Botted.Core
 
 		public Task StopAsync(CancellationToken cancellationToken)
 		{
-			_eventService.GetEvent<BotStopped>()
+			_eventBottedService.GetEvent<BotStopped>()
 						 .Raise();
 			
 			return Task.CompletedTask;

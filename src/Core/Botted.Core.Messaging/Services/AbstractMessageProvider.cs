@@ -10,22 +10,22 @@ namespace Botted.Core.Messaging.Services
 	public abstract class AbstractMessageProvider : IMessageProvider
 	{
 		private readonly ProviderIdentifier _identifier;
-		private readonly IEventService _eventService;
+		private readonly IEventBottedService _eventBottedService;
 		
-		protected AbstractMessageProvider(IEventService eventService, 
+		protected AbstractMessageProvider(IEventBottedService eventBottedService, 
 										  ProviderIdentifier identifier)
 		{
-			_eventService = eventService;
+			_eventBottedService = eventBottedService;
 			_identifier = identifier;
 
-			_eventService.GetEvent<MessageSent>().Subscribe(OnMessageSent);
+			_eventBottedService.GetEvent<MessageSent>().Subscribe(OnMessageSent);
 		}
 
 		public abstract Task SendMessage(BottedMessage message);
 
 		protected void OnMessageReceived(BottedMessage message)
 		{
-			_eventService.GetEvent<MessageReceived>().Raise(message);
+			_eventBottedService.GetEvent<MessageReceived>().Raise(message);
 		}
 
 		protected Task OnMessageSent(BottedMessage message)

@@ -7,8 +7,8 @@ namespace Botted.Core.Commands.Extensions
 	{
 		public static IBottedBuilder UseDefaultCommandService(this IBottedBuilder bottedBuilder)
 		{
-			return bottedBuilder.UseCommandService<CommandService>()
-								.ConfigureContainer(c => c.RegisterConfigurationSection<CommandsConfiguration>("Commands"));
+			return bottedBuilder.UseCommandService<CommandBottedService>()
+								.ConfigureServices(c => c.RegisterConfigurationSection<CommandsConfiguration>("Commands"));
 		}
 
 		public static IBottedBuilder UseDefaultCommandParser(this IBottedBuilder bottedBuilder)

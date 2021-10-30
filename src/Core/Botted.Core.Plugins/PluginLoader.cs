@@ -13,10 +13,10 @@ namespace Botted.Core.Plugins
 		private readonly ILogger<PluginLoader> _logger;
 		private readonly DirectoryInfo _pluginsDirectory;
 
-		public PluginLoader(ILogger<PluginLoader> logger, string pluginsDirectory)
+		public PluginLoader(ILogger<PluginLoader> logger, DirectoryInfo pluginsDirectory)
 		{
 			_logger = logger;
-			_pluginsDirectory = new DirectoryInfo(pluginsDirectory);
+			_pluginsDirectory = pluginsDirectory;
 		}
 
 		public IReadOnlyCollection<BottedPlugin> LoadPlugins()

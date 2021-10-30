@@ -11,7 +11,7 @@ namespace Botted.Core.Events.Abstractions.Events
 	/// </summary>
 	/// <remarks>
 	/// You don't need to create it your self's, just get it though
-	/// <see cref="IEventService.GetEvent{TEvent}"/>
+	/// <see cref="IEventBottedService.GetEvent{TEvent}"/>
 	/// </remarks>
 	public abstract class Event
 	{

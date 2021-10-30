@@ -1,50 +1,34 @@
 ﻿using System;
 using System.IO;
-using System.Reflection;
-using Autofac;
 using Botted.Core.Abstractions;
 using Botted.Core.Abstractions.Dependencies;
 using Botted.Core.Abstractions.Extensions;
-using Botted.Core.Dependencies;
 using Botted.Core.Plugins;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
-using Serilog;
-using Serilog.Extensions.Logging;
 
 namespace Botted.Core
 {
 	/// <inheritdoc />
-	public class BottedBuilder<TBot> : IBottedBuilder
-		where TBot : notnull
+	public class BottedBuilder : IBottedBuilder
 	{
 		private readonly IContainerBuilder _containerBuilder;
-		private readonly string _botPath;
+		private readonly ILoggerFactory _loggerFactory;
+		private readonly DirectoryInfo _botRootDirectory;
 
-		internal BottedBuilder(ContainerBuilder containerBuilder)
+		public BottedBuilder(IContainerBuilder containerBuilder,
+							 ILoggerFactory loggerFactory,
+							 DirectoryInfo rootDirectory)
 		{
-			_botPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!;
-
-			containerBuilder.RegisterType<TBot>()
-							.AsImplementedInterfaces()
-							.SingleInstance();
-
-			_containerBuilder = new AutofacContainerBuilder(containerBuilder);
+			_containerBuilder = containerBuilder;
+			_loggerFactory = loggerFactory;
+			_botRootDirectory = rootDirectory;
 		}
-
-		public IBottedBuilder UseLibrariesFolder(string librariesPath)
-		{
-			LoadLibraries(Path.Combine(_botPath, librariesPath));
-			return this;
-		}
-
+		
 		public IBottedBuilder UsePluginsFolder(string pluginsPath)
 		{
-			var fullPath = Path.Combine(_botPath, pluginsPath);
-			CreateDirectoryIfNotExist(fullPath);
-
-			var loader = new PluginLoader(new SerilogLoggerFactory(Log.Logger).CreateLogger<PluginLoader>(), fullPath);
+			var pluginDirectory = _botRootDirectory.CreateSubdirectory(pluginsPath);
+			var loader = new PluginLoader(_loggerFactory.CreateLogger<PluginLoader>(), pluginDirectory);
 			var plugins = loader.LoadPlugins();
 			plugins.ApplyToEachImmediately(p => p.OnInit(this));
 			_containerBuilder.RegisterBuildCallback(container =>
@@ -56,45 +40,23 @@ namespace Botted.Core
 
 		public IBottedBuilder UseConfigsFolder(string configsPath)
 		{
-			LoadConfigs(Path.Combine(_botPath, configsPath));
-			return this;
-		}
-
-		public IBottedBuilder ConfigureContainer(Action<IContainerBuilder> configure)
-		{
-			_containerBuilder.Apply(configure);
-			return this;
-		}
-		
-		private void LoadLibraries(string librariesPath)
-		{
-			CreateDirectoryIfNotExist(librariesPath);
-
-			Directory.GetFiles(librariesPath, "*.dll")
-					 .ApplyToEachImmediately(lib => Assembly.LoadFrom(lib));
-		}
-
-		private void LoadConfigs(string configsPath)
-		{
-			CreateDirectoryIfNotExist(configsPath);
-
+			var configsDirectory = _botRootDirectory.CreateSubdirectory(configsPath);
 			var configurationBuilder = new ConfigurationBuilder();
 
-			configurationBuilder.SetBasePath(configsPath);
-			Directory.GetFiles(configsPath, "*.json")
-					 .ApplyToEachImmediately(f => configurationBuilder.AddJsonFile(f));
+			configurationBuilder.SetBasePath(configsDirectory.FullName);
+			configsDirectory.GetFiles("*.json")
+							.ApplyToEachImmediately(f => configurationBuilder.AddJsonFile(f.Name));
 
 			var config = configurationBuilder.Build();
 			
 			_containerBuilder.RegisterSingleton<IConfiguration>(config);
+			return this;
 		}
 
-		private static void CreateDirectoryIfNotExist(string directoryPath)
+		public IBottedBuilder ConfigureServices(Action<IContainerBuilder> configure)
 		{
-			if (!Directory.Exists(directoryPath))
-			{
-				Directory.CreateDirectory(directoryPath);
-			}
+			_containerBuilder.Apply(configure);
+			return this;
 		}
 	}
 }

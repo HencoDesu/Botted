@@ -11,7 +11,7 @@ namespace Botted.Plugins.Providers.Telegram
 		public override void OnInit(IBottedBuilder containerBuilder)
 		{
 			containerBuilder.UseProvider<TelegramProvider>()
-							.ConfigureContainer(ConfigureContainer);
+							.ConfigureServices(ConfigureContainer);
 		}
 
 		public override void OnLoad(IContainer services) { }

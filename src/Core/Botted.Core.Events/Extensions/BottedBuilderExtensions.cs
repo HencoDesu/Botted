@@ -7,7 +7,7 @@ namespace Botted.Core.Events.Extensions
 	{
 		public static IBottedBuilder UseDefaultEventService(this IBottedBuilder bottedBuilder)
 		{
-			return bottedBuilder.UseEventService<EventService>();
+			return bottedBuilder.UseEventService<EventBottedService>();
 		}
 	}
 }

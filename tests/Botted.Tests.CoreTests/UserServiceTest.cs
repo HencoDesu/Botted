@@ -27,7 +27,7 @@ namespace Botted.Tests.CoreTests
 		public void RegistrationTest()
 		{
 			var userDatabase = A.Fake<IUserDatabase>();
-			var userService = new UserService(userDatabase, A.Fake<IEventService>());
+			var userService = new UserService(userDatabase, A.Fake<IEventBottedService>());
 			
 			userService.Register();
 			
@@ -37,7 +37,7 @@ namespace Botted.Tests.CoreTests
 		[Fact]
 		public void GetByIdTest()
 		{
-			var userService = new UserService(_userDatabase, A.Fake<IEventService>());
+			var userService = new UserService(_userDatabase, A.Fake<IEventBottedService>());
 			
 			var user = userService.GetById(8);
 
@@ -47,7 +47,7 @@ namespace Botted.Tests.CoreTests
 		[Fact]
 		public void GetAllTest()
 		{
-			var userService = new UserService(_userDatabase, A.Fake<IEventService>());
+			var userService = new UserService(_userDatabase, A.Fake<IEventBottedService>());
 			
 			var users = userService.GetAll();
 
@@ -57,7 +57,7 @@ namespace Botted.Tests.CoreTests
 		[Fact]
 		public void GetByPredicateTest()
 		{
-			var userService = new UserService(_userDatabase, A.Fake<IEventService>());
+			var userService = new UserService(_userDatabase, A.Fake<IEventBottedService>());
 			
 			var users = userService.GetAll(u => u.Nickname == "HencoDesu");
 

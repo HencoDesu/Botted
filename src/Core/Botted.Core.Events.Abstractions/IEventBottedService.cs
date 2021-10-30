@@ -6,7 +6,7 @@ namespace Botted.Core.Events.Abstractions
 	/// <summary>
 	/// Manages all events that can occurs in bot
 	/// </summary>
-	public interface IEventService : IService
+	public interface IEventBottedService : IBottedService
 	{
 		/// <summary>
 		/// Gets any event for subscription or raising

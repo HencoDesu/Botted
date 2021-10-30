@@ -17,14 +17,9 @@ namespace Botted.Core.Dependencies
 			_containerBuilder = containerBuilder;
 		}
 
-		public void RegisterService<T>() where T : IService
-		{
-			RegisterService<T, T>();
-		}
-
 		public void RegisterService<TAbstraction, TImplementation>() 
 			where TImplementation : TAbstraction
-			where TAbstraction : IService
+			where TAbstraction : IBottedService
 		{
 			RegisterSingleton<TAbstraction, TImplementation>();
 		}

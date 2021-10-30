@@ -5,9 +5,9 @@ namespace Botted.Core.Events.Abstractions.Extensions
 	public static class BottedBuilderExtensions
 	{
 		public static IBottedBuilder UseEventService<TEventService>(this IBottedBuilder bottedBuilder)
-			where TEventService : IEventService
+			where TEventService : IEventBottedService
 		{
-			return bottedBuilder.ConfigureContainer(c => c.RegisterService<IEventService, TEventService>());
+			return bottedBuilder.ConfigureServices(c => c.RegisterService<IEventBottedService, TEventService>());
 		}
 	}
 }

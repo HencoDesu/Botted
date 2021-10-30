@@ -17,21 +17,21 @@ namespace Botted.Core.Commands
 {
 	/// <inheritdoc />
 	[UsedImplicitly]
-	public class CommandService : ICommandService
+	public class CommandBottedService : ICommandBottedService
 	{
 		private readonly Subject<BottedMessage> _messageSubject = new();
 		private readonly Subject<ICommandExecutionContext> _executionSubject = new();
 		private readonly Dictionary<string, ICommandDataStructure> _dataStructures = new();
-		private readonly IEventService _eventService;
+		private readonly IEventBottedService _eventBottedService;
 		private readonly ICommandParser _parser;
 
-		public CommandService(IEventService eventService, 
+		public CommandBottedService(IEventBottedService eventBottedService, 
 							  ICommandParser parser)
 		{
-			_eventService = eventService;
+			_eventBottedService = eventBottedService;
 			_parser = parser;
 
-			eventService.GetEvent<MessageReceived>().Subscribe(OnMessageReceived);
+			eventBottedService.GetEvent<MessageReceived>().Subscribe(OnMessageReceived);
 
 			_messageSubject.Subscribe(message =>
 						   {
@@ -41,7 +41,7 @@ namespace Botted.Core.Commands
 								   return;
 							   }
 							   
-							   _eventService.GetEvent<CommandExecuting>()
+							   _eventBottedService.GetEvent<CommandExecuting>()
 											.Raise(context);
 							   _executionSubject.OnNext(context);
 						   });
@@ -70,7 +70,7 @@ namespace Botted.Core.Commands
 					ProviderIdentifier = context.Message.ProviderIdentifier,
 					Text = result.Text
 				};
-				_eventService.GetEvent<MessageSent>().Raise(message);
+				_eventBottedService.GetEvent<MessageSent>().Raise(message);
 			});
 		}
 		

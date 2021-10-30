@@ -13,12 +13,12 @@ namespace Botted.Tests.CoreTests
 {
 	public class CommandServiceTest
 	{
-		private readonly IEventService _eventService;
+		private readonly IEventBottedService _eventBottedService;
 		private readonly ICommandParser _commandParser;
 
 		public CommandServiceTest()
 		{
-			_eventService = new EventService();
+			_eventBottedService = new EventBottedService();
 			_commandParser = new CommandParser(
 				new CommandsConfiguration 
 				{ 
@@ -74,21 +74,21 @@ namespace Botted.Tests.CoreTests
 			act.Should().Throw<Exception>();
 		}
 
-		private ICommandService CreateCommandService()
+		private ICommandBottedService CreateCommandService()
 		{
-			return new CommandService(_eventService, _commandParser);
+			return new CommandBottedService(_eventBottedService, _commandParser);
 		}
 
 		private void ReceiveMessage(string message)
 		{
 			var generatedMessage = TestMessageGenerator.GenerateMessage(message);
-			_eventService.GetEvent<MessageReceived>()
+			_eventBottedService.GetEvent<MessageReceived>()
 						 .Raise(generatedMessage);
 		}
 
-		private TestCommand CreateAndRegisterCommand(ICommandService commandService)
+		private TestCommand CreateAndRegisterCommand(ICommandBottedService commandBottedService)
 		{
-			return new TestCommand().Apply(commandService.RegisterCommand);
+			return new TestCommand().Apply(commandBottedService.RegisterCommand);
 		}
 	}
 }

@@ -24,7 +24,7 @@ namespace Botted.Plugins.Providers.Vk
 		public override void OnInit(IBottedBuilder containerBuilder)
 		{
 			containerBuilder.UseProvider<VkProvider>()
-							.ConfigureContainer(ConfigureContainer);
+							.ConfigureServices(ConfigureContainer);
 		}
 
 		private void ConfigureContainer(IContainerBuilder containerBuilder)

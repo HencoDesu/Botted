@@ -3,6 +3,7 @@ using IContainer = Botted.Core.Abstractions.Dependencies.IContainer;
 
 namespace Botted.Core.Dependencies
 {
+	/// <inheritdoc cref="IContainer"/>
 	public class AutofacContainer : IContainer
 	{
 		private readonly IComponentContext _scope;

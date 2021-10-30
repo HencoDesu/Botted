@@ -12,7 +12,7 @@ namespace Botted.Tests.CoreTests
 		[Fact]
 		public void EventCreatingTest()
 		{
-			var eventService = new EventService();
+			var eventService = new EventBottedService();
 			
 			var firstEvent = eventService.GetEvent<TestEvent>();
 			var secondEvent = eventService.GetEvent<TestEvent>();
@@ -23,7 +23,7 @@ namespace Botted.Tests.CoreTests
 		[Fact]
 		public void SubscribeUnsubscribeTest()
 		{
-			var eventService = new EventService();
+			var eventService = new EventBottedService();
 			var testEvent = eventService.GetEvent<TestEvent>();
 			var invocations = 0;
 			
@@ -39,7 +39,7 @@ namespace Botted.Tests.CoreTests
 		[Fact]
 		public void SubscribeUnsubscribeWithDataTest()
 		{
-			var eventService = new EventService();
+			var eventService = new EventBottedService();
 			var testEvent = eventService.GetEvent<TestEvent>();
 			var invocations = 0;
 			

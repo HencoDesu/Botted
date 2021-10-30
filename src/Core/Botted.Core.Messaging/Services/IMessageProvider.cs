@@ -4,7 +4,7 @@ using Botted.Core.Messaging.Data;
 
 namespace Botted.Core.Messaging.Services
 {
-	public interface IMessageProvider : IService
+	public interface IMessageProvider : IBottedService
 	{
 		Task SendMessage(BottedMessage message);
 	}

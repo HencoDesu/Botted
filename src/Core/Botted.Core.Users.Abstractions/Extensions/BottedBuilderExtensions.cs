@@ -10,7 +10,7 @@ namespace Botted.Core.Users.Abstractions.Extensions
 		public static IBottedBuilder UseUserService<TUserService>(this IBottedBuilder bottedBuilder) 
 			where TUserService : IUserService
 		{
-			return bottedBuilder.ConfigureContainer(c => c.RegisterService<IUserService, TUserService>());
+			return bottedBuilder.ConfigureServices(c => c.RegisterService<IUserService, TUserService>());
 		}
 
 		public static IBottedBuilder UseUserDatabase<TUserDatabase>(this IBottedBuilder bottedBuilder,

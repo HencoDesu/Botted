@@ -14,13 +14,13 @@ namespace Botted.Core.Users
 	public class UserService : IUserService
 	{
 		private readonly IUserDatabase _database;
-		private readonly IEventService _eventService;
+		private readonly IEventBottedService _eventBottedService;
 
 		public UserService(IUserDatabase database, 
-						   IEventService eventService)
+						   IEventBottedService eventBottedService)
 		{
 			_database = database;
-			_eventService = eventService;
+			_eventBottedService = eventBottedService;
 		}
 
 		public BottedUser GetById(long userId)
@@ -37,7 +37,7 @@ namespace Botted.Core.Users
 		public BottedUser Register()
 		{
 			var user = _database.RegisterUser();
-			_eventService.GetEvent<UserRegistered>().Raise(user);
+			_eventBottedService.GetEvent<UserRegistered>().Raise(user);
 			return user;
 		}
 	}

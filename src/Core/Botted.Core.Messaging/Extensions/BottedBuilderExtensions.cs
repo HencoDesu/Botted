@@ -15,7 +15,7 @@ namespace Botted.Core.Messaging.Extensions
 			where TProvider : TProviderAbstraction
 			where TProviderAbstraction : IMessageProvider
 		{
-			return bottedBuilder.ConfigureContainer(c => c.RegisterService<TProviderAbstraction, TProvider>());
+			return bottedBuilder.ConfigureServices(c => c.RegisterService<TProviderAbstraction, TProvider>());
 		}
 	}
 }

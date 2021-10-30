@@ -22,16 +22,16 @@ namespace Botted.Plugins.Providers.Vk
 		private readonly Random _random = new ();
 		private readonly CancellationTokenSource _cts = new();
 		
-		public VkProvider(IEventService eventService,
+		public VkProvider(IEventBottedService eventBottedService,
 						  IVkApi vkApi,
 						  VkConfiguration configuration)
-			: base(eventService, Identifier)
+			: base(eventBottedService, Identifier)
 		{
 			_vkApi = vkApi;
 			_configuration = configuration;
 
-			eventService.GetEvent<BotStarted>().Subscribe(OnBotStarted);
-			eventService.GetEvent<BotStopped>().Subscribe(OnBotStopped);
+			eventBottedService.GetEvent<BotStarted>().Subscribe(OnBotStarted);
+			eventBottedService.GetEvent<BotStopped>().Subscribe(OnBotStopped);
 		}
 
 		public override async Task SendMessage(BottedMessage message)

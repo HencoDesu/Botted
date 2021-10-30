@@ -8,7 +8,7 @@ namespace Botted.Core.Users.Abstractions
 	/// <summary>
 	/// Represents a service to receive information about users
 	/// </summary>
-	public interface IUserService : IService
+	public interface IUserService : IBottedService
 	{
 		/// <summary>
 		/// Gets user with specific ID

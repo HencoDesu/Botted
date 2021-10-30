@@ -6,6 +6,5 @@ namespace Botted.Core.Abstractions
 	/// Provides an abstraction for bot 
 	/// </summary>
 	public interface IBot : IHostedService
-	{
-	}
+	{ }
 }

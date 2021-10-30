@@ -8,7 +8,7 @@ namespace Botted.Core.Events
 {
 	/// <inheritdoc />
 	[UsedImplicitly]
-	public class EventService : IEventService
+	public class EventBottedService : IEventBottedService
 	{
 		private readonly List<Event> _events = new();
 		
