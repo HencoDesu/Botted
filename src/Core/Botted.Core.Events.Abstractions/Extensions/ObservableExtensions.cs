@@ -13,8 +13,14 @@ namespace Botted.Core.Events.Abstractions.Extensions
 													Action<Exception>? handler = null)
 		{
 			return handler is null 
-				? source.Subscribe(_ => asyncAction().Start()) 
-				: source.Subscribe(_ => asyncAction().Start(), handler);
+				? source.SelectMany(Wrapped).Subscribe(_ => { }) 
+				: source.SelectMany(Wrapped).Subscribe(_ => { }, handler);
+			
+			async Task<Unit> Wrapped(T t)
+			{
+				await asyncAction();
+				return Unit.Default;
+			}
 		}
 
 		public static IDisposable SubscribeAsync<T>(this IObservable<T> source,
@@ -22,8 +28,14 @@ namespace Botted.Core.Events.Abstractions.Extensions
 													Action<Exception>? handler = null)
 		{
 			return handler is null 
-				? source.Subscribe(_ => asyncAction(_).Start()) 
-				: source.Subscribe(_ => asyncAction(_).Start(), handler);
+				? source.SelectMany(Wrapped).Subscribe(_ => { }) 
+				: source.SelectMany(Wrapped).Subscribe(_ => { }, handler);
+			
+			async Task<Unit> Wrapped(T t)
+			{
+				await asyncAction(t);
+				return Unit.Default;
+			}
 		}
 	}
 }

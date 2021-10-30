@@ -42,7 +42,7 @@ namespace Botted.Core.Commands
 							   }
 							   
 							   _eventBottedService.GetEvent<CommandExecuting>()
-											.Raise(context);
+												  .Raise(context);
 							   _executionSubject.OnNext(context);
 						   });
 		}

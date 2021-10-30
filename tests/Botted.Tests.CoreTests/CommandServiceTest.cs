@@ -83,7 +83,7 @@ namespace Botted.Tests.CoreTests
 		{
 			var generatedMessage = TestMessageGenerator.GenerateMessage(message);
 			_eventBottedService.GetEvent<MessageReceived>()
-						 .Raise(generatedMessage);
+							   .Raise(generatedMessage);
 		}
 
 		private TestCommand CreateAndRegisterCommand(ICommandBottedService commandBottedService)
