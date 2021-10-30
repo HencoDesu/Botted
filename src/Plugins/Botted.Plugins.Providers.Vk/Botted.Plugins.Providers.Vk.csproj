@@ -16,8 +16,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Autofac" Version="6.2.0" />
-      <PackageReference Include="JetBrains.Annotations" Version="2021.2.0" />
       <PackageReference Include="VkNet" Version="1.67.0" />
     </ItemGroup>
 

@@ -6,6 +6,7 @@ using Botted.Core.Events.Abstractions.Events;
 using Botted.Core.Messaging.Data;
 using Botted.Core.Messaging.Services;
 using Botted.Core.Users.Abstractions.Data;
+using JetBrains.Annotations;
 using VkNet.Abstractions;
 using VkNet.Enums.SafetyEnums;
 using VkNet.Model;
@@ -13,6 +14,7 @@ using VkNet.Model.RequestParams;
 
 namespace Botted.Plugins.Providers.Vk
 {
+	[UsedImplicitly]
 	public class VkProvider : AbstractMessageProvider
 	{
 		public static ProviderIdentifier Identifier { get; } = ProviderIdentifier.Create();

@@ -22,8 +22,4 @@
       <ProjectReference Include="..\Botted.Core.Users.Abstractions\Botted.Core.Users.Abstractions.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <PackageReference Include="JetBrains.Annotations" Version="2021.2.0" />
-    </ItemGroup>
-
 </Project>
