@@ -5,5 +5,5 @@ using Botted.Core.Users.Abstractions.Data;
 namespace Botted.Core.Users.Abstractions.Events
 {
 	[SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
-	public class UserRegistered : EventWithData<User> { }
+	public class UserRegistered : EventWithData<BottedUser> { }
 }

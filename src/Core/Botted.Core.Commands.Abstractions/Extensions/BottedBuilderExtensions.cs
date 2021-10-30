@@ -27,12 +27,17 @@ namespace Botted.Core.Commands.Abstractions.Extensions
 			where TCommand : ICommand<TData> 
 			where TData : class, ICommandData
 		{
-			return bottedBuilder.ConfigureContainer(c => c.RegisterBuildCallback(container =>
+			return bottedBuilder.ConfigureContainer(c =>
 			{
-				var commandService = container.Resolve<ICommandService>();
-				var command = container.Resolve<TCommand>();
-				commandService.RegisterCommand(command);
-			}));
+				c.RegisterSingleton<TCommand>();
+				
+				c.RegisterBuildCallback(container =>
+				{
+					var commandService = container.Resolve<ICommandService>();
+					var command = container.Resolve<TCommand>();
+					commandService.RegisterCommand(command);
+				});
+			});
 		}
 	}
 }

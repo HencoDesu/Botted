@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Threading.Tasks;
 using Botted.Core.Commands.Abstractions;
 using Botted.Core.Commands.Abstractions.Context;
 using Botted.Core.Commands.Abstractions.Data;
@@ -11,17 +9,17 @@ using Botted.Core.Commands.Abstractions.Events;
 using Botted.Core.Commands.Context;
 using Botted.Core.Events.Abstractions;
 using Botted.Core.Events.Abstractions.Extensions;
-using Botted.Core.Providers.Abstractions.Data;
-using Botted.Core.Providers.Abstractions.Events;
+using Botted.Core.Messaging.Data;
+using Botted.Core.Messaging.Events;
 using JetBrains.Annotations;
 
 namespace Botted.Core.Commands
 {
 	/// <inheritdoc />
 	[UsedImplicitly]
-	public partial class CommandService : ICommandService
+	public class CommandService : ICommandService
 	{
-		private readonly Subject<Message> _messageSubject = new();
+		private readonly Subject<BottedMessage> _messageSubject = new();
 		private readonly Subject<ICommandExecutionContext> _executionSubject = new();
 		private readonly Dictionary<string, ICommandDataStructure> _dataStructures = new();
 		private readonly IEventService _eventService;
@@ -58,23 +56,30 @@ namespace Botted.Core.Commands
 			}
 			
 			_dataStructures.Add(command.Name, TData.Structure);
-			_executionSubject.SubscribeAsync(context =>
+			_executionSubject.SubscribeAsync(async context =>
 			{
 				if (context.CommandName != command.Name || !context.CanExecute)
 				{
-					return Task.CompletedTask;
+					return;
 				}
 
-				return ExecuteCommand(command, (context.CommandData as TData)!);
+				var result = await command.Execute((context.CommandData as TData)!);
+				var message = new BottedMessage()
+				{
+					ChatId = context.Message.ChatId,
+					ProviderIdentifier = context.Message.ProviderIdentifier,
+					Text = result.Text
+				};
+				_eventService.GetEvent<MessageSent>().Raise(message);
 			});
 		}
 		
-		private void OnMessageReceived(Message message)
+		private void OnMessageReceived(BottedMessage message)
 		{
 			_messageSubject.OnNext(message);
 		}
 
-		private ICommandExecutionContext? ParseContext(Message message)
+		private ICommandExecutionContext? ParseContext(BottedMessage message)
 		{
 			if (!_parser.TryParseCommandName(message, out var commandName))
 			{
@@ -89,15 +94,7 @@ namespace Botted.Core.Commands
 
 			var structure = _dataStructures[commandName];
 			var data = _parser.ParseCommandData(message, structure);
-			return new CommandExecutionContext(commandName, data, true);
-		}
-		
-		private async Task ExecuteCommand<TCommandData>(ICommand<TCommandData> command, TCommandData data) 
-			where TCommandData : class, ICommandData
-		{
-			var result = await command.Execute(data);
-			var message = new Message(result.Text);
-			_eventService.GetEvent<MessageHandled>().Raise(message);
+			return new CommandExecutionContext(commandName, data, message, true);
 		}
 	}
 }

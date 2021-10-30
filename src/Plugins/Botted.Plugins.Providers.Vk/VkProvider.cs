@@ -1,53 +1,61 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
-using Botted.Core.AdditionalData.Abstractions;
 using Botted.Core.Events.Abstractions;
 using Botted.Core.Events.Abstractions.Events;
-using Botted.Core.Providers.Abstractions;
-using Botted.Core.Providers.Abstractions.Data;
-using Botted.Core.Providers.Abstractions.Events;
+using Botted.Core.Messaging.Data;
+using Botted.Core.Messaging.Services;
 using Botted.Core.Users.Abstractions.Data;
-using Microsoft.Extensions.Logging;
 using VkNet.Abstractions;
 using VkNet.Enums.SafetyEnums;
+using VkNet.Model;
 using VkNet.Model.RequestParams;
 
 namespace Botted.Plugins.Providers.Vk
 {
-	public class VkProvider : AbstractProviderService
+	public class VkProvider : AbstractMessageProvider
 	{
-		public static ProviderIdentifier Identifier { get; } = new();
+		public static ProviderIdentifier Identifier { get; } = ProviderIdentifier.Create();
 
 		private readonly IVkApi _vkApi;
 		private readonly VkConfiguration _configuration;
-		private readonly ILogger<VkProvider> _logger;
+		private readonly Random _random = new ();
 		private readonly CancellationTokenSource _cts = new();
 		
 		public VkProvider(IEventService eventService,
 						  IVkApi vkApi,
-						  VkConfiguration configuration,
-						  ILogger<VkProvider> logger)
+						  VkConfiguration configuration)
 			: base(eventService, Identifier)
 		{
 			_vkApi = vkApi;
 			_configuration = configuration;
-			_logger = logger;
 
 			eventService.GetEvent<BotStarted>().Subscribe(OnBotStarted);
 			eventService.GetEvent<BotStopped>().Subscribe(OnBotStopped);
 		}
 
-		public override async Task SendMessage(Message message)
+		public override async Task SendMessage(BottedMessage message)
 		{
-			var vkMessage = message.GetAdditionalData<VkNet.Model.Message>();
 			await _vkApi.Messages.SendAsync(new MessagesSendParams()
 			{
-				PeerId = vkMessage.PeerId,
-				Message = message.Text
+				PeerId = message.ChatId,
+				Message = message.Text,
+				RandomId = _random.Next()
 			});
 		}
 
-		protected override void WaitForUpdates(CancellationToken cancellationToken)
+		private void OnBotStarted()
+		{
+			var token = _cts.Token;
+			Task.Run(() => WaitForUpdates(token), token);
+		}
+
+		private void OnBotStopped()
+		{
+			_cts.Cancel();
+		}
+
+		private void WaitForUpdates(CancellationToken cancellationToken)
 		{
 			while (!cancellationToken.IsCancellationRequested)
 			{
@@ -71,10 +79,7 @@ namespace Botted.Plugins.Providers.Vk
 							if (groupUpdate.Type == GroupUpdateType.MessageNew)
 							{
 								var message = groupUpdate.Message;
-								var bottedMessage = new Message(message.Text, Identifier, new User())
-									.WithAdditionalData(message);
-								_logger.LogInformation(message.Text);
-								OnMessageReceived(bottedMessage);
+								OnMessageReceived(ReadMessage(message));
 							}
 						}
 					}
@@ -83,6 +88,17 @@ namespace Botted.Plugins.Providers.Vk
 					// ignored for now
 				}
 			}
+		}
+		
+		private BottedMessage ReadMessage(Message message)
+		{
+			return new BottedMessage()
+			{
+				ChatId = message.ChatId ?? message.PeerId,
+				ProviderIdentifier = Identifier,
+				Text = message.Text,
+				Sender = new BottedUser()
+			};
 		}
 	}
 }

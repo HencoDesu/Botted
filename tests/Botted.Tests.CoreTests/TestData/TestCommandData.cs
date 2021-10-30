@@ -12,7 +12,7 @@ namespace Botted.Tests.CoreTests.TestData
 						  .WithArgument(d => d.IntData, c => c.TextArgs[0])
 						  .WithArgument(d => d.StringData, c => c.TextArgs[1])
 						  .WithArgument(d => d.EnumData, c => c.TextArgs[2], true)
-						  .WithArgument(d => d.User, c => c.User)
+						  .WithArgument(d => d.BottedUser, c => c.User)
 						  .Build();
 
 		public TestCommandData()
@@ -21,12 +21,12 @@ namespace Botted.Tests.CoreTests.TestData
 		public TestCommandData(int intData, 
 							   string stringData, 
 							   TestEnum enumData, 
-							   User userData)
+							   BottedUser bottedUserData)
 		{
 			IntData = intData;
 			StringData = stringData;
 			EnumData = enumData;
-			User = userData;
+			BottedUser = bottedUserData;
 		}
 		
 		public int IntData { get; set; }
@@ -35,7 +35,7 @@ namespace Botted.Tests.CoreTests.TestData
 			
 		public TestEnum EnumData { get; set; }
 		
-		public User? User { get; set; }
+		public BottedUser? BottedUser { get; set; }
 
 		/// <inheritdoc />
 		public bool Equals(TestCommandData? other)
@@ -45,7 +45,7 @@ namespace Botted.Tests.CoreTests.TestData
 			return IntData == other.IntData 
 				&& StringData == other.StringData
 				&& EnumData == other.EnumData 
-				&& Equals(User, other.User);
+				&& Equals(BottedUser, other.BottedUser);
 		}
 
 		/// <inheritdoc />

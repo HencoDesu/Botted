@@ -1,24 +1,22 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Botted.Core.Events.Abstractions;
 using Botted.Core.Events.Abstractions.Events;
-using Botted.Core.Providers.Abstractions;
-using Botted.Core.Providers.Abstractions.Data;
+using Botted.Core.Messaging.Data;
+using Botted.Core.Messaging.Services;
+using Botted.Core.Users.Abstractions.Data;
 using Telegram.Bot;
-using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
-using TelegramMessage = Telegram.Bot.Types.Message;
-using Message = Botted.Core.Providers.Abstractions.Data.Message;
 
 namespace Botted.Plugins.Providers.Telegram
 {
-	public class TelegramProvider : AbstractProviderService
+	public class TelegramProvider : AbstractMessageProvider
 	{
-		public static ProviderIdentifier Identifier { get; } = new();
+		public static ProviderIdentifier Identifier { get; } = ProviderIdentifier.Create();
 
 		private readonly ITelegramBotClient _telegramBotClient;
+		private readonly CancellationTokenSource _cts = new();
 
 		public TelegramProvider(IEventService eventService,
 								ITelegramBotClient telegramBotClient)
@@ -30,30 +28,19 @@ namespace Botted.Plugins.Providers.Telegram
 			eventService.GetEvent<BotStopped>().Subscribe(OnBotStopped);
 		}
 
-		public override async Task SendMessage(Message message)
+		public override async Task SendMessage(BottedMessage message)
 		{
-			var tgMessage = message.GetAdditionalData<TelegramMessage>();
-			await _telegramBotClient.SendTextMessageAsync(tgMessage.Chat.Id, message.Text);
+			await _telegramBotClient.SendTextMessageAsync(message.ChatId, message.Text);
 		}
 
-		protected override void OnBotStarted()
+		private void OnBotStarted()
 		{
-			_telegramBotClient.StartReceiving(HandleUpdateAsync, HandleErrorAsync, null, Cts.Token);
+			_telegramBotClient.StartReceiving(HandleUpdateAsync, (_, _, _) => Task.CompletedTask, null, _cts.Token);
 		}
 
-		private Task HandleErrorAsync(ITelegramBotClient botClient,
-									  Exception exception,
-									  CancellationToken cancellationToken)
+		private void OnBotStopped()
 		{
-			var errorMessage = exception switch
-			{
-				ApiRequestException apiRequestException =>
-					$"Telegram API Error:\n[{apiRequestException.ErrorCode}]\n{apiRequestException.Message}",
-				_ => exception.ToString()
-			};
-
-			Console.WriteLine(errorMessage);
-			return Task.CompletedTask;
+			_cts.Cancel();
 		}
 
 		private Task HandleUpdateAsync(ITelegramBotClient botClient,
@@ -65,12 +52,21 @@ namespace Botted.Plugins.Providers.Telegram
 				update.Message.Type == MessageType.Text && 
 				update.Message.Text is not null)
 			{
-				var message = new Message(update.Message.Text, Identifier, null);
-				message.SetAdditionalData(update.Message);
-				OnMessageReceived(message);
+				OnMessageReceived(ReadMessage(update.Message));
 			}
 
 			return Task.CompletedTask;
+		}
+
+		private BottedMessage ReadMessage(Message message)
+		{
+			return new BottedMessage()
+			{
+				Text = message.Text,
+				ProviderIdentifier = Identifier,
+				ChatId = message.Chat.Id,
+				Sender = new BottedUser()
+			};
 		}
 	}
 }

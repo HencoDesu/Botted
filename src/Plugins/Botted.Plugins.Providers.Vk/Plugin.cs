@@ -1,7 +1,7 @@
 ﻿using Botted.Core.Abstractions;
 using Botted.Core.Abstractions.Dependencies;
+using Botted.Core.Messaging.Extensions;
 using Botted.Core.Plugins;
-using Botted.Core.Providers.Abstractions.Extensions;
 using VkNet;
 using VkNet.Abstractions;
 using VkNet.Model;

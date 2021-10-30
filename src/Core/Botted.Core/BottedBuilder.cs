@@ -9,6 +9,9 @@ using Botted.Core.Dependencies;
 using Botted.Core.Plugins;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
+using Serilog;
+using Serilog.Extensions.Logging;
 
 namespace Botted.Core
 {
@@ -41,16 +44,12 @@ namespace Botted.Core
 			var fullPath = Path.Combine(_botPath, pluginsPath);
 			CreateDirectoryIfNotExist(fullPath);
 
-			_containerBuilder.RegisterSingleton(c =>
+			var loader = new PluginLoader(new SerilogLoggerFactory(Log.Logger).CreateLogger<PluginLoader>(), fullPath);
+			var plugins = loader.LoadPlugins();
+			plugins.ApplyToEachImmediately(p => p.OnInit(this));
+			_containerBuilder.RegisterBuildCallback(container =>
 			{
-				var loader = new PluginLoader(c.Resolve<ILogger<PluginLoader>>(), fullPath);
-				var plugins = loader.LoadPlugins();
-				plugins.ApplyToEachImmediately(p => p.OnInit(this));
-				_containerBuilder.RegisterBuildCallback(container =>
-				{
-					plugins.ApplyToEachImmediately(p => p.OnLoad(container));
-				});
-				return loader;
+				plugins.ApplyToEachImmediately(p => p.OnLoad(container));
 			});
 			return this;
 		}

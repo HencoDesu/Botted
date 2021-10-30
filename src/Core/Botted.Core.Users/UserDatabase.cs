@@ -17,14 +17,14 @@ namespace Botted.Core.Users
 		/// <inheritdoc />
 		[SuppressMessage("ReSharper", "UnassignedGetOnlyAutoProperty")]
 		[SuppressMessage("ReSharper", "ReplaceAutoPropertyWithComputedProperty")]
-		IQueryable<User> IUserDatabase.Users => UsersTable;
+		IQueryable<BottedUser> IUserDatabase.Users => UsersTable;
 
-		private DbSet<User> UsersTable { get; set; }
+		private DbSet<BottedUser> UsersTable { get; set; } = null!;
 
 		/// <inheritdoc />
-		public User RegisterUser()
+		public BottedUser RegisterUser()
 		{
-			var user = new User();
+			var user = new BottedUser();
 			UsersTable.Add(user);
 			SaveChanges();
 			return user;

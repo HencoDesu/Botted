@@ -4,7 +4,7 @@ using Botted.Core.Commands;
 using Botted.Core.Commands.Abstractions;
 using Botted.Core.Events;
 using Botted.Core.Events.Abstractions;
-using Botted.Core.Providers.Abstractions.Events;
+using Botted.Core.Messaging.Events;
 using Botted.Tests.CoreTests.TestData;
 using FluentAssertions;
 using Xunit;

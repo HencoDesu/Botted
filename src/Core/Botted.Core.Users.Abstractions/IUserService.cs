@@ -15,25 +15,25 @@ namespace Botted.Core.Users.Abstractions
 		/// </summary>
 		/// <param name="userId">User ID</param>
 		/// <returns>User with ID</returns>
-		User GetById(long userId);
+		BottedUser GetById(long userId);
 		
 		/// <summary>
 		/// Gets all users
 		/// </summary>
 		/// <returns>All users</returns>
-		IReadOnlyCollection<User> GetAll();
+		IReadOnlyCollection<BottedUser> GetAll();
 		
 		/// <summary>
 		/// Gets all users that matches predicate
 		/// </summary>
 		/// <param name="predicate">Predicate to filter users</param>
 		/// <returns>Users that matches predicate</returns>
-		IReadOnlyCollection<User> GetAll(Func<User, bool> predicate);
+		IReadOnlyCollection<BottedUser> GetAll(Func<BottedUser, bool> predicate);
 		
 		/// <summary>
 		/// Register a new user
 		/// </summary>
 		/// <returns>New user</returns>
-		User Register();
+		BottedUser Register();
 	}
 }

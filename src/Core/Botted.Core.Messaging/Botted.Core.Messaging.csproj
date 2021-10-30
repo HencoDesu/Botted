@@ -4,13 +4,9 @@
         <TargetFramework>net6.0</TargetFramework>
         <Nullable>enable</Nullable>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <PackageVersion>0.0.1</PackageVersion>
-        <Title>Botted.AdditionalData.Abstractions</Title>
+        <PackageVersion>0.0.1-preview0</PackageVersion>
+        <Title>Botted Messaging</Title>
         <Authors>HencoDesu</Authors>
-        <Company>HencoDesu</Company>
-        <Product>Botted</Product>
-        <AssemblyVersion>0.0.1</AssemblyVersion>
-        <FileVersion>0.0.1</FileVersion>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -20,5 +16,14 @@
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
       <OutputPath>..\..\..\bin\Release\</OutputPath>
     </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Botted.Core.Events.Abstractions\Botted.Core.Events.Abstractions.csproj" />
+      <ProjectReference Include="..\Botted.Core.Users.Abstractions\Botted.Core.Users.Abstractions.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="JetBrains.Annotations" Version="2021.2.0" />
+    </ItemGroup>
 
 </Project>

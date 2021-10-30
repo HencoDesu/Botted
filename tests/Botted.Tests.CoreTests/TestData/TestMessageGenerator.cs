@@ -1,12 +1,18 @@
-﻿using Botted.Core.Providers.Abstractions.Data;
+﻿using Botted.Core.Messaging.Data;
 
 namespace Botted.Tests.CoreTests.TestData
 {
 	public static class TestMessageGenerator
 	{
-		public static Message GenerateMessage(string text)
+		public static BottedMessage GenerateMessage(string text)
 		{
-			return new Message(text, ProviderIdentifier.Any, TestUsers.TestUser);
+			return new BottedMessage()
+			{
+				Text = text,
+				ChatId = 0,
+				ProviderIdentifier = ProviderIdentifier.Any,
+				Sender = TestUsers.TestBottedUser
+			};
 		}
 	}
 }

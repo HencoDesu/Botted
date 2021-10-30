@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
         <Nullable>enable</Nullable>
-        <PackageVersion>0.0.1</PackageVersion>
+        <PackageVersion>0.0.1-preview0</PackageVersion>
         <Title>Botted.Events.Abstractions</Title>
         <Authors>HencoDesu</Authors>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>

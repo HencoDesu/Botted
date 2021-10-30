@@ -5,7 +5,7 @@
         <Nullable>enable</Nullable>
         <LangVersion>preview</LangVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <PackageVersion>0.0.1</PackageVersion>
+        <PackageVersion>0.0.1-preview0</PackageVersion>
         <Title>Botted.Commands</Title>
         <Authors>HencoDesu</Authors>
         <Company>HencoDesu</Company>
@@ -23,10 +23,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Tools\Botted.Tools.SourceGenerators\Botted.Tools.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
       <ProjectReference Include="..\Botted.Core.Commands.Abstractions\Botted.Core.Commands.Abstractions.csproj" />
       <ProjectReference Include="..\Botted.Core.Events.Abstractions\Botted.Core.Events.Abstractions.csproj" />
-      <ProjectReference Include="..\Botted.Core.Providers.Abstractions\Botted.Core.Providers.Abstractions.csproj" />
+      <ProjectReference Include="..\Botted.Core.Messaging\Botted.Core.Messaging.csproj" />
       <ProjectReference Include="..\Botted.Core.Parsing.Converters\Botted.Core.Parsing.Converters.csproj" />
       <ProjectReference Include="..\Botted.Core.Users.Abstractions\Botted.Core.Users.Abstractions.csproj" />
     </ItemGroup>

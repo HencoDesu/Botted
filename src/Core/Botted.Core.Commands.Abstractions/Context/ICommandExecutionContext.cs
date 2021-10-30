@@ -1,4 +1,5 @@
 ﻿using Botted.Core.Commands.Abstractions.Data;
+using Botted.Core.Messaging.Data;
 
 namespace Botted.Core.Commands.Abstractions.Context
 {
@@ -21,5 +22,7 @@ namespace Botted.Core.Commands.Abstractions.Context
 		/// Can that command be executed
 		/// </summary>
 		bool CanExecute { get; set; }
+		
+		BottedMessage Message { get; }
 	}
 }

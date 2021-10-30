@@ -17,10 +17,10 @@ namespace Botted.Tests.CoreTests
 
 		public UserServiceTest()
 		{
-			var usersList = new List<User> { TestUsers.TestUser, TestUsers.HencoDesu };
+			var usersList = new List<BottedUser> { TestUsers.TestBottedUser, TestUsers.HencoDesu };
 			_userDatabase = A.Fake<IUserDatabase>();
 			A.CallTo(() => _userDatabase.Users)
-			 .Returns(new EnumerableQuery<User>(usersList));
+			 .Returns(new EnumerableQuery<BottedUser>(usersList));
 		}
 		
 		[Fact]

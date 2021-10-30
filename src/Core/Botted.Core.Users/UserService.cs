@@ -23,18 +23,18 @@ namespace Botted.Core.Users
 			_eventService = eventService;
 		}
 
-		public User GetById(long userId)
+		public BottedUser GetById(long userId)
 			=> _database.Users.SingleOrDefault(u => u.Id == userId) ?? throw new Exception(); //TODO: Custom exception here
 
-		public IReadOnlyCollection<User> GetAll() 
+		public IReadOnlyCollection<BottedUser> GetAll() 
 			=> _database.Users.ToList();
 
-		public IReadOnlyCollection<User> GetAll(Func<User, bool> predicate)
+		public IReadOnlyCollection<BottedUser> GetAll(Func<BottedUser, bool> predicate)
 			=> _database.Users
 						.Where(u => predicate(u))
 						.ToList();
 
-		public User Register()
+		public BottedUser Register()
 		{
 			var user = _database.RegisterUser();
 			_eventService.GetEvent<UserRegistered>().Raise(user);

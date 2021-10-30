@@ -9,7 +9,7 @@ namespace Botted.Parsing.Converters
 		
 		public Enum? Convert(string source, object? argument)
 		{
-			return Enum.TryParse(argument as Type, source, true, out var result) ? result as Enum : null;
+			return Enum.TryParse((argument as Type)!, source, true, out var result) ? result as Enum : null;
 		}
 	}
 }

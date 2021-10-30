@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Botted.Core.Commands;
-using Botted.Core.Providers.Abstractions.Data;
+using Botted.Core.Messaging.Data;
 using Botted.Tests.CoreTests.TestData;
 using FluentAssertions;
 using Xunit;
@@ -14,8 +14,8 @@ namespace Botted.Tests.CoreTests
 		{
 			public IEnumerator<object[]> GetEnumerator()
 			{
-				yield return new object[] { TestMessageGenerator.GenerateMessage("!test 5 abc b"), new TestCommandData(5, "abc", TestEnum.B, TestUsers.TestUser) };
-				yield return new object[] { TestMessageGenerator.GenerateMessage("!test 5 abc"), new TestCommandData(5, "abc", TestEnum.A, TestUsers.TestUser) };
+				yield return new object[] { TestMessageGenerator.GenerateMessage("!test 5 abc b"), new TestCommandData(5, "abc", TestEnum.B, TestUsers.TestBottedUser) };
+				yield return new object[] { TestMessageGenerator.GenerateMessage("!test 5 abc"), new TestCommandData(5, "abc", TestEnum.A, TestUsers.TestBottedUser) };
 			}
 
 			IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
@@ -57,7 +57,7 @@ namespace Botted.Tests.CoreTests
 
 		[Theory]
 		[ClassData(typeof(TestData))]
-		public void ParseCommandData(Message testMessage, TestCommandData expectedData)
+		public void ParseCommandData(BottedMessage testMessage, TestCommandData expectedData)
 		{
 			var parser = new CommandParser(_configuration);
 			var structure = TestCommandData.Structure;

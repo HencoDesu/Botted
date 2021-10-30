@@ -2,9 +2,9 @@
 
 namespace Botted.Tests.CoreTests.TestData
 {
-	public class TestUsers : User
+	public static class TestUsers
 	{
-		public static User TestUser { get; } = new() { Id = 0, Nickname = "TestUser"};
-		public static User HencoDesu { get; } = new() { Id = 8, Nickname = "HencoDesu" };
+		public static BottedUser TestBottedUser { get; } = new() { Id = 0, Nickname = "TestUser"};
+		public static BottedUser HencoDesu { get; } = new() { Id = 8, Nickname = "HencoDesu" };
 	}
 }

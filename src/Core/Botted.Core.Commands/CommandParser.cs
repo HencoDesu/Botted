@@ -5,7 +5,7 @@ using Botted.Core.Commands.Abstractions;
 using Botted.Core.Commands.Abstractions.Data;
 using Botted.Core.Commands.Abstractions.Data.Structure;
 using Botted.Core.Commands.Context;
-using Botted.Core.Providers.Abstractions.Data;
+using Botted.Core.Messaging.Data;
 using Botted.Parsing.Converters.Abstractions;
 using Pidgin;
 using static Pidgin.Parser;
@@ -52,18 +52,18 @@ namespace Botted.Core.Commands
 
 		#endregion
 
-		public bool TryParseCommandName(Message message, out string commandName)
+		public bool TryParseCommandName(BottedMessage message, out string commandName)
 		{
 			var result = CommandName.Parse(message.Text);
 			commandName = result.Success ? result.Value : string.Empty;
 			return result.Success;
 		}
 
-		public ICommandData ParseCommandData(Message message, ICommandDataStructure structure)
+		public ICommandData ParseCommandData(BottedMessage message, ICommandDataStructure structure)
 		{
 			var data = structure.Empty;
 			var textArgs = Arguments.ParseOrThrow(message.Text);
-			var context = new CommandParsingContext(textArgs, message.User);
+			var context = new CommandParsingContext(textArgs, message.Sender);
 
 			foreach (var argumentStructure in structure.Arguments)
 			{
